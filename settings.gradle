@@ -1,0 +1,4 @@
+rootProject.name = 'cordalo'
+include 'corda-common'
+include 'corda-common-test'
+
