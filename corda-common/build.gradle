@@ -15,6 +15,8 @@ dependencies {
     compile "$corda_release_group:corda-test-utils:$corda_release_version"
     compile "$corda_release_group:corda-node-driver:$corda_release_version"
     testCompile "junit:junit:$junit_version"
+
+    testCompile project(":corda-common-test")
 }
 
 jar {

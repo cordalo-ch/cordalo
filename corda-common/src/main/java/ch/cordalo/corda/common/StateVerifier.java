@@ -30,12 +30,12 @@ interface TransactionDelegate {
  */
 
 public class StateVerifier {
-    protected TransactionDelegate tx;
-    protected StateVerifier parent;
-    protected String description = "";
-    protected Class<? extends CommandData> commandClazz;
-    protected CommandWithParties<? extends CommandData> command;
-    protected String text;
+    TransactionDelegate tx;
+    StateVerifier parent;
+    String description = "";
+    Class<? extends CommandData> commandClazz;
+    CommandWithParties<? extends CommandData> command;
+    String text;
 
     public static StateVerifier fromTransaction(SignedTransaction tx, ServiceHub serviceHub) {
         return new SignedStateVerifier(tx, serviceHub);
@@ -48,10 +48,10 @@ public class StateVerifier {
     }
 
 
-    protected StateVerifier() {
+    StateVerifier() {
         this.parent = null;
     }
-    protected void setTransaction(TransactionDelegate tx) {
+    void setTransaction(TransactionDelegate tx) {
         this.tx = tx;
     }
 
@@ -63,13 +63,13 @@ public class StateVerifier {
         this.command = requireSingleCommand(tx.getCommands(), (Class<? extends CommandData>)this.commandClazz);
     }
     */
-    protected StateVerifier(StateVerifier parent) {
+    StateVerifier(StateVerifier parent) {
         this.tx = parent.tx;
         this.parent = parent;
         this.commandClazz = parent.commandClazz;
         this.command = parent.command;
     }
-    protected StateVerifier(StateVerifier parent, String text) {
+    StateVerifier(StateVerifier parent, String text) {
         this.tx = parent.tx;
         this.parent = parent;
         this.commandClazz = parent.commandClazz;
@@ -77,7 +77,7 @@ public class StateVerifier {
         this.text = text;
     }
 
-    protected String s(String text) {
+    String s(String text) {
         String t = this.text == null ? text : this.text;
         return this.description == null ? t : t+this.description;
     }
