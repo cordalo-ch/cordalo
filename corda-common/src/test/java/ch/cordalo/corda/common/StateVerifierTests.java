@@ -1,7 +1,7 @@
 package ch.cordalo.corda.common;
 
-import ch.cordalo.corda.common.states.TestContract;
-import ch.cordalo.corda.common.states.TestState;
+import ch.cordalo.corda.common.states.test.TestContract;
+import ch.cordalo.corda.common.states.test.TestState;
 import net.corda.core.contracts.UniqueIdentifier;
 import org.junit.After;
 import org.junit.Assert;

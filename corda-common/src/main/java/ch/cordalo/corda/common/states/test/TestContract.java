@@ -1,4 +1,4 @@
-package ch.cordalo.corda.common.states;
+package ch.cordalo.corda.common.states.test;
 
 import ch.cordalo.corda.common.StateVerifier;
 import ch.cordalo.corda.common.contracts.ReferenceContract;
@@ -13,7 +13,7 @@ import java.util.List;
 import static net.corda.core.contracts.ContractsDSL.requireThat;
 
 public class TestContract implements Contract {
-    public static final String ID = "ch.cordalo.corda.common.states.TestContract";
+    public static final String ID = "ch.cordalo.corda.common.states.test.TestContract";
 
     public TestContract() {}
 

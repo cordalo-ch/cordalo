@@ -1,4 +1,4 @@
-package ch.cordalo.corda.common.states;
+package ch.cordalo.corda.common.states.test;
 
 import com.google.common.collect.Lists;
 import net.corda.core.contracts.Amount;
@@ -14,8 +14,6 @@ import java.math.BigDecimal;
 import java.security.PublicKey;
 import java.util.Currency;
 import java.util.List;
-import java.util.Locale;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 
