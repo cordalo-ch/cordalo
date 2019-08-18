@@ -8,11 +8,17 @@ Use our StateVerifier to simplify test in contracts, flows and testcases
 
 example: test for no input and 1 single output of one specific class a specific command
 ```
-        StateVerifier verifier = StateVerifier.fromTransaction(tx, ServiceContract.Commands.class);
-        verifier.input().empty("input must be empty");
-        ServiceState service = verifier
-              .output().notEmpty().one().one(ServiceState.class)
-              .object();
+StateVerifier verifier = StateVerifier
+      .fromTransaction(tx, ServiceContract.Commands.class);
+verifier
+  .input()
+  .empty("input must be empty");
+ServiceState service = verifier
+  .output()
+  .notEmpty()
+  .one()
+  .one(ServiceState.class)
+  .object();
       
 `````
 
