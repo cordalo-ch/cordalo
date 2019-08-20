@@ -1,13 +1,18 @@
 package ch.cordalo.corda.common.test;
 
+import net.corda.core.concurrent.CordaFuture;
 import net.corda.core.flows.FlowLogic;
 import net.corda.core.identity.CordaX500Name;
 import net.corda.core.identity.Party;
+import net.corda.core.transactions.SignedTransaction;
 import net.corda.testing.core.TestIdentity;
 import net.corda.testing.node.MockServices;
 import net.corda.testing.node.StartedMockNode;
 
+import java.util.concurrent.ExecutionException;
+
 public class CordaNodeEnvironment {
+    public CordaTestNetwork network;
     public final String name;
     public final CordaX500Name x500;
     public final TestIdentity identity;
@@ -15,7 +20,8 @@ public class CordaNodeEnvironment {
     public Party party;
     public MockServices ledgerServices;
 
-    public CordaNodeEnvironment(String name, String x500Name) {
+    public CordaNodeEnvironment(CordaTestNetwork network, String name, String x500Name) {
+        this.network = network;
         this.name = name;
         this.x500 = CordaX500Name.parse(x500Name);
         this.identity = new TestIdentity(x500);
@@ -55,5 +61,11 @@ public class CordaNodeEnvironment {
     public void startNoNetwork() {
         this.party = this.identity.getParty();
 
+    }
+
+    public SignedTransaction startFlow(FlowLogic<SignedTransaction> flow) throws ExecutionException, InterruptedException {
+        CordaFuture<SignedTransaction> future = this.node.startFlow(flow);
+        this.network.runNetwork();
+        return future.get();
     }
 }

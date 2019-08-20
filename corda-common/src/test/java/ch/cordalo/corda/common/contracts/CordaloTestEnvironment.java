@@ -1,4 +1,4 @@
-package ch.cordalo.corda.common;
+package ch.cordalo.corda.common.contracts;
 
 import ch.cordalo.corda.common.test.CordaNodeEnvironment;
 import ch.cordalo.corda.common.test.CordaTestNetwork;
@@ -17,12 +17,14 @@ public class CordaloTestEnvironment {
 
     public List<TestCordapp> getTestCordapps() {
         return ImmutableList.of(
-                TestCordapp.findCordapp("ch.cordalo.corda.common")
+                TestCordapp.findCordapp("ch.cordalo.corda.common.contracts"),
+                TestCordapp.findCordapp("ch.cordalo.corda.common.flows")
         );
     }
     public List<String> getCordappPackageNames() {
         return ImmutableList.of(
-                "ch.cordalo.corda.common"
+                "ch.cordalo.corda.common.contracts",
+                "ch.cordalo.corda.common.flows"
         );
     }
 

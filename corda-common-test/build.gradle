@@ -3,7 +3,6 @@ plugins {
 }
 
 group 'ch.cordalo'
-version '0.1'
 
 sourceCompatibility = 1.8
 

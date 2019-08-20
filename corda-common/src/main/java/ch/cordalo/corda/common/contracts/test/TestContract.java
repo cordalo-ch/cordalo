@@ -1,7 +1,7 @@
-package ch.cordalo.corda.common.states.test;
+package ch.cordalo.corda.common.contracts.test;
 
-import ch.cordalo.corda.common.StateVerifier;
 import ch.cordalo.corda.common.contracts.ReferenceContract;
+import ch.cordalo.corda.common.contracts.StateVerifier;
 import net.corda.core.contracts.CommandData;
 import net.corda.core.contracts.Contract;
 import net.corda.core.serialization.CordaSerializable;
@@ -13,7 +13,7 @@ import java.util.List;
 import static net.corda.core.contracts.ContractsDSL.requireThat;
 
 public class TestContract implements Contract {
-    public static final String ID = "ch.cordalo.corda.common.states.test.TestContract";
+    public static final String ID = TestContract.class.getName();
 
     public TestContract() {}
 
@@ -45,6 +45,35 @@ public class TestContract implements Contract {
                             .object();
                     Assert.assertNotNull("test is not null", test);
 
+                    return null;
+                });
+
+            }
+        }
+
+        class UpdateOneInOut implements TestContract.Commands {
+            @Override
+            public void verify(LedgerTransaction tx, StateVerifier verifier) throws IllegalArgumentException {
+                requireThat(req -> {
+                    TestState in = verifier
+                            .input()
+                            .one()
+                            .one(TestState.class)
+                            .object();
+                    TestState out = verifier
+                            .output()
+                            .notEmpty()
+                            .notEmpty("should not be empty")
+                            .moreThanZero()
+                            .moreThanZero(1)
+                            .one()
+                            .one("must be one")
+                            .one(TestState.class)
+                            .amountNot0("amount", x -> ((TestState)x).getAmount())
+                            .object();
+                    req.using("ids must be equal", in.getLinearId().equals(out.getLinearId()));
+                    req.using("owner must be equal", in.getOwner().equals(out.getOwner()));
+                    req.using("new provider must be different", !in.getProvider().equals(out.getProvider()));
                     return null;
                 });
 

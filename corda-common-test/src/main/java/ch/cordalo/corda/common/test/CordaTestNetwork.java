@@ -53,7 +53,7 @@ public class CordaTestNetwork {
 
     public CordaNodeEnvironment startEnv(String name, String x500) {
         return this.startNode(
-                new CordaNodeEnvironment(name, x500));
+                new CordaNodeEnvironment(this,name, x500));
     }
 
     public void startNodes() {

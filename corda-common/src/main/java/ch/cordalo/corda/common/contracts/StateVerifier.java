@@ -1,4 +1,4 @@
-package ch.cordalo.corda.common;
+package ch.cordalo.corda.common.contracts;
 
 import com.google.common.collect.ImmutableList;
 import net.corda.core.contracts.*;
@@ -211,9 +211,6 @@ public class StateVerifier {
     public StateVerifier sameParty(String name1, Function<ContractState, ? extends AbstractParty> party1Mapper,
                                    String name2, Function<ContractState, ? extends AbstractParty> party2Mapper
     ) { return new SameParty(this, name1, party1Mapper, name2, party2Mapper).verify(); }
-
-
-
 
     class Signers extends StateVerifier {
 

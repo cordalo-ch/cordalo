@@ -1,4 +1,4 @@
-package ch.cordalo.corda.common;
+package ch.cordalo.corda.common.contracts;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;

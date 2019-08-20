@@ -1,4 +1,4 @@
-package ch.cordalo.corda.common.states.test;
+package ch.cordalo.corda.common.contracts.test;
 
 import com.google.common.collect.Lists;
 import net.corda.core.contracts.Amount;
@@ -53,6 +53,15 @@ public class TestState implements LinearState {
         this.owner = owner;
         this.provider = provider;
         this.cloneProvider = cloneProvider;
+        this.stringValue = stringValue;
+        this.intValue = intValue;
+        this.amount = CHF(intValue);
+    }
+    public TestState(@NotNull UniqueIdentifier linearId, @NotNull Party owner, @NotNull Party provider, String stringValue, Integer intValue) {
+        this.linearId = linearId;
+        this.owner = owner;
+        this.provider = provider;
+        this.cloneProvider = provider;
         this.stringValue = stringValue;
         this.intValue = intValue;
         this.amount = CHF(intValue);

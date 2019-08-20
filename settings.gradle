@@ -1,4 +1,5 @@
 rootProject.name = 'cordalo'
 include 'corda-common'
 include 'corda-common-test'
+include 'corda-common-flows'
 

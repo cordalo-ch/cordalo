@@ -1,6 +1,5 @@
 package ch.cordalo.corda.common.contracts;
 
-import ch.cordalo.corda.common.StateVerifier;
 import net.corda.core.contracts.CommandData;
 import net.corda.core.contracts.Contract;
 import net.corda.core.contracts.ContractState;
