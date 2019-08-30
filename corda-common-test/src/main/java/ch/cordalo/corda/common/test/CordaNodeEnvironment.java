@@ -9,6 +9,7 @@ import net.corda.testing.core.TestIdentity;
 import net.corda.testing.node.MockServices;
 import net.corda.testing.node.StartedMockNode;
 
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class CordaNodeEnvironment {
@@ -42,7 +43,7 @@ public class CordaNodeEnvironment {
 
     }
 
-    private void registerResponders(Class<? extends FlowLogic>[] responderClasses) {
+    private void registerResponders(List<Class<? extends FlowLogic>> responderClasses) {
         if (responderClasses != null) {
             for (Class<? extends FlowLogic> responderClass: responderClasses) {
                 this.node.registerInitiatedFlow(responderClass);

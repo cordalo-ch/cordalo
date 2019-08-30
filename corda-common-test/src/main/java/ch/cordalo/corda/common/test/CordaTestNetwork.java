@@ -8,19 +8,20 @@ import net.corda.testing.node.TestCordapp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class CordaTestNetwork {
 
-    private final Class<? extends FlowLogic>[] responderClasses;
+    private final List<Class<? extends FlowLogic>> responderClasses;
     private MockNetwork network;
     private List<TestCordapp> testCordapps;
     private List<String> testPackageNames;
     private final boolean withNodes;
     private final Map<String, CordaNodeEnvironment> nodes = new HashMap();
 
-    public CordaTestNetwork(boolean withNodes, List<TestCordapp> testCordapps, List<String> testPackageNames, Class<? extends FlowLogic> ...responderClasses) {
-        this.testCordapps = testCordapps;
+    public CordaTestNetwork(boolean withNodes, List<String> testPackageNames, List<Class<? extends FlowLogic>> responderClasses) {
         this.testPackageNames = testPackageNames;
+        this.testCordapps = testPackageNames.stream().map(x -> TestCordapp.findCordapp(x)).collect(Collectors.toList());
         this.withNodes = withNodes;
         this.responderClasses = responderClasses;
         this.createNetwork();
@@ -47,7 +48,7 @@ public class CordaTestNetwork {
         return this.network;
     }
 
-    public Class<? extends FlowLogic>[] getResponderClasses() {
+    public List<Class<? extends FlowLogic>> getResponderClasses() {
         return this.responderClasses;
     }
 
