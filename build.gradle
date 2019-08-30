@@ -70,7 +70,8 @@ allprojects {
         from sourceSets.main.allSource
     }
     artifacts {
-        archives javadocJar
+        // dont add javadocjars and source to it because travis is not able to build
+        // archives javadocJar, sourcesJar
     }
 
     signing {
