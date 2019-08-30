@@ -12,8 +12,7 @@ install:
   - ./gradlew assemble -x signArchives
 script:
 ##  - ./gradlew --info --stacktrace check test
-  - ./gradlew check test
+  - ./gradlew check test generateCoberturaReport performCoverageCheck
 after_success:
-  - ./gradlew generateCoberturaReport
   - ./deploy.sh
 
