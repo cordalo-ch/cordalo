@@ -46,7 +46,6 @@ allprojects {
     apply plugin: 'maven'
     apply plugin: 'signing'
     apply plugin: 'net.saliman.cobertura'
-    apply plugin: 'com.github.kt3k.coveralls'
 
     repositories {
         mavenLocal()
@@ -125,13 +124,6 @@ allprojects {
             }
         }
     }
-
-    cobertura {
-        rootProject.subprojects.each {
-            coverageDirs << file("${it.name}/build/classes/main")
-        }
-        coverageFormats = ['html', 'xml']
-    }
 }
 
 ext {
@@ -139,6 +131,14 @@ ext {
 }
 
 apply plugin: 'net.corda.plugins.quasar-utils'
+apply plugin: 'com.github.kt3k.coveralls'
+
+cobertura {
+    rootProject.subprojects.each {
+        coverageDirs << file("${it.name}/build/classes/main")
+    }
+    coverageFormats = ['html', 'xml']
+}
 
 
 sourceSets {
