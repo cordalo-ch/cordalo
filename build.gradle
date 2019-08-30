@@ -29,6 +29,7 @@ buildscript {
         mavenCentral()
         jcenter()
         maven { url 'https://ci-artifactory.corda.r3cev.com/artifactory/corda' }
+        maven { url 'https://plugins.gradle.org/m2/'}
     }
 
     dependencies {
@@ -36,9 +37,8 @@ buildscript {
         classpath "$corda_release_group_plugins:cordformation:$corda_gradle_plugins_version"
         classpath "$corda_release_group_plugins:quasar-utils:$corda_gradle_plugins_version"
         classpath "org.springframework.boot:spring-boot-gradle-plugin:$spring_boot_gradle_plugin_version"
-        classpath "org.eluder.coveralls:coveralls-maven-plugin:4.3.0"
         classpath "net.saliman:gradle-cobertura-plugin:2.5.4"
-
+        classpath "com.github.kt3k.coveralls:com.github.kt3k.coveralls.gradle.plugin:2.8.4"
     }
 }
 allprojects {
@@ -46,6 +46,7 @@ allprojects {
     apply plugin: 'maven'
     apply plugin: 'signing'
     apply plugin: 'net.saliman.cobertura'
+    apply plugin: 'com.github.kt3k.coveralls'
 
     repositories {
         mavenLocal()
@@ -124,6 +125,13 @@ allprojects {
             }
         }
     }
+
+    cobertura {
+        rootProject.subprojects.each {
+            coverageDirs << file("${it.name}/build/classes/main")
+        }
+        coverageFormats = ['html', 'xml']
+    }
 }
 
 ext {
@@ -132,11 +140,6 @@ ext {
 
 apply plugin: 'net.corda.plugins.quasar-utils'
 
-cobertura {
-    rootProject.subprojects.each {
-        coverageDirs << file("${it.name}/build/classes/main")
-    }
-}
 
 sourceSets {
     main {
