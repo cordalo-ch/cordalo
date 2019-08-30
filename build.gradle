@@ -70,7 +70,7 @@ allprojects {
         from sourceSets.main.allSource
     }
     artifacts {
-        archives javadocJar, sourcesJar
+        archives javadocJar
     }
 
     signing {
