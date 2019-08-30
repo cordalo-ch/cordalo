@@ -3,7 +3,6 @@ package ch.cordalo.corda.common.flows.test;
 import ch.cordalo.corda.common.contracts.CordaloTestEnvironment;
 import ch.cordalo.corda.common.contracts.StateVerifier;
 import ch.cordalo.corda.common.contracts.test.TestState;
-import net.corda.core.contracts.ContractState;
 import net.corda.core.transactions.SignedTransaction;
 import org.junit.After;
 import org.junit.Assert;

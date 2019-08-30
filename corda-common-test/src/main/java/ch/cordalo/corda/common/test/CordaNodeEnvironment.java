@@ -43,7 +43,7 @@ public class CordaNodeEnvironment {
 
     }
 
-    private void registerResponders(List<Class<? extends FlowLogic>> responderClasses) {
+    private void registerResponders(Class<? extends FlowLogic>[] responderClasses) {
         if (responderClasses != null) {
             for (Class<? extends FlowLogic> responderClass: responderClasses) {
                 this.node.registerInitiatedFlow(responderClass);

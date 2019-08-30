@@ -12,14 +12,14 @@ import java.util.stream.Collectors;
 
 public class CordaTestNetwork {
 
-    private final List<Class<? extends FlowLogic>> responderClasses;
+    private final Class<? extends FlowLogic>[] responderClasses;
     private MockNetwork network;
     private List<TestCordapp> testCordapps;
     private List<String> testPackageNames;
     private final boolean withNodes;
     private final Map<String, CordaNodeEnvironment> nodes = new HashMap();
 
-    public CordaTestNetwork(boolean withNodes, List<String> testPackageNames, List<Class<? extends FlowLogic>> responderClasses) {
+    public CordaTestNetwork(boolean withNodes, List<String> testPackageNames, Class<? extends FlowLogic>[] responderClasses) {
         this.testPackageNames = testPackageNames;
         this.testCordapps = testPackageNames.stream().map(x -> TestCordapp.findCordapp(x)).collect(Collectors.toList());
         this.withNodes = withNodes;
@@ -48,7 +48,7 @@ public class CordaTestNetwork {
         return this.network;
     }
 
-    public List<Class<? extends FlowLogic>> getResponderClasses() {
+    public Class<? extends FlowLogic>[] getResponderClasses() {
         return this.responderClasses;
     }
 
