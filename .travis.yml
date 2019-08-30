@@ -1,12 +1,7 @@
-addons:
-  apt:
-    packages:
-      - oracle-java8-installer
-
 language: java
 os: linux
 dist: trusty
-jdk: oraclejdk8
+jdk: openjdk10
 install:
   - ./gradlew assemble -x signArchives
 script:
