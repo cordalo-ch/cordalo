@@ -6,4 +6,4 @@ dist: trusty
 jdk: oraclejdk8
 
 script:
-  - ./gradlew clean test uploadArchives
+  - ./gradlew clean test
