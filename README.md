@@ -1,4 +1,7 @@
 # cordalo
+[![Build Status](https://api.travis-ci.org/cordalo-ch/cordalo.svg?branch=master)](https://travis-ci.org/cordalo-ch/cordalo)
+[![Coverage Status](https://coveralls.io/repos/github/cordalo-ch/cordalo/badge.svg?branch=master)](https://coveralls.io/github/cordalo-ch/cordalo?branch=master)
+
 provider CORDA frameworks to speed up your development in the decentralized space
 
 
