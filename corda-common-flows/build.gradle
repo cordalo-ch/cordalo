@@ -3,6 +3,8 @@ plugins {
 }
 
 group 'ch.cordalo'
+archivesBaseName = "corda-common-workflows"
+version '0.1-SNAPSHOT'
 
 sourceCompatibility = 1.8
 

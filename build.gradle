@@ -25,11 +25,13 @@ buildscript {
         classpath "$corda_release_group_plugins:cordformation:$corda_gradle_plugins_version"
         classpath "$corda_release_group_plugins:quasar-utils:$corda_gradle_plugins_version"
         classpath "org.springframework.boot:spring-boot-gradle-plugin:$spring_boot_gradle_plugin_version"
+
     }
 }
-
 allprojects {
     apply plugin: 'java'
+    apply plugin: 'maven'
+    apply plugin: 'signing'
 
     repositories {
         mavenLocal()
@@ -48,6 +50,65 @@ allprojects {
         preserveFileTimestamps = false
         reproducibleFileOrder = true
     }
+    task javadocJar(type: Jar) {
+        classifier = 'javadoc'
+        from javadoc
+    }
+    task sourcesJar(type: Jar) {
+        classifier = 'sources'
+        from sourceSets.main.allSource
+    }
+    artifacts {
+        archives javadocJar, sourcesJar
+    }
+
+    signing {
+        sign configurations.archives
+    }
+
+    uploadArchives {
+        repositories {
+            mavenDeployer {
+                beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+                repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                    authentication(userName: nexusUsername, password: nexusPassword)
+                }
+
+                snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+                    authentication(userName: nexusUsername, password: nexusPassword)
+                }
+                pom.project {
+                    name 'cordalo.ch CORDA extensions'
+                    packaging 'jar'
+                    // optionally artifactId can be defined here
+                    description 'cordalo.ch is a simple framework for fast CORDA development'
+                    url 'https://cordalo.ch'
+
+                    scm {
+                        connection 'scm:git:https://github.com/cordalo-ch/cordalo.git'
+                        developerConnection 'scm:git:https://github.com/cordalo-ch/cordalo.git'
+                        url 'https://github.com/cordalo-ch/cordalo'
+                    }
+
+                    licenses {
+                        license {
+                            name 'MIT'
+                            url 'https://cordalo.ch/LICENCE.md'
+                        }
+                    }
+
+                    developers {
+                        developer {
+                            id 'lolo8304'
+                            name 'Lorenz Hänggi aka Lolo'
+                            email 'lolo8304@gmail.com'
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
 ext {
@@ -55,6 +116,7 @@ ext {
 }
 
 apply plugin: 'net.corda.plugins.quasar-utils'
+
 
 sourceSets {
     main {
@@ -89,5 +151,8 @@ task installQuasar(type: Copy) {
 
 jar {
     // Prevent the root project from building an unwanted dummy CorDapp.
-    enabled = false
+    enabled = true
 }
+
+// based on docu https://central.sonatype.org/pages/working-with-pgp-signatures.html
+// https://central.sonatype.org/pages/gradle.html

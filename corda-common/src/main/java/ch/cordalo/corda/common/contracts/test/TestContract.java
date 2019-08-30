@@ -6,7 +6,6 @@ import net.corda.core.contracts.CommandData;
 import net.corda.core.contracts.Contract;
 import net.corda.core.serialization.CordaSerializable;
 import net.corda.core.transactions.LedgerTransaction;
-import org.junit.Assert;
 
 import java.util.List;
 
@@ -43,8 +42,6 @@ public class TestContract implements Contract {
                             .one(TestState.class)
                             .amountNot0("amount", x -> ((TestState)x).getAmount())
                             .object();
-                    Assert.assertNotNull("test is not null", test);
-
                     return null;
                 });
 

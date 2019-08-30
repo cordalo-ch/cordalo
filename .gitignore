@@ -82,3 +82,5 @@ nohup*.out
 .vscode
 **/bin
 */out
+
+*/gradle.properties
