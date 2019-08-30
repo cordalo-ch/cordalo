@@ -5,7 +5,7 @@ jdk: openjdk8
 install:
   - ./gradlew assemble -x signArchives
 script:
-  - ./gradlew --debug --stacktrace check test
+  - ./gradlew check test
 after_success:
   - ./deploy.sh
 env:
