@@ -1,9 +1,9 @@
 language: java
 install: true
-
 os: linux
 dist: trusty
 jdk: oraclejdk8
-
 script:
-  - ./gradlew clean test
+- "./gradlew clean test"
+dd:
+  secure: iLv3GEC8+vajoolsUaGD/+YBlkZ28n3XverQYXtZ7bDo72izQEdPuMhdlmCaeVARCurmENwu+ZHKphhQxZtrirZbvZSAqmvWt+itCNx2oYEV5JpR3O3Yi5hYL8yk5GlrOxZZF3Ptk28ArIdxQC+0wIUmlj+yUWzOAml2RK6QLDCETXm1ZCHAVg3fr4c4FI4UOf/KA2H4zAx+RF7bx7Rz1cBDqXcXgjI2rYP1D9sVuAnp12LrvZpdCGilPMxoHSV9nlUKvYEjevTGlYS9WJggPJwsmN+DWWZFw1yJYcOqVKHyNT1nFJsvXHtpJ1QAEuTgS19W2agj+RwtEeR6mvJosRSa81bsZP3St93ME6/lVDfoVY2FEYba4cve74i/NTt/96tSR+Y9slbbaBWXYphodbshWd+Wf/Da0iYYlTRuJy1qnAiUCR7PXs4znLtzl1Tfgbwb9EH/s0otLhmwQ+rzYBKR3E1lb/PhVuIG4gzLQeKIaFAUtLwlcggxmZuVmAlxria+5oWhzDZYyQfxB5dTcrHWNJGJBcBv5hP+g48IV3f0owC1AhTwcRRMCDII7busbKnTcyIkUBoDNrkXcTnbdX97IKwQsi2SO+pNuC0WmrAvRUUR9Iugbw+I3xsPfbahxPd8+rjpKneL0o2ONtSqN9L/Ci/co3qwlgzLhVG5UpU=

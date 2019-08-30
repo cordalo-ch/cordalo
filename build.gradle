@@ -25,13 +25,13 @@ buildscript {
         classpath "$corda_release_group_plugins:cordformation:$corda_gradle_plugins_version"
         classpath "$corda_release_group_plugins:quasar-utils:$corda_gradle_plugins_version"
         classpath "org.springframework.boot:spring-boot-gradle-plugin:$spring_boot_gradle_plugin_version"
-
+        classpath "com.bmuschko:gradle-nexus-plugin:2.3.1"
     }
 }
 allprojects {
     apply plugin: 'java'
-    apply plugin: 'maven'
     apply plugin: 'signing'
+    apply plugin: 'com.bmuschko.nexus'
 
     repositories {
         mavenLocal()
@@ -40,7 +40,6 @@ allprojects {
         maven { url 'https://ci-artifactory.corda.r3cev.com/artifactory/corda' }
         maven { url 'https://jitpack.io' }
     }
-
     tasks.withType(JavaCompile) {
         options.compilerArgs << "-parameters" // Required by Corda's serialisation framework.
     }
@@ -50,6 +49,7 @@ allprojects {
         preserveFileTimestamps = false
         reproducibleFileOrder = true
     }
+
     task javadocJar(type: Jar) {
         classifier = 'javadoc'
         from javadoc
@@ -58,56 +58,64 @@ allprojects {
         classifier = 'sources'
         from sourceSets.main.allSource
     }
-    artifacts {
-        archives javadocJar, sourcesJar
-    }
 
-    signing {
-        sign configurations.archives
-    }
+    modifyPom {
+        project {
+            name 'cordalo.ch CORDA extensions'
+            description 'cordalo.ch is a simple framework for fast CORDA development.'
+            url 'https://github.com/cordalo-ch/cordalo'
+            inceptionYear '2019'
 
-    uploadArchives {
-        repositories {
-            mavenDeployer {
-                beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+            scm {
+                url 'https://github.com/cordalo-ch/cordalo'
+                connection 'scm:https://github.com/cordalo-ch/cordalo.git'
+                developerConnection 'scm:git://github.com/cordalo-ch/cordalo.git'
+            }
 
-                repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-                    authentication(userName: nexusUsername, password: nexusPassword)
+            licenses {
+                license {
+                    name 'MIT'
+                    url 'https://cordalo.ch/LICENCE.md'
                 }
+            }
 
-                snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
-                    authentication(userName: nexusUsername, password: nexusPassword)
-                }
-                pom.project {
-                    name 'cordalo.ch CORDA extensions'
-                    packaging 'jar'
-                    // optionally artifactId can be defined here
-                    description 'cordalo.ch is a simple framework for fast CORDA development'
-                    url 'https://cordalo.ch'
-
-                    scm {
-                        connection 'scm:git:https://github.com/cordalo-ch/cordalo.git'
-                        developerConnection 'scm:git:https://github.com/cordalo-ch/cordalo.git'
-                        url 'https://github.com/cordalo-ch/cordalo'
-                    }
-
-                    licenses {
-                        license {
-                            name 'MIT'
-                            url 'https://cordalo.ch/LICENCE.md'
-                        }
-                    }
-
-                    developers {
-                        developer {
-                            id 'lolo8304'
-                            name 'Lorenz Hänggi aka Lolo'
-                            email 'lolo8304@gmail.com'
-                        }
-                    }
+            developers {
+                developer {
+                    id 'lolo8304'
+                    name 'Lorenz Hänggi aka Lolo'
+                    email 'lolo8304@gmail.com'
                 }
             }
         }
+
+
+        extraArchive {
+            sources = true
+            tests = true
+            javadoc = true
+        }
+
+        nexus {
+            sign = true
+            repositoryUrl = 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
+            snapshotRepositoryUrl = 'https://oss.sonatype.org/content/repositories/snapshots/'
+        }
+
+        signing {
+            sign configurations.archives
+        }
+    }
+
+    extraArchive {
+        sources = false
+        tests = true
+        javadoc = false
+    }
+
+    nexus {
+        sign = true
+        repositoryUrl = 'http://localhost:8081/nexus/content/repositories/internal/'
+        snapshotRepositoryUrl = 'http://localhost:8081/nexus/content/repositories/internal-snapshots/'
     }
 }
 
