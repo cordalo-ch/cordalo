@@ -1,7 +1,7 @@
 language: java
 os: linux
-dist: trusty
-jdk: openjdk10
+dist: xenial
+jdk: oraclejdk8
 install:
   - ./gradlew assemble -x signArchives
 script:
