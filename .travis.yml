@@ -9,6 +9,7 @@ script:
   - ./gradlew check test
 after_success:
   - ./deploy.sh
+  - ./gradlew cobertura:cobertura coveralls:report
 env:
   global:
     secure: RGMjs5q5PX9Da/VNz/LmBMLaj++M0B6Va0nqdU4J2F61uYlgIlG5SSZKvKfpKWW20l757j/bn1qEomIR+RaQNuDskUi7Pal0welnlybMJImXH0C8j2uB/fclFJixXyjwxcdoB+YPXTDt8e4um2TOgzhr1h5sZwN25BQz9hBfdNo+QwAcpgPEUqLvmKvk4m+SA8dnFUmlCrSEymLDTWlo1XH+Womc/nNrnlesHU1LPcxg7K+/68ImbEv8uHDhVSsLEJTrIlh9aUqMXTOmsc0HgocNpMMDlxt76ftIOFVlzyUuOUdvkW8OY9KowMDBVzsbxwRY8J9fDlgKwmVtht5mPOdKs8c8vRqjP5vxyS9xk6lWkyiOKBcnnW1VbD04R7lgRgEmg7p+985ErSQc5P+wc7EnUJZ0ilSwlS/FDBPpAEz2MvIyGHkggpO+J0j2naCwcW7VAL57MkYlDTi6EscIQk2H3QvXS7h9iom4fIFfQRPs8L5QEbTQrFstdA9G8wGb9zbNb7mr8L2PJITxdFkO8krQxWSfT+BwXtaPULEqODVBgZ6tkXefsViW99C0zUVp1PwkUOogROlSaknt07ZraF2h2L6Exl9cP88eyXLpLatWg264wGBXTk2ri/gMByw9gUuPNewj4Ie9Hzj41KO09oj1WFZCXeQ/6OGQywR3Nec=
