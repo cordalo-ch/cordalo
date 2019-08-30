@@ -1,8 +1,7 @@
 os: linux
 dist: xenial
 language: java
-jdk:
-  - oraclejdk8
+jdk: openjdk8
 install:
   - ./gradlew assemble -x signArchives
 script:
