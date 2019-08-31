@@ -65,18 +65,18 @@ allprojects {
         reproducibleFileOrder = true
     }
     task javadocJar(type: Jar) {
-        classifier = 'javadoc'
+        classifier = 'javadoc-tests'
         from javadoc
     }
     task sourcesJar(type: Jar) {
-        classifier = 'sources'
+        classifier = 'sources-tests'
         from sourceSets.main.allSource
     }
     artifacts {
         // dont add javadocjars and source to it because travis is not able to build
-        // archives javadocJar, sourcesJar
+        archives javadocJar, sourcesJar
     }
-
+o
     signing {
         sign configurations.archives
     }
@@ -94,10 +94,10 @@ allprojects {
                     authentication(userName: v_ossrhUsername, password: v_ossrhPassword)
                 }
                 pom.project {
-                    name 'cordalo.ch CORDA extensions'
+                    name 'cordalo.ch CORDA extensions - module ${project}'
                     packaging 'jar'
                     // optionally artifactId can be defined here
-                    description 'cordalo.ch is a simple framework for fast CORDA development'
+                    description 'cordalo.ch is a simple framework for fast CORDA development - module ${project}'
                     url 'https://cordalo.ch'
 
                     scm {
