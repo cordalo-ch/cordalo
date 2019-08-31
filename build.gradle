@@ -76,7 +76,6 @@ allprojects {
         // dont add javadocjars and source to it because travis is not able to build
         archives javadocJar, sourcesJar
     }
-o
     signing {
         sign configurations.archives
     }
