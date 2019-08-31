@@ -9,8 +9,8 @@ os: linux
 dist: xenial
 language: java
 jdk: openjdk8
-##install:
-##  - ./gradlew assemble -x signArchives
+install:
+  - ./gradlew jar -x signArchives
 script:
 ##  - ./gradlew --info --stacktrace check test
   - ./gradlew instrument cobertura coberturaReport coberturaCheck coveralls
