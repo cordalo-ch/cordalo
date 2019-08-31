@@ -1,7 +1,9 @@
 package ch.cordalo.corda.common.contracts.test;
 
+import ch.cordalo.corda.common.contracts.CommandVerifier;
 import ch.cordalo.corda.common.contracts.ReferenceContract;
 import ch.cordalo.corda.common.contracts.StateVerifier;
+import kotlin.Pair;
 import net.corda.core.contracts.CommandData;
 import net.corda.core.contracts.Contract;
 import net.corda.core.serialization.CordaSerializable;
@@ -30,6 +32,7 @@ public class TestContract implements Contract {
             @Override
             public void verify(LedgerTransaction tx, StateVerifier verifier) throws IllegalArgumentException {
                 requireThat(req -> {
+                    TestState create = new CommandVerifier(verifier).verify_create1(TestState.class);
                     verifier.input().empty();
                     TestState test = verifier
                             .output()
@@ -68,6 +71,9 @@ public class TestContract implements Contract {
                             .one(TestState.class)
                             .amountNot0("amount", x -> ((TestState)x).getAmount())
                             .object();
+
+                    Pair<TestState, TestState> pair = new CommandVerifier(verifier).verify_update1(TestState.class,
+                            TestState::getLinearId, TestState::getOwner);
                     req.using("ids must be equal", in.getLinearId().equals(out.getLinearId()));
                     req.using("owner must be equal", in.getOwner().equals(out.getOwner()));
                     req.using("new provider must be different", !in.getProvider().equals(out.getProvider()));
