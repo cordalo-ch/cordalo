@@ -81,7 +81,7 @@ public class CommandVerifier {
         public Parameters<T> notEmpty(Function<T, Object> ...newMappers) {
             if (newMappers != null) {
                 // concrete due issue with static mapping
-                for(Function<T, Object> mapper : newMappers) notEqualMappers.add(mapper);
+                for(Function<T, Object> mapper : newMappers) notEmptyMappers.add(mapper);
             }
             return this;
         }
