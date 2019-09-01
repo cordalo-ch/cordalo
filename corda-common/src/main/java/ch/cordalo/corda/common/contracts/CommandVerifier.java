@@ -37,8 +37,18 @@ public class CommandVerifier {
         return this.verify_update1(stateClass, new Parameters<T>().equal(equalMappers));
     }
     public <T extends LinearState> Pair<T, T> verify_update1(Class<T> stateClass, Parameters<T> parameters) {
-        T input = verifier.input().one().one(stateClass).object();
-        T output = verifier.output().one().one(stateClass).object();
+        T input = verifier
+                .input()
+                .notEmpty()
+                .one()
+                .one(stateClass)
+                .object();
+        T output = verifier
+                .output()
+                .notEmpty()
+                .one()
+                .one(stateClass)
+                .object();
         parameters.verify(input).verify(output).verify(input, output);
         return new Pair<>(input, output);
     }
@@ -47,6 +57,7 @@ public class CommandVerifier {
         verifier.output().empty();
         return this.verifier
                 .input()
+                .notEmpty()
                 .one()
                 .one(stateClass)
                 .object();
