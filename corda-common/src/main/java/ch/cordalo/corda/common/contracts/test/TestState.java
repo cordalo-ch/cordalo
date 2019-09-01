@@ -39,7 +39,7 @@ public class TestState implements LinearState {
     }
 
     @ConstructorForDeserialization
-    public TestState(@NotNull UniqueIdentifier linearId, @NotNull Party owner, @NotNull Party provider, @NotNull Party cloneProvider, String stringValue, Integer intValue, Amount<Currency> amount) {
+    public TestState(@NotNull UniqueIdentifier linearId, @NotNull Party owner, @NotNull Party provider, @NotNull Party cloneProvider, @NotNull String stringValue, @NotNull Integer intValue, @NotNull Amount<Currency> amount) {
         this.linearId = linearId;
         this.owner = owner;
         this.provider = provider;
@@ -48,7 +48,7 @@ public class TestState implements LinearState {
         this.intValue = intValue;
         this.amount = amount;
     }
-    public TestState(@NotNull UniqueIdentifier linearId, @NotNull Party owner, @NotNull Party provider, @NotNull Party cloneProvider, String stringValue, Integer intValue) {
+    public TestState(@NotNull UniqueIdentifier linearId, @NotNull Party owner, @NotNull Party provider, @NotNull Party cloneProvider, @NotNull String stringValue, @NotNull Integer intValue) {
         this.linearId = linearId;
         this.owner = owner;
         this.provider = provider;
@@ -57,7 +57,7 @@ public class TestState implements LinearState {
         this.intValue = intValue;
         this.amount = CHF(intValue);
     }
-    public TestState(@NotNull UniqueIdentifier linearId, @NotNull Party owner, @NotNull Party provider, String stringValue, Integer intValue) {
+    public TestState(@NotNull UniqueIdentifier linearId, @NotNull Party owner, @NotNull Party provider, @NotNull String stringValue, @NotNull Integer intValue) {
         this.linearId = linearId;
         this.owner = owner;
         this.provider = provider;

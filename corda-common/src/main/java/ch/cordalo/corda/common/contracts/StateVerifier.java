@@ -9,8 +9,7 @@ import net.corda.core.transactions.SignedTransaction;
 import org.jetbrains.annotations.NotNull;
 
 import java.security.PublicKey;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -212,6 +211,41 @@ public class StateVerifier {
                                    String name2, Function<ContractState, ? extends AbstractParty> party2Mapper
     ) { return new SameParty(this, name1, party1Mapper, name2, party2Mapper).verify(); }
 
+    public <T extends ContractState> StateVerifier isEmpty(Collection<Function<T, Object>> emptyMappers) {
+        return new IsEmpty(this, emptyMappers).verify();
+    }
+    public <T extends ContractState> StateVerifier isEmpty(Function<T, Object> emptyMapper, String text) {
+        return new IsEmpty(this, emptyMapper, text).verify();
+    }
+    public <T extends ContractState> StateVerifier isEmpty(Function<T, Object> ...emptyMapper) {
+        return new IsEmpty(this, Arrays.asList(emptyMapper)).verify();
+    }
+
+
+    public <T extends ContractState> StateVerifier isNotEmpty(Collection<Function<T, Object>> emptyMappers) {
+        return new IsNotEmpty(this, emptyMappers).verify();
+    }
+    public <T extends ContractState> StateVerifier isNotEmpty(Function<T, Object> emptyMapper, String text) {
+        return new IsNotEmpty(this, emptyMapper, text).verify();
+    }
+    public <T extends ContractState> StateVerifier isNotEmpty(Function<T, Object> ...emptyMapper) {
+        return new IsNotEmpty(this, Arrays.asList(emptyMapper)).verify();
+    }
+
+
+    public <T extends ContractState> StateVerifier isEqual(Function<T, Object> firstMapper, Function<T, Object> secondMapper, String text) {
+        return new IsEqual(this, firstMapper, secondMapper, text).verify();
+    }
+    public <T extends ContractState> StateVerifier isEqual(Function<T, Object> firstMapper, Function<T, Object> secondMapper) {
+        return new IsEqual(this, firstMapper, secondMapper).verify();
+    }
+    public <T extends ContractState> StateVerifier isNotEqual(Function<T, Object> firstMapper, Function<T, Object> secondMapper, String text) {
+        return new IsNotEqual(this, firstMapper, secondMapper, text).verify();
+    }
+    public <T extends ContractState> StateVerifier isNotEqual(Function<T, Object> firstMapper, Function<T, Object> secondMapper) {
+        return new IsNotEqual(this, firstMapper, secondMapper).verify();
+    }
+
     class Signers extends StateVerifier {
 
         private Function<ContractState, ? extends AbstractParty> mapper;
@@ -392,6 +426,152 @@ public class StateVerifier {
             return this;
         }
     }
+    abstract class Expression extends One {
+        protected Expression(StateVerifier parent) {  super(parent); }
+        protected Expression(StateVerifier parent, String text) {  super(parent, text); }
+        @Override
+        protected StateVerifier verify() {
+            this.evaluate(object());
+            return this;
+        }
+        public <T extends  ContractState> T object() {
+            return super.object();
+        }
+        public abstract <T extends  ContractState> void evaluate(T state);
+    }
+    class IsEmpty<T extends ContractState> extends Expression {
+        private final Collection<Function<T, Object>> emptyMappers;
+
+        public IsEmpty(StateVerifier stateVerifier, Collection<Function<T, Object>> emptyMappers) {
+            super(stateVerifier);
+            this.emptyMappers = emptyMappers;
+        }
+        public IsEmpty(StateVerifier stateVerifier, Function<T, Object> ...emptyMappers) {
+            super(stateVerifier);
+            this.emptyMappers = Arrays.asList(emptyMappers);
+        }
+        public IsEmpty(StateVerifier stateVerifier, Function<T, Object> emptyMapper, String text) {
+            super(stateVerifier, text);
+            this.emptyMappers = Collections.singletonList(emptyMapper);
+        }
+        public IsEmpty(StateVerifier stateVerifier, Function<T, Object> emptyMapper) {
+            super(stateVerifier);
+            this.emptyMappers = Collections.singletonList(emptyMapper);
+        }
+        public <T extends  ContractState> void evaluate(T state) {
+            requireThat(req -> {
+                for(Function<? extends ContractState, Object> mapper : this.emptyMappers) {
+                    Object value = mapper.apply(this.object());
+                    if (value instanceof String) {
+                        req.using(s("field " + mapper.toString() + " must be null or empty"),
+                                value == null || ((String) value).isEmpty());
+                    } else {
+                        req.using(s("field " + mapper.toString() + " must be null"),
+                                value == null);
+                    }
+                }
+                return null;
+            });
+        }
+    }
+
+    class IsNotEmpty<T extends ContractState> extends Expression {
+        private final Collection<Function<T, Object>> notEmptyMappers;
+
+        public IsNotEmpty(StateVerifier stateVerifier, Collection<Function<T, Object>> notEmptyMappers) {
+            super(stateVerifier);
+            this.notEmptyMappers = notEmptyMappers;
+        }
+        public IsNotEmpty(StateVerifier stateVerifier, Function<T, Object> ...notEmptyMappers) {
+            super(stateVerifier);
+            this.notEmptyMappers = Arrays.asList(notEmptyMappers);
+        }
+        public IsNotEmpty(StateVerifier stateVerifier, Function<T, Object> notEmptyMapper, String text) {
+            super(stateVerifier, text);
+            this.notEmptyMappers = Collections.singletonList(notEmptyMapper);
+        }
+        public IsNotEmpty(StateVerifier stateVerifier, Function<T, Object> notEmptyMapper) {
+            super(stateVerifier);
+            this.notEmptyMappers = Collections.singletonList(notEmptyMapper);
+        }
+        public <T extends  ContractState> void evaluate(T state) {
+            requireThat(req -> {
+                for(Function<? extends ContractState, Object> mapper : this.notEmptyMappers) {
+                    Object value = mapper.apply(this.object());
+                    req.using(s("field " + mapper.toString() + " cannot be null"),
+                            value != null);
+                    if (value instanceof String) {
+                        req.using(s("field " + mapper.toString() + " cannot be empty"),
+                                !((String) value).isEmpty());
+                    }
+                }
+                return null;
+            });
+        }
+    }
+
+
+    class IsEqual<T extends ContractState> extends Expression {
+        private final Function<T, Object> firstMapping;
+        private final Function<T, Object> secondMapping;
+
+        public IsEqual(StateVerifier stateVerifier, Function<T, Object> firstMapping, Function<T, Object> secondMapping) {
+            super(stateVerifier);
+            this.firstMapping = firstMapping;
+            this.secondMapping = secondMapping;
+        }
+        public IsEqual(StateVerifier stateVerifier, Function<T, Object> firstMapping, Function<T, Object> secondMapping, String text) {
+            super(stateVerifier, text);
+            this.firstMapping = firstMapping;
+            this.secondMapping = secondMapping;
+        }
+        public <T extends  ContractState> void evaluate(T state) {
+            requireThat(req -> {
+                Object inputVal = firstMapping.apply(this.object());
+                Object outputVal = secondMapping.apply(this.object());
+                if (inputVal != null) {
+                    req.using("fields must be the same",
+                            inputVal.equals(outputVal));
+                } else {
+                    req.using("fields must be empty for both",
+                            outputVal == null);
+                }
+                return null;
+            });
+        }
+    }
+
+
+    class IsNotEqual<T extends ContractState> extends Expression {
+        private final Function<T, Object> firstMapping;
+        private final Function<T, Object> secondMapping;
+
+        public IsNotEqual(StateVerifier stateVerifier, Function<T, Object> firstMapping, Function<T, Object> secondMapping) {
+            super(stateVerifier);
+            this.firstMapping = firstMapping;
+            this.secondMapping = secondMapping;
+        }
+        public IsNotEqual(StateVerifier stateVerifier, Function<T, Object> firstMapping, Function<T, Object> secondMapping, String text) {
+            super(stateVerifier, text);
+            this.firstMapping = firstMapping;
+            this.secondMapping = secondMapping;
+        }
+        public <T extends  ContractState> void evaluate(T state) {
+            requireThat(req -> {
+                Object inputVal = firstMapping.apply(this.object());
+                Object outputVal = secondMapping.apply(this.object());
+                if (inputVal != null) {
+                    req.using("fields must be different",
+                            !inputVal.equals(outputVal));
+                } else {
+                    req.using("fields must be different",
+                            outputVal != null);
+                }
+                return null;
+            });
+        }
+    }
+
     class OneClass<T> extends StateList<T> {
         protected OneClass(StateVerifier parent, Class<T> stateClass) {  super(parent, stateClass); }
 
