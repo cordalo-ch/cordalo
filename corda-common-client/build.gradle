@@ -21,17 +21,9 @@ dependencies {
     }
     compile("org.springframework.boot:spring-boot-devtools:$spring_boot_version")
 
-    compile("org.webjars:webjars-locator-core:0.38")
-    compile("org.webjars:sockjs-client:1.1.2")
-    compile("org.webjars:stomp-websocket:2.3.3-1")
-    compile("org.webjars:bootstrap:4.3.1")
-    compile("org.webjars:jquery:3.4.1")
-
-
     compile "org.apache.logging.log4j:log4j-slf4j-impl:${log4j_version}"
     compile "org.apache.logging.log4j:log4j-web:${log4j_version}"
     compile "org.slf4j:jul-to-slf4j:$slf4j_version"
-
 }
 
 jar {
