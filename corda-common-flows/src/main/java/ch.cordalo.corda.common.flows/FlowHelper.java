@@ -10,6 +10,7 @@ import net.corda.core.node.services.Vault;
 import net.corda.core.node.services.vault.PageSpecification;
 import net.corda.core.node.services.vault.QueryCriteria;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class FlowHelper<T extends ContractState> {
@@ -42,6 +43,28 @@ public class FlowHelper<T extends ContractState> {
             return null;
         } else {
             return tPage.getStates();
+        }
+    }
+    @Suspendable
+    public List<StateAndRef<T>> getLastStatesByCriteria(Class<T> stateClass, QueryCriteria queryCriteria, int count) {
+        Vault.Page<T> tPage = this.serviceHub.getVaultService().queryBy(stateClass, queryCriteria, new PageSpecification(1, count));
+        if (tPage.getTotalStatesAvailable() <= count) {
+            return tPage.getStates();
+        } else {
+            int page = (int)tPage.getTotalStatesAvailable() / count;
+            int lastPageSize = (int)tPage.getTotalStatesAvailable() % count;
+            if (lastPageSize == 0) {
+                // last page count = count
+                return this.getStatesByCriteria(stateClass, queryCriteria, new PageSpecification(page, count));
+            } else {
+                List<StateAndRef<T>> list = new ArrayList<>();
+                list.addAll(
+                        this.getStatesByCriteria(stateClass, queryCriteria, new PageSpecification(page, count)).subList(count - lastPageSize - 1, count));
+                page++;
+                list.addAll(
+                        this.getStatesByCriteria(stateClass, queryCriteria, new PageSpecification(page, count)));
+                return list;
+            }
         }
     }
 
