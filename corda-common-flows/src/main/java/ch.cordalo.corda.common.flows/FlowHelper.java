@@ -7,6 +7,7 @@ import net.corda.core.contracts.StateAndRef;
 import net.corda.core.contracts.UniqueIdentifier;
 import net.corda.core.node.ServiceHub;
 import net.corda.core.node.services.Vault;
+import net.corda.core.node.services.vault.PageSpecification;
 import net.corda.core.node.services.vault.QueryCriteria;
 
 import java.util.List;
@@ -21,42 +22,77 @@ public class FlowHelper<T extends ContractState> {
     }
 
     @Suspendable
+    public StateAndRef<T> getLastStateByCriteria(Class<T> stateClass, QueryCriteria queryCriteria) {
+        PageSpecification pageSpec = new PageSpecification(1, 1);
+        Vault.Page<T> tPage = this.serviceHub.getVaultService().queryBy(stateClass, queryCriteria, pageSpec);
+        if (tPage.getTotalStatesAvailable() == 0) {
+            return null;
+        } else if (tPage.getTotalStatesAvailable() == 1) {
+            return tPage.getStates().get(0);
+        } else {
+            pageSpec = new PageSpecification((int)tPage.getTotalStatesAvailable(), 1);
+            tPage = this.serviceHub.getVaultService().queryBy(stateClass, queryCriteria, pageSpec);
+            return tPage.getStates().get(0);
+        }
+    }
+    @Suspendable
+    public List<StateAndRef<T>> getStatesByCriteria(Class<T> stateClass, QueryCriteria queryCriteria, PageSpecification pageSpec) {
+        Vault.Page<T> tPage = this.serviceHub.getVaultService().queryBy(stateClass, queryCriteria, pageSpec);
+        if (tPage.getTotalStatesAvailable() == 0) {
+            return null;
+        } else {
+            return tPage.getStates();
+        }
+    }
+
+
+    @Suspendable
     public StateAndRef<T> getLastStateByLinearId(Class<T> stateClass, UniqueIdentifier linearId) {
         QueryCriteria queryCriteria = new QueryCriteria.LinearStateQueryCriteria(
                 null,
                 ImmutableList.of(linearId),
                 Vault.StateStatus.ALL,
                 null);
-        List<StateAndRef<T>> data = this.serviceHub.getVaultService().queryBy(stateClass, queryCriteria).getStates();
-        return data != null && data.size() > 0 ? data.get(data.size()-1) : null;
+        return this.getLastStateByCriteria(stateClass, queryCriteria);
     }
 
     @Suspendable
     public List<StateAndRef<T>> getAllStatesByLinearId(Class<T> stateClass, UniqueIdentifier linearId) {
+        return this.getAllStatesByLinearId(stateClass, linearId, new PageSpecification(1, 50));
+    }
+    @Suspendable
+    public List<StateAndRef<T>> getAllStatesByLinearId(Class<T> stateClass, UniqueIdentifier linearId, PageSpecification pageSpec) {
         QueryCriteria queryCriteria = new QueryCriteria.LinearStateQueryCriteria(
                 null,
                 ImmutableList.of(linearId),
                 Vault.StateStatus.ALL,
                 null);
-        return this.serviceHub.getVaultService().queryBy(stateClass, queryCriteria).getStates();
+        return this.getStatesByCriteria(stateClass, queryCriteria, pageSpec);
     }
 
     @Suspendable
     public StateAndRef<T> getLastState(Class<T> stateClass) {
         QueryCriteria queryCriteria = new QueryCriteria.VaultQueryCriteria(Vault.StateStatus.UNCONSUMED);
-        List<StateAndRef<T>> data = this.serviceHub.getVaultService().queryBy(stateClass, queryCriteria).getStates();
-        return data != null && data.size() > 0 ? data.get(data.size()-1) : null;
+        return this.getLastStateByCriteria(stateClass, queryCriteria);
     }
 
     @Suspendable
     public List<StateAndRef<T>> getUnconsumed(Class<T> stateClass) {
+        return this.getUnconsumed(stateClass, new PageSpecification(1, 50));
+    }
+    @Suspendable
+    public List<StateAndRef<T>> getUnconsumed(Class<T> stateClass, PageSpecification pageSpec) {
         QueryCriteria queryCriteria = new QueryCriteria.VaultQueryCriteria(Vault.StateStatus.UNCONSUMED);
-        return this.serviceHub.getVaultService().queryBy(stateClass, queryCriteria).getStates();
+        return this.getStatesByCriteria(stateClass, queryCriteria, pageSpec);
     }
     @Suspendable
     public List<StateAndRef<T>> getConsumed(Class<T> stateClass) {
+        return this.getConsumed(stateClass, new PageSpecification(1, 50));
+    }
+    @Suspendable
+    public List<StateAndRef<T>> getConsumed(Class<T> stateClass, PageSpecification pageSpec) {
         QueryCriteria queryCriteria = new QueryCriteria.VaultQueryCriteria(Vault.StateStatus.CONSUMED);
-        return this.serviceHub.getVaultService().queryBy(stateClass, queryCriteria).getStates();
+        return this.getStatesByCriteria(stateClass, queryCriteria, pageSpec);
     }
 
 }

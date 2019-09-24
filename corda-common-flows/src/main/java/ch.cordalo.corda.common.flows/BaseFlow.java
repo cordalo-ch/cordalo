@@ -90,9 +90,9 @@ public abstract class BaseFlow extends FlowLogic<SignedTransaction> {
 
         @Suspendable
     private SignedTransaction signSyncCollectAndFinalize(boolean syncIdentities, List<AbstractParty> counterparties, TransactionBuilder transactionBuilder) throws FlowException {
-        counterparties = new ArrayList<>(Sets.newLinkedHashSet(counterparties));;
-        if (counterparties.contains(this.getOurIdentity())) {
-            counterparties.remove(this.getOurIdentity());
+        List<AbstractParty> counterPartiesWithoutMe = new ArrayList<>(Sets.newLinkedHashSet(counterparties));;
+        if (counterPartiesWithoutMe.contains(this.getOurIdentity())) {
+            counterPartiesWithoutMe.remove(this.getOurIdentity());
         }
         ProgressTracker tracker = this.getProgressTracker();
         tracker.setCurrentStep(VERIFYING);
@@ -105,10 +105,11 @@ public abstract class BaseFlow extends FlowLogic<SignedTransaction> {
         Integer otherPartiesFlowVersion = 2;
         Set<FlowSession> otherPartySessions = new LinkedHashSet<>();
 
-        //sync and collect counterparties only if counterparties exist
-        if (counterparties != null && !counterparties.isEmpty()) {
-            // prepare counterparties flow sessions to sync and / or collec
-            for(AbstractParty counterparty : counterparties) {
+        //sync and collect counterPartiesWithoutMe only if counterPartiesWithoutMe exist
+        if (counterPartiesWithoutMe != null && !counterPartiesWithoutMe.isEmpty()) {
+            // prepare counterPartiesWithoutMe flow sessions to sync and / or collec
+            for (int i = 0; i < counterPartiesWithoutMe.size(); i++) {
+                AbstractParty counterparty = counterPartiesWithoutMe.get(i);
                 if (counterparty instanceof Party) {
                     FlowSession flowSession = initiateFlow((Party)counterparty);
                     otherPartiesFlowVersion = flowSession.getCounterpartyFlowInfo().getFlowVersion();
@@ -122,7 +123,7 @@ public abstract class BaseFlow extends FlowLogic<SignedTransaction> {
                 subFlow(new IdentitySyncFlow.Send(otherPartySessions, signedTx.getTx(), SYNCING.childProgressTracker()));
             }
 
-            // Send the state to all counterparties, and receive it back with their signature.
+            // Send the state to all counterPartiesWithoutMe, and receive it back with their signature.
             tracker.setCurrentStep(COLLECTING);
             final SignedTransaction fullySignedTx = subFlow(
                     new CollectSignaturesFlow(
