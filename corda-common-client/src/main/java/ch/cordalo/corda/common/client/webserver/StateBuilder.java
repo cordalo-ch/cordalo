@@ -29,6 +29,7 @@ public class StateBuilder<T extends LinearState> {
         }
         return newStates;
     }
+
     public StateBuilder(List<T> states, BodyBuilder builder) {
         this.states = wrapIntoStateAndLinks(states);
         this.builder = builder;
@@ -50,9 +51,11 @@ public class StateBuilder<T extends LinearState> {
         protected URI getRoot() throws URISyntaxException {
             return new URI(request.getScheme(), null, request.getServerName(), request.getServerPort(), null, null, null);
         }
+
         protected URI createURI(String subpath) throws URISyntaxException {
-            return this.getRoot().resolve(this.mappingPath+this.bashPath+"/"+subpath);
+            return this.getRoot().resolve(this.mappingPath + this.bashPath + "/" + subpath);
         }
+
         public URI self(String modelPlural, UniqueIdentifier id) throws URISyntaxException {
             return this.createURI(modelPlural + "/" + id.getId().toString());
         }
@@ -62,9 +65,10 @@ public class StateBuilder<T extends LinearState> {
                     action,
                     createURI(modelPlural + "/" + id.getId().toString() + "/" + action));
         }
+
         public Map<String, URI> links(String modelPlural, UniqueIdentifier id, List<String> actions) throws URISyntaxException {
             Map<String, URI> map = new LinkedHashMap<>();
-            for (String action: actions) {
+            for (String action : actions) {
                 map.put(
                         action,
                         createURI(modelPlural + "/" + id.getId().toString() + "/" + action)
@@ -72,9 +76,10 @@ public class StateBuilder<T extends LinearState> {
             }
             return map;
         }
+
         public Map<String, URI> links(String modelPlural, UniqueIdentifier id, String[] actions) throws URISyntaxException {
             Map<String, URI> map = new LinkedHashMap<>();
-            for(String action : actions) {
+            for (String action : actions) {
                 map.put(
                         action,
                         createURI(modelPlural + "/" + id.getId().toString() + "/" + action)
@@ -90,12 +95,11 @@ public class StateBuilder<T extends LinearState> {
     }
 
 
-
     public StateBuilder<T> link(String modelPlural, String action) throws URISyntaxException {
         if (apiHelper != null) {
             for (StateAndLinks<T> stateAndLink : this.states) {
                 stateAndLink.link(
-                    apiHelper.link(modelPlural, stateAndLink.getState().getLinearId(), action));
+                        apiHelper.link(modelPlural, stateAndLink.getState().getLinearId(), action));
             }
         }
         return this;
@@ -116,20 +120,22 @@ public class StateBuilder<T extends LinearState> {
         if (apiHelper != null) {
             for (StateAndLinks<T> stateAndLink : this.states) {
                 stateAndLink.links(
-                    apiHelper.links(modelPlural, stateAndLink.getState().getLinearId(), actions));
+                        apiHelper.links(modelPlural, stateAndLink.getState().getLinearId(), actions));
             }
         }
         return this;
     }
+
     public StateBuilder<T> links(String modelPlural, List<String> actions) throws URISyntaxException {
         if (apiHelper != null) {
             for (StateAndLinks<T> stateAndLink : this.states) {
                 stateAndLink.links(
-                    apiHelper.links(modelPlural, stateAndLink.getState().getLinearId(), actions));
+                        apiHelper.links(modelPlural, stateAndLink.getState().getLinearId(), actions));
             }
         }
         return this;
     }
+
     public StateBuilder<T> self(String modelPlural) throws URISyntaxException {
         if (apiHelper != null) {
             for (StateAndLinks<T> stateAndLink : this.states) {
@@ -143,6 +149,7 @@ public class StateBuilder<T extends LinearState> {
     public ResponseEntity<StateAndLinks<T>> build() {
         return this.builder.body(this.states.get(0));
     }
+
     public ResponseEntity<List<StateAndLinks<T>>> buildList() {
         return this.builder.body(this.states);
     }
