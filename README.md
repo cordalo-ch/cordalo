@@ -27,3 +27,19 @@ ServiceState service = verifier
       
 `````
 
+# Developer environment setup
+
+Install in that order:
+* Java JDK 1.8
+* Gradle https://gradle.org/install/
+* Ruby https://www.ruby-lang.org/en/
+* rubyGen https://rubygems.org/pages/download should be enough with  
+    ```gem update --system```
+* https://rubygems.org/gems/travis should be enough with  
+    ```gem install travis```
+
+# Annexes
+## How to create the release instruction in .travis.yml
+To create the release part in your .travis.yml file, run the following command in the root of your project:
+  ```travis setup releases```
+You will be prompted for your GitHub username and password. This will create the deploy part in your .travis.yml file
