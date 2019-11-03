@@ -191,9 +191,6 @@ apply plugin: 'java'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-group 'ch.cordalo'
-version '0.4-SNAPSHOT'
-
 dependencies {
     compile "$corda_release_group:corda-core:$corda_release_version"
     compile "$corda_release_group:corda-jackson:$corda_release_version"
