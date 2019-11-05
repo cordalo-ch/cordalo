@@ -20,14 +20,16 @@ public class TestBaseFlowTests extends CordaloTestEnvironment {
                 true,
                 TestBaseFlow.CreateResponder.class,
                 TestBaseFlow.UpdateProviderResponder.class
-
         );
     }
+
     @After
-    public void tearDown() { super.tearDown(); }
+    public void tearDown() {
+        super.tearDown();
+    }
 
     @Test
-    public void testCreate()  {
+    public void testCreate() {
         try {
             TestBaseFlow.Create flow = new TestBaseFlow.Create(testNode2.party, "my string", 42);
             SignedTransaction signedTransaction = null;

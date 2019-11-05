@@ -33,6 +33,7 @@ public abstract class BaseFlow extends FlowLogic<SignedTransaction> {
         transactionBuilder.addCommand(command, uniqueSigners);
         return transactionBuilder;
     }
+
     protected TransactionBuilder getTransactionBuilderSignedByParties(List<AbstractParty> parties, CommandData command) throws FlowException {
         List<AbstractParty> uniqueParties = new ArrayList<>(Sets.newLinkedHashSet(parties));
         TransactionBuilder transactionBuilder = new TransactionBuilder();
@@ -68,6 +69,7 @@ public abstract class BaseFlow extends FlowLogic<SignedTransaction> {
         }
         return signSyncCollectAndFinalize(set, transactionBuilder);
     }
+
     @Suspendable
     protected SignedTransaction signSyncCollectAndFinalize(List<AbstractParty> counterparties, TransactionBuilder transactionBuilder) throws FlowException {
         return signSyncCollectAndFinalize(true, counterparties, transactionBuilder);
@@ -88,9 +90,10 @@ public abstract class BaseFlow extends FlowLogic<SignedTransaction> {
         return signSyncCollectAndFinalize(false, counterparties, transactionBuilder);
     }
 
-        @Suspendable
+    @Suspendable
     private SignedTransaction signSyncCollectAndFinalize(boolean syncIdentities, List<AbstractParty> counterparties, TransactionBuilder transactionBuilder) throws FlowException {
-        List<AbstractParty> counterPartiesWithoutMe = new ArrayList<>(Sets.newLinkedHashSet(counterparties));;
+        List<AbstractParty> counterPartiesWithoutMe = new ArrayList<>(Sets.newLinkedHashSet(counterparties));
+        ;
         if (counterPartiesWithoutMe.contains(this.getOurIdentity())) {
             counterPartiesWithoutMe.remove(this.getOurIdentity());
         }
@@ -111,7 +114,7 @@ public abstract class BaseFlow extends FlowLogic<SignedTransaction> {
             for (int i = 0; i < counterPartiesWithoutMe.size(); i++) {
                 AbstractParty counterparty = counterPartiesWithoutMe.get(i);
                 if (counterparty instanceof Party) {
-                    FlowSession flowSession = initiateFlow((Party)counterparty);
+                    FlowSession flowSession = initiateFlow((Party) counterparty);
                     otherPartiesFlowVersion = flowSession.getCounterpartyFlowInfo().getFlowVersion();
                     otherPartySessions.add(flowSession);
                 }
@@ -161,7 +164,7 @@ public abstract class BaseFlow extends FlowLogic<SignedTransaction> {
     }
 
     @Suspendable
-    protected <T extends ContractState>T getStateByRef(StateAndRef<T> ref){
+    protected <T extends ContractState> T getStateByRef(StateAndRef<T> ref) {
         return ref.getState().getData();
     }
 

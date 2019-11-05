@@ -7,12 +7,13 @@ import net.corda.core.contracts.ContractState;
 import net.corda.core.crypto.SecureHash;
 import net.corda.core.flows.*;
 
-abstract public class ResponderBaseFlow<T extends ContractState>  extends FlowLogic<Unit> {
+abstract public class ResponderBaseFlow<T extends ContractState> extends FlowLogic<Unit> {
     protected final FlowSession otherFlow;
 
     public ResponderBaseFlow(FlowSession otherFlow) {
         this.otherFlow = otherFlow;
     }
+
     @Suspendable
     protected Unit receiveIdentitiesCounterpartiesNoTxChecking() throws FlowException {
         if (otherFlow.getCounterparty() != null) {
@@ -26,6 +27,7 @@ abstract public class ResponderBaseFlow<T extends ContractState>  extends FlowLo
         }
         return Unit.INSTANCE;
     }
+
     @Suspendable
     protected Unit receiveCounterpartiesNoTxChecking() throws FlowException {
         if (otherFlow.getCounterpartyFlowInfo().getFlowVersion() >= 2) {
