@@ -561,10 +561,10 @@ public class StateVerifier {
                 Object inputVal = firstMapping.apply(this.object());
                 Object outputVal = secondMapping.apply(this.object());
                 if (inputVal != null) {
-                    req.using("fields must be different",
+                    req.using(this.s("fields must be different"),
                             !inputVal.equals(outputVal));
                 } else {
-                    req.using("fields must be different",
+                    req.using(this.s("fields must be different"),
                             outputVal != null);
                 }
                 return null;
