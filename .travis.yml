@@ -17,7 +17,7 @@ script:
 after_success:
 - "./deploy.sh"
 before_deploy:
-  - export project_version=$(gradle properties -q | grep "^version:" | awk '{print $2}')
+  - export project_version=$(gradle properties -q | grep "version:" | awk '{print $2}' | tr -d '[:space:]')
 deploy:
   provider: releases
   api_key:
