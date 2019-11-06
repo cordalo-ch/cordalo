@@ -4,8 +4,13 @@ import ch.cordalo.corda.common.test.CordaNodeEnvironment;
 import ch.cordalo.corda.common.test.CordaTestNetwork;
 import com.google.common.collect.ImmutableList;
 import net.corda.core.flows.FlowLogic;
+import net.corda.testing.node.TestCordapp;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class CordaloTestEnvironment {
 
@@ -18,8 +23,7 @@ public class CordaloTestEnvironment {
         return ImmutableList.of(
                 "ch.cordalo.corda.common.contracts");
     }
-
-    public void setup(boolean withNodes, Class<? extends FlowLogic>... responderClasses) {
+    public void setup(boolean withNodes, Class<? extends FlowLogic> ...responderClasses) {
         this.network = new CordaTestNetwork(
                 withNodes,
                 this.getCordappPackageNames(),
@@ -33,8 +37,6 @@ public class CordaloTestEnvironment {
 
     public void tearDown() {
         if (network != null) network.stopNodes();
-    }
-
-    ;
+    };
 
 }

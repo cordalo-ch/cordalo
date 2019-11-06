@@ -38,25 +38,8 @@ Install in that order:
 * https://rubygems.org/gems/travis should be enough with  
     ```gem install travis```
 
-# How to create a new release
-For the maintainer of the project Cordalo
-```
- travis login
- .travis//trigger-release.sh   
-```
-
 # Annexes
 ## How to create the release instruction in .travis.yml
 To create the release part in your .travis.yml file, run the following command in the root of your project:
   ```travis setup releases```
 You will be prompted for your GitHub username and password. This will create the deploy part in your .travis.yml file
-
-## project CI/CD initial setup
-
-### Gradle wrapper
-If not there already, make sure to enable the gradle wrapper, so Travis does not have to guess about the version of Gradle to use.
-```gradle wrapper```
-This creates a gradlew and gradlew.bat files in folder gradle
-###  Enable Gradle to create a full pom file that Maven Central will approve of
-In gradle.properties, on top of the group and version, replace the values accordingly
-

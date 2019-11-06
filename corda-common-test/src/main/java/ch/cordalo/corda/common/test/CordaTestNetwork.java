@@ -32,7 +32,6 @@ public class CordaTestNetwork {
             network = new MockNetwork(new MockNetworkParameters(testCordapps));
         }
     }
-
     private CordaNodeEnvironment startNode(CordaNodeEnvironment env) {
         env.startWith(this);
         nodes.put(env.name, env);
@@ -42,11 +41,9 @@ public class CordaTestNetwork {
     public List<String> getCordappPackageNames() {
         return this.testPackageNames;
     }
-
     public List<TestCordapp> getCordapps() {
         return this.testCordapps;
     }
-
     public MockNetwork getNetwork() {
         return this.network;
     }
@@ -57,7 +54,7 @@ public class CordaTestNetwork {
 
     public CordaNodeEnvironment startEnv(String name, String x500) {
         return this.startNode(
-                new CordaNodeEnvironment(this, name, x500));
+                new CordaNodeEnvironment(this,name, x500));
     }
 
     public void startNodes() {
