@@ -16,6 +16,9 @@ public class CommandVerifierTests extends CordaloTestEnvironment {
         this.setup(false);
     }
 
+    private TestState newTest() {
+        return new TestState(new UniqueIdentifier(), testNode1.party, testNode2.party, testNode2.party, "string", 100);
+    }
     private TestState newTest(String stringValue) {
         return new TestState(new UniqueIdentifier(), testNode1.party, testNode2.party, testNode2.party, stringValue, 100);
     }
@@ -30,6 +33,8 @@ public class CommandVerifierTests extends CordaloTestEnvironment {
             return null;
         });
     }
+
+
 
     @After
     public void tearDown() {

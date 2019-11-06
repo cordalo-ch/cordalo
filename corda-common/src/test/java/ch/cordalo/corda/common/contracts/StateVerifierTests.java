@@ -19,14 +19,14 @@ public class StateVerifierTests extends CordaloTestEnvironment {
         this.setup(false);
     }
 
+
+
     private TestState newTest() {
         return new TestState(new UniqueIdentifier(), testNode1.party, testNode2.party, testNode2.party, "string", 100);
     }
-
     private TestState newTest(String stringValue) {
         return new TestState(new UniqueIdentifier(), testNode1.party, testNode2.party, testNode2.party, stringValue, 100);
     }
-
     private TestState newJson(String json) {
         String json2 = JsonHelper.convertJsonToString(JsonHelper.convertStringToJson(json));
         return new TestState(new UniqueIdentifier(), testNode1.party, testNode2.party, testNode2.party, json2, 100);
@@ -36,12 +36,14 @@ public class StateVerifierTests extends CordaloTestEnvironment {
         return new TestState(new UniqueIdentifier(), testNode1.party, testNode2.party, testNode2.party, stringValue, intValue);
     }
 
+
     @Test
     public void simpleTestObject() {
         TestState test = newTest();
         Assert.assertNotNull("test not null", test);
         test.withValues("string-new", 42);
     }
+
 
     @Test
     public void simpleJsonObject() {
@@ -53,9 +55,9 @@ public class StateVerifierTests extends CordaloTestEnvironment {
     public void simpleJsonObjectAccess() {
         TestState test = newJson("{\"testS\":\"string\", \"testB\" : true, \"testO\" : {\"int\" : 100} }");
         Map<String, Object> map = JsonHelper.convertStringToJson(test.getStringValue());
-        Assert.assertEquals("testS = string", "string", JsonHelper.getDataValue(map, "testS"));
-        Assert.assertEquals("testB = true", "true", JsonHelper.getDataValue(map, "testB"));
-        Assert.assertEquals("testO.int = 100", "100", JsonHelper.getDataValue(map, "testO.int"));
+        Assert.assertEquals("testS = string","string", JsonHelper.getDataValue(map, "testS"));
+        Assert.assertEquals("testB = true","true", JsonHelper.getDataValue(map, "testB"));
+        Assert.assertEquals("testO.int = 100","100", JsonHelper.getDataValue(map, "testO.int"));
     }
 
     @Test
@@ -63,9 +65,9 @@ public class StateVerifierTests extends CordaloTestEnvironment {
         TestState test = newJson("{\"testS\":\"string\", \"testB\" : true, \"testO\" : {\"int\" : 100} }");
         Map<String, Object> map = JsonHelper.convertStringToJson(test.getStringValue());
         Map<String, Object> filterMap = JsonHelper.filterByGroupId(map, new String[]{"testO"});
-        Assert.assertEquals("testS = ", "", JsonHelper.getDataValue(filterMap, "testS"));
-        Assert.assertEquals("testB = ", "", JsonHelper.getDataValue(filterMap, "true"));
-        Assert.assertEquals("testO.int = 100", "100", JsonHelper.getDataValue(filterMap, "testO.int"));
+        Assert.assertEquals("testS = ","", JsonHelper.getDataValue(filterMap, "testS"));
+        Assert.assertEquals("testB = ","", JsonHelper.getDataValue(filterMap, "true"));
+        Assert.assertEquals("testO.int = 100","100", JsonHelper.getDataValue(filterMap, "testO.int"));
     }
 
     @Test
@@ -106,6 +108,7 @@ public class StateVerifierTests extends CordaloTestEnvironment {
         });
     }
 
+
     @Test
     public void contract_create_multiple() {
         transaction(testNode1.ledgerServices, tx -> {
@@ -119,6 +122,7 @@ public class StateVerifierTests extends CordaloTestEnvironment {
         });
     }
 
+
     @Test
     public void contract_create_parties() {
         transaction(testNode1.ledgerServices, tx -> {
@@ -130,4 +134,9 @@ public class StateVerifierTests extends CordaloTestEnvironment {
         });
     }
 
+
+    @After
+    public void tearDown() {
+        super.tearDown();
+    }
 }
