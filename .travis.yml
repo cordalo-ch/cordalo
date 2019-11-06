@@ -13,9 +13,9 @@ env:
     - secure: "q4ngDsMWdJPr2FZK2vYO4WKAiZBc8pP+Er8BmD/7CJWMeRM1u/68F6hEwlxP0UP5nVpaCgPOf1kUKjEwd8NHvjgy3FsQYNNqSAfBuaUdKrMHpN5+GAkwm3HDyfuAkL+8hwdTtiwC54C4F/8DNHkc3n7NZJeOsAlnsfkBjJbXJ/V+VIwYyivnsCRuvE/PwfadJR2VPIgxCMhMGYDxsLEMOcVYBYr5ICs5ez9u85l7Qgjr9ZNfBCMbHkwB62HIbziIpDJgnOL5aGJqYuaTZ2RIizSTAWEfntBlJKmu4oyQCDGjHL38IYj6FeDePNbFbyJ5RwQdLufkoPwzuf0hpIktV5aA64XSBmDUzmFgpaPkhr/eZghzzVp0EY1khHpzBs4iVuf8s8df1AHgcgn+3tQRS2izbZfbtNjUxKltdtPyiSMIz1tFCXVw+Kf82pwhpopkl5k9t+90z3FdA6HUn8fTO9MNu/tXtKDVyTKmrPUK00khMgdShRGpJk+Q6Js351Be9sWJ9Kjx0Io40oBJHscVpyylpnduWRAuxKxbtdc1fNjDA+DatIc2+0JwtmbBhg5wX5OP8/HzDJi9h5Y1vzsa5WAvQFpyANjPc8jZ9vQtZod8C7SPm9i2wdK+knt8q6yJcuIo9u9qtb88qOOVGPOPKl2N6tIIROVsb5M+gSBtnAE="
     # COVERALLS_REPO_TOKEN, created with travis encrypt "COVERALLS_REPO_TOKEN=xxxxxx"
     - secure: "XglmCPkYT16wE3e0592NuOwu5eY31yCwGAUCHfT2YdEX1A3vnTJKNC9fVntbTQ1GXwwOkasERO0oOaf9sieKG2zNDJY2bFwSMuDNS/XmQNMbXLgRbxVgEfZoUU/R5tjh0mRtlKF6FrJaALM+giSLXc1Q3G6BU2k9N6WC7YV32uyREA/AB5o/NHVYKvl4hgO4Q22AhtdLqoLhdgtY4qB4LCY3KaBusx/6kMclG/BsEIArrO+458YQGS06e45POortmyK5KZuoCSlYh01uKwuP3mnUF5zyUBYIz5SRY6+4hEXWuEFH3vikMOm0ByQRbK6y8zz88jhpRNJ/70WHVyY3jMmHHs8r05vLzLPNVSAKhepwcI03a6w1cr1KWdmaf7mVVnwAfnDgI7r8G7hm83M6aFqHOTHnBK9RDyWMc/5ELIvYuqlG+waFR/mGUhV2jvtQvBusUCDv3pmlpFF1OxKSQY8zP/8bu0Wi1P9aBz4nM1+3DJyqabTStGv7mrTSlZKlhr9209frkExCmxnJfAaP9FDZz1gthgBQgObLgX1VtHMea8nLpFJ2rDVrIqYbn+cxCljmIcHwWT+bfuV0EgTOvUBRFTNzdbEcUydzRCMkPxjhOkMlsZMru1AwS/N0hd3+2GMSsIqtd4B/f0ZLFQzQatZyl8Pdc5qUJ5VWPlJrCrE="
-    - GPG_KEY_LOCATION=".travis/secret.gpg"
+    - GPG_KEY_LOCATION=".travis/secring.gpg"
     # destination file used in openssl aes-256-cbc -out ENCRYPTED_GPG_KEY_LOCATION
-    - ENCRYPTED_GPG_KEY_LOCATION=".travis/secret.gpg.enc"
+    - ENCRYPTED_GPG_KEY_LOCATION=".travis/secring.gpg.enc"
 
 #  The branches section lets Travis know which branches to build on. Use master and dev only.
 branches:
