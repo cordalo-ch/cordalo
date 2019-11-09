@@ -39,8 +39,13 @@ public class NodeRPCConnection implements AutoCloseable {
         JacksonSupport.createNonRpcMapper();
         NetworkHostAndPort rpcAddress = new NetworkHostAndPort(host, rpcPort);
         CordaRPCClient rpcClient = new CordaRPCClient(rpcAddress);
-        rpcConnection = rpcClient.start(username, password);
-        proxy = rpcConnection.getProxy();
+        try {
+            rpcConnection = rpcClient.start(username, password);
+            proxy = rpcConnection.getProxy();
+        } catch (Exception e) {
+            rpcConnection = null;
+            proxy = null;
+        }
     }
     public boolean isValid() {
         return this.proxy != null;
