@@ -47,6 +47,11 @@ allprojects {
     apply plugin: 'signing'
     apply plugin: 'net.saliman.cobertura'
 
+    group 'ch.cordalo'
+    version '0.5-SNAPSHOT'
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
     repositories {
         mavenLocal()
         jcenter()
@@ -152,9 +157,6 @@ sourceSets {
 apply plugin: 'java'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
-
-group 'ch.cordalo'
-version '0.5-SNAPSHOT'
 
 dependencies {
     compile "$corda_release_group:corda-core:$corda_release_version"

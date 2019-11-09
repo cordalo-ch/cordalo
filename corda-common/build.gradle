@@ -2,11 +2,7 @@ plugins {
     id 'java'
 }
 
-group 'ch.cordalo'
 archivesBaseName = "corda-common-contracts"
-version '0.4-SNAPSHOT'
-
-sourceCompatibility = 1.8
 
 description 'Testing utilities for Cordalo common'
 
