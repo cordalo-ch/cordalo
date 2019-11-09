@@ -33,13 +33,14 @@ public abstract class VaultChangeScheduler<T extends LinearState> {
 
     protected VaultChangeScheduler(NodeRPCConnection rpc, Class<T> typeOfT) {
         this.typeOfT = typeOfT;
-        if (rpc.proxy == null) {
+        if (rpc.getProxy() == null) {
             this.proxy = null;
             this.myLegalName = null;
+            logger.error("NodeRPC connection + proxy is not initialized (null)");
             return;
         }
-        this.proxy = rpc.proxy;
-        this.myLegalName = rpc.proxy.nodeInfo().getLegalIdentities().get(0).getName();
+        this.proxy = rpc.getProxy();
+        this.myLegalName = rpc.getProxy().nodeInfo().getLegalIdentities().get(0).getName();
 
     }
 

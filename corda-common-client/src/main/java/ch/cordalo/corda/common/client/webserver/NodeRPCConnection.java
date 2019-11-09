@@ -32,7 +32,7 @@ public class NodeRPCConnection implements AutoCloseable {
     private int rpcPort;
 
     private CordaRPCConnection rpcConnection;
-    CordaRPCOps proxy;
+    private CordaRPCOps proxy;
 
     @PostConstruct
     public void initialiseNodeRPCConnection() {
