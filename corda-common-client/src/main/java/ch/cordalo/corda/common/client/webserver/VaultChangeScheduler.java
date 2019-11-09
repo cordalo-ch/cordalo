@@ -46,7 +46,7 @@ public abstract class VaultChangeScheduler<T extends LinearState> {
     public void installVaultFeedAndSubscribeToTopic(String topicName) {
         if (proxy != null) {
             PageSpecification pageSpec = new PageSpecification(1, 1);
-            DataFeed<Vault.Page<T>, Vault.Update<T>> dataFeed = proxy.vaultTrackByWithPagingSpec(typeOfT, new QueryCriteria.VaultQueryCriteria(Vault.StateStatus.ALL), pageSpec);
+            DataFeed<Vault.Page<T>, Vault.Update<T>> dataFeed = proxy.vaultTrackByWithPagingSpec(typeOfT, new QueryCriteria.VaultQueryCriteria(), pageSpec);
             logger.info("Vault Update Feed :: {} - subscribed for {}", dateTimeFormatter.format(LocalDateTime.now()), this.typeOfT.getSimpleName());
             dataFeed.getUpdates().subscribe(
                     next -> {
