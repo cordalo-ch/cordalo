@@ -52,12 +52,13 @@ public abstract class VaultChangeScheduler<T extends LinearState> {
             dataFeed.getUpdates().subscribe(
                     next -> {
                         this.triggerChanged(topicName, typeOfT);
-                        logger.info("Vault Feed Updated :: {} - name={}", dateTimeFormatter.format(LocalDateTime.now()), this.typeOfT.getSimpleName());
+                        logger.info("Vault Feed Updated :: {} - name={} topic={}", dateTimeFormatter.format(LocalDateTime.now()), this.typeOfT.getSimpleName(), topicName);
                     },
                     error -> {
-                        logger.info("Vault Feed Exception :: {} - name={} - error={} - message={}",
+                        logger.info("Vault Feed Exception :: {} - name={} - topic={} - error={} - message={}",
                                 dateTimeFormatter.format(LocalDateTime.now()),
                                 this.typeOfT.getSimpleName(),
+                                topicName,
                                 error.getClass().getSimpleName(),
                                 error.getMessage());
                     },
