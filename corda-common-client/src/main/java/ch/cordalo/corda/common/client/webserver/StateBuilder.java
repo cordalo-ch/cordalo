@@ -53,31 +53,31 @@ public class StateBuilder<T extends LinearState> {
         protected URI createURI(String subpath) throws URISyntaxException {
             return this.getRoot().resolve(this.mappingPath+this.bashPath+"/"+subpath);
         }
-        public URI self(String modelPlural, UniqueIdentifier id) throws URISyntaxException {
-            return this.createURI(modelPlural + "/" + id.getId().toString());
+        public URI self(UniqueIdentifier id) throws URISyntaxException {
+            return this.createURI(id.getId().toString());
         }
 
-        public Map.Entry<String, URI> link(String modelPlural, UniqueIdentifier id, String action) throws URISyntaxException {
+        public Map.Entry<String, URI> link(UniqueIdentifier id, String action) throws URISyntaxException {
             return new AbstractMap.SimpleImmutableEntry<>(
                     action,
-                    createURI(modelPlural + "/" + id.getId().toString() + "/" + action));
+                    createURI(id.getId().toString() + "/" + action));
         }
-        public Map<String, URI> links(String modelPlural, UniqueIdentifier id, List<String> actions) throws URISyntaxException {
+        public Map<String, URI> links(UniqueIdentifier id, List<String> actions) throws URISyntaxException {
             Map<String, URI> map = new LinkedHashMap<>();
             for (String action: actions) {
                 map.put(
                         action,
-                        createURI(modelPlural + "/" + id.getId().toString() + "/" + action)
+                        createURI(id.getId().toString() + "/" + action)
                 );
             }
             return map;
         }
-        public Map<String, URI> links(String modelPlural, UniqueIdentifier id, String[] actions) throws URISyntaxException {
+        public Map<String, URI> links(UniqueIdentifier id, String[] actions) throws URISyntaxException {
             Map<String, URI> map = new LinkedHashMap<>();
             for(String action : actions) {
                 map.put(
                         action,
-                        createURI(modelPlural + "/" + id.getId().toString() + "/" + action)
+                        createURI(id.getId().toString() + "/" + action)
                 );
             }
             return map;
@@ -91,11 +91,11 @@ public class StateBuilder<T extends LinearState> {
 
 
 
-    public StateBuilder<T> link(String modelPlural, String action) throws URISyntaxException {
+    public StateBuilder<T> link(String action) throws URISyntaxException {
         if (apiHelper != null) {
             for (StateAndLinks<T> stateAndLink : this.states) {
                 stateAndLink.link(
-                    apiHelper.link(modelPlural, stateAndLink.getState().getLinearId(), action));
+                    apiHelper.link(stateAndLink.getState().getLinearId(), action));
             }
         }
         return this;
@@ -105,7 +105,7 @@ public class StateBuilder<T extends LinearState> {
         if (apiHelper != null) {
             for (StateAndLinks<T> stateAndLink : this.states) {
                 stateAndLink.links(
-                        apiHelper.links(modelPlural, stateAndLink.getState().getLinearId(),
+                        apiHelper.links(stateAndLink.getState().getLinearId(),
                                 mapper.apply(stateAndLink.getState())));
             }
         }
@@ -116,7 +116,7 @@ public class StateBuilder<T extends LinearState> {
         if (apiHelper != null) {
             for (StateAndLinks<T> stateAndLink : this.states) {
                 stateAndLink.links(
-                    apiHelper.links(modelPlural, stateAndLink.getState().getLinearId(), actions));
+                    apiHelper.links(stateAndLink.getState().getLinearId(), actions));
             }
         }
         return this;
@@ -125,16 +125,16 @@ public class StateBuilder<T extends LinearState> {
         if (apiHelper != null) {
             for (StateAndLinks<T> stateAndLink : this.states) {
                 stateAndLink.links(
-                    apiHelper.links(modelPlural, stateAndLink.getState().getLinearId(), actions));
+                    apiHelper.links(stateAndLink.getState().getLinearId(), actions));
             }
         }
         return this;
     }
-    public StateBuilder<T> self(String modelPlural) throws URISyntaxException {
+    public StateBuilder<T> self() throws URISyntaxException {
         if (apiHelper != null) {
             for (StateAndLinks<T> stateAndLink : this.states) {
                 stateAndLink.self(
-                        apiHelper.self(modelPlural, stateAndLink.getState().getLinearId()));
+                        apiHelper.self(stateAndLink.getState().getLinearId()));
             }
         }
         return this;
