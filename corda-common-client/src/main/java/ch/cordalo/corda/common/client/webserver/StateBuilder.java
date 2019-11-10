@@ -101,7 +101,7 @@ public class StateBuilder<T extends LinearState> {
         return this;
     }
 
-    public StateBuilder<T> links(String modelPlural, Function<? super T, List<String>> mapper) throws URISyntaxException {
+    public StateBuilder<T> links(Function<? super T, List<String>> mapper) throws URISyntaxException {
         if (apiHelper != null) {
             for (StateAndLinks<T> stateAndLink : this.states) {
                 stateAndLink.links(
@@ -112,7 +112,7 @@ public class StateBuilder<T extends LinearState> {
         return this;
     }
 
-    public StateBuilder<T> links(String modelPlural, String[] actions) throws URISyntaxException {
+    public StateBuilder<T> links(String[] actions) throws URISyntaxException {
         if (apiHelper != null) {
             for (StateAndLinks<T> stateAndLink : this.states) {
                 stateAndLink.links(
@@ -121,7 +121,7 @@ public class StateBuilder<T extends LinearState> {
         }
         return this;
     }
-    public StateBuilder<T> links(String modelPlural, List<String> actions) throws URISyntaxException {
+    public StateBuilder<T> links(List<String> actions) throws URISyntaxException {
         if (apiHelper != null) {
             for (StateAndLinks<T> stateAndLink : this.states) {
                 stateAndLink.links(
