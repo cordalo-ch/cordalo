@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # deploy to OSS nexus
-# configure your global gradle.properties
+# configure your global radle.properties
 # read https://github.com/cedricwalter/cicd-gradle-oss-nexus
 
 ./gradlew jar -x signArchives
