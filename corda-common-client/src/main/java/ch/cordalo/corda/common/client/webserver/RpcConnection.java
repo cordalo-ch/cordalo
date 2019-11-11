@@ -45,13 +45,19 @@ public class RpcConnection implements AutoCloseable {
     @PostConstruct
     public void initialiseNodeRPCConnection() {
         JacksonSupport.createNonRpcMapper();
-        NetworkHostAndPort rpcAddress = new NetworkHostAndPort(host, rpcPort);
-        CordaRPCClient rpcClient = new CordaRPCClient(rpcAddress);
-        try {
-            rpcConnection = rpcClient.start(username, password);
-            proxy = rpcConnection.getProxy();
-        } catch (Exception e) {
-            logger.error("NodeRPC connection + proxy is not initialized (null)");
+        if (this.host != null && !this.host.isEmpty()) {
+            NetworkHostAndPort rpcAddress = new NetworkHostAndPort(host, rpcPort);
+            CordaRPCClient rpcClient = new CordaRPCClient(rpcAddress);
+            try {
+                rpcConnection = rpcClient.start(username, password);
+                proxy = rpcConnection.getProxy();
+            } catch (Exception e) {
+                logger.error("NodeRPC connection + proxy is not initialized (null)");
+                rpcConnection = null;
+                proxy = null;
+            }
+        } else {
+            logger.error("NodeRPC connection + proxy is not initialized (for testing)");
             rpcConnection = null;
             proxy = null;
         }
