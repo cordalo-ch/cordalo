@@ -45,6 +45,8 @@ public class RpcConnection implements AutoCloseable {
     @PostConstruct
     public void initialiseNodeRPCConnection() {
         JacksonSupport.createNonRpcMapper();
+        // validate if hostname is not empty, to have a working test environment
+        // CordaRPCClient cannot be initialized twice
         if (this.host != null && !this.host.isEmpty()) {
             NetworkHostAndPort rpcAddress = new NetworkHostAndPort(host, rpcPort);
             CordaRPCClient rpcClient = new CordaRPCClient(rpcAddress);
