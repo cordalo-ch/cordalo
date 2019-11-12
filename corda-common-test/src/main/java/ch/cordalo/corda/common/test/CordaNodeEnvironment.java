@@ -4,6 +4,7 @@ import net.corda.core.concurrent.CordaFuture;
 import net.corda.core.flows.FlowLogic;
 import net.corda.core.identity.CordaX500Name;
 import net.corda.core.identity.Party;
+import net.corda.core.node.NodeInfo;
 import net.corda.core.transactions.SignedTransaction;
 import net.corda.testing.core.TestIdentity;
 import net.corda.testing.node.MockServices;
@@ -42,6 +43,9 @@ public class CordaNodeEnvironment {
         );
 
     }
+    public boolean isNotary() {
+        return false;
+    }
 
     private void registerResponders(Class<? extends FlowLogic>[] responderClasses) {
         if (responderClasses != null) {
@@ -68,5 +72,9 @@ public class CordaNodeEnvironment {
         CordaFuture<SignedTransaction> future = this.node.startFlow(flow);
         this.network.runNetwork();
         return future.get();
+    }
+
+    public NodeInfo getNodeInfo() {
+        return this.ledgerServices.getMyInfo();
     }
 }

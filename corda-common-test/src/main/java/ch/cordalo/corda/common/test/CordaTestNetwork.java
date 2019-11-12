@@ -1,6 +1,8 @@
 package ch.cordalo.corda.common.test;
 
 import net.corda.core.flows.FlowLogic;
+import net.corda.core.identity.Party;
+import net.corda.core.node.NodeInfo;
 import net.corda.testing.node.MockNetwork;
 import net.corda.testing.node.MockNetworkParameters;
 import net.corda.testing.node.TestCordapp;
@@ -47,6 +49,12 @@ public class CordaTestNetwork {
     public MockNetwork getNetwork() {
         return this.network;
     }
+    public List<Party>peers() {
+        return this.nodes.values().stream().map(x -> x.party).collect(Collectors.toList());
+    }
+    public List<NodeInfo> networkMapSnapshot() {
+        return this.nodes.values().stream().map(x -> x.getNodeInfo()).collect(Collectors.toList());
+    }
 
     public Class<? extends FlowLogic>[] getResponderClasses() {
         return this.responderClasses;
@@ -55,6 +63,10 @@ public class CordaTestNetwork {
     public CordaNodeEnvironment startEnv(String name, String x500) {
         return this.startNode(
                 new CordaNodeEnvironment(this,name, x500));
+    }
+    public CordaNodeEnvironment startNotaryEnv(String name, String x500) {
+        return this.startNode(
+                new CordaNotaryNodeEnvironment(this,name, x500));
     }
 
     public void startNodes() {
