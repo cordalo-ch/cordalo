@@ -66,7 +66,7 @@ public abstract class BaseFlow extends FlowLogic<SignedTransaction> {
         if (counterparty != null) {
             set = Collections.singletonList(counterparty);
         }
-        return signSyncCollectAndFinalize(set, transactionBuilder);
+        return signSyncCollectAndFinalize(true, set, transactionBuilder);
     }
     @Suspendable
     protected SignedTransaction signSyncCollectAndFinalize(List<AbstractParty> counterparties, TransactionBuilder transactionBuilder) throws FlowException {

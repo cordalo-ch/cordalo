@@ -1,6 +1,7 @@
 package ch.cordalo.corda.common.contracts;
 
 import net.corda.core.identity.AbstractParty;
+import net.corda.core.identity.Party;
 
 import java.security.PublicKey;
 import java.util.ArrayList;
@@ -13,7 +14,18 @@ public class Participants {
         return party.nameOrNull().getX500Principal().getName();
     }
 
+    public static Participants fromParties(List<Party> parties) {
+        return new Participants(
+                parties.stream().map(x -> (AbstractParty)x).collect(Collectors.toList()));
+    }
+    public static Participants fromAbstractParties(List<AbstractParty> parties) {
+        return new Participants(parties);
+    }
+
     private final List<AbstractParty> parties;
+    public Participants(List<AbstractParty> parties) {
+        this.parties = parties;
+    }
 
     public Participants(AbstractParty... parties) {
         List<AbstractParty> list = new ArrayList<>();
