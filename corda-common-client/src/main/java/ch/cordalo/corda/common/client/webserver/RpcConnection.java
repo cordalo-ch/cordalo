@@ -73,6 +73,8 @@ public class RpcConnection implements AutoCloseable {
 
     @PreDestroy
     public void close() {
-        rpcConnection.notifyServerAndClose();
+        if (rpcConnection != null) {
+            rpcConnection.notifyServerAndClose();
+        }
     }
 }

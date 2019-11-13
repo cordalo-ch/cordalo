@@ -14,5 +14,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 abstract public class CordaloBaseTests {
+    public abstract CordaTestNetwork setup(boolean withNodes, Class<? extends FlowLogic> ...responderClasses);
+    public abstract CordaTestNetwork getNetwork();
+    public void tearDown() {
+        if (this.getNetwork() != null) this.getNetwork().stopNodes();
+    };
 
 }

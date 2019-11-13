@@ -3,4 +3,5 @@ include 'corda-common'
 include 'corda-common-test'
 include 'corda-common-flows'
 include 'corda-common-client'
+include 'corda-ext'
 

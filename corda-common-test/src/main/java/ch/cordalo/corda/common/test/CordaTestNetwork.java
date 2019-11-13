@@ -56,6 +56,13 @@ public class CordaTestNetwork {
         return this.nodes.values().stream().map(x -> x.getNodeInfo()).collect(Collectors.toList());
     }
 
+    public List<Party> getNotaryIdentities() {
+        return this.nodes.values().stream().filter(x -> x.isNotary()).map(x -> x.party).collect(Collectors.toList());
+    }
+    public MockNetworkMapCache getNetworkMapCache() {
+        return new MockNetworkMapCache(this);
+    }
+
     public Class<? extends FlowLogic>[] getResponderClasses() {
         return this.responderClasses;
     }
@@ -67,6 +74,9 @@ public class CordaTestNetwork {
     public CordaNodeEnvironment startNotaryEnv(String name, String x500) {
         return this.startNode(
                 new CordaNotaryNodeEnvironment(this,name, x500));
+    }
+    public CordaNodeEnvironment getEnv(String name) {
+        return this.nodes.get(name);
     }
 
     public void startNodes() {
