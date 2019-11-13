@@ -37,7 +37,7 @@ allprojects {
     apply plugin: 'net.saliman.cobertura'
 
     group 'ch.cordalo'
-    version '0.8-SNAPSHOT'
+    version '0.9-SNAPSHOT'
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
 

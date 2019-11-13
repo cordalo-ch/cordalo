@@ -5,8 +5,6 @@ import ch.cordalo.corda.common.contracts.test.TestState;
 import ch.cordalo.corda.common.flows.BaseFlow;
 import ch.cordalo.corda.common.flows.ResponderBaseFlow;
 import co.paralleluniverse.fibers.Suspendable;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import kotlin.Unit;
 import net.corda.core.contracts.StateAndRef;
 import net.corda.core.contracts.UniqueIdentifier;
@@ -17,8 +15,7 @@ import net.corda.core.transactions.SignedTransaction;
 import net.corda.core.transactions.TransactionBuilder;
 import net.corda.core.utilities.ProgressTracker;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.List;
 
 public class TestBaseFlow  {
 
