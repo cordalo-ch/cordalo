@@ -1,6 +1,5 @@
 package ch.cordalo.corda.common.test;
 
-import ch.cordalo.corda.ext.CordaProxy;
 import net.corda.core.identity.Party;
 import net.corda.core.messaging.CordaRPCOps;
 

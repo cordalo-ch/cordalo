@@ -1,6 +1,6 @@
 package ch.cordalo.corda.common.client.webserver;
 
-import ch.cordalo.corda.ext.CordaProxy;
+import ch.cordalo.corda.common.contracts.CordaProxy;
 import net.corda.core.identity.Party;
 import net.corda.core.messaging.CordaRPCOps;
 import org.springframework.stereotype.Component;
