@@ -177,9 +177,6 @@ public class StateVerifier {
     public StateVerifier moreThanZero() {
         return new MoreThanZero(this).verify();
     }
-    public StateVerifier moreThanZero(int size) {
-        return new MoreThanZero(this, size).verify();
-    }
     public StateVerifier count(int size) {
         return new Count(this, size).verify();
     }
@@ -190,10 +187,13 @@ public class StateVerifier {
         return new Min(this, size).verify();
     }
     public StateVerifier moreThanOne() {
-        return new MoreThanOne(this).verify();
+        return new MoreThanN(this, 1).verify();
     }
-    public StateVerifier moreThanOne(int size) {
-        return new MoreThanOne(this, size).verify();
+    public StateVerifier moreThan(int size){
+        return new MoreThanN(this, size).verify();
+    }
+    public StateVerifier lessThan(int size){
+        return new LessThanN(this, size).verify();
     }
     public StateVerifier amountNot0(String name, Function<ContractState, Amount> mapper) {
         return new AmountNot0(this, name, mapper).verify();
@@ -405,7 +405,7 @@ public class StateVerifier {
         protected StateVerifier verify() {
             requireThat(req -> {
                 if (this.size != -1) {
-                    req.using(s("List must have "+this.size+" entries."), this.getParentList().size() == this.size);
+                    req.using(s(String.format("List entries must have size %d", this.size)), this.getParentList().size() == this.size);
                 }
                 return null;
             });
@@ -618,10 +618,8 @@ public class StateVerifier {
     }
     class MoreThanZero extends Size {
         protected MoreThanZero(StateVerifier parent) {  super(parent); }
-        protected MoreThanZero(StateVerifier parent, int size) {  super(parent, size); }
         @Override
         protected StateVerifier verify() {
-            super.verify();
             requireThat(req -> {
                 req.using(s("List must contain at least 1 entry."), this.getParentList().size() > 0);
                 return null;
@@ -629,14 +627,25 @@ public class StateVerifier {
             return this;
         }
     }
-    class MoreThanOne extends Size {
-        protected MoreThanOne(StateVerifier parent) {  super(parent); }
-        protected MoreThanOne(StateVerifier parent, int size) {  super(parent, size); }
+    class MoreThanN extends Size {
+        protected MoreThanN(StateVerifier parent) {  this(parent, 1); }
+        protected MoreThanN(StateVerifier parent, int size) {  super(parent, size); }
         @Override
         protected StateVerifier verify() {
-            super.verify();
             requireThat(req -> {
-                req.using(s("List must more than 1 entry."), this.getParentList().size() > 1);
+                req.using(s("List must have more than " + this.size() + " entrie(s)."), this.getParentList().size() > this.size());
+                return null;
+            });
+            return this;
+        }
+    }
+    class LessThanN extends Size {
+        protected LessThanN(StateVerifier parent) {  this(parent, 1); }
+        protected LessThanN(StateVerifier parent, int size) {  super(parent, size); }
+        @Override
+        protected StateVerifier verify() {
+            requireThat(req -> {
+                req.using(s("List must have less than " + this.size() + " entrie(s)."), this.getParentList().size() < this.size());
                 return null;
             });
             return this;
@@ -654,7 +663,6 @@ public class StateVerifier {
         protected Max(StateVerifier parent, int size) {  super(parent, size); }
         @Override
         protected StateVerifier verify() {
-            super.verify();
             requireThat(req -> {
                 req.using(s("List must contain max "+this.size()+"."), this.getParentList().size() <= this.size());
                 return null;
@@ -666,7 +674,6 @@ public class StateVerifier {
         protected Min(StateVerifier parent, int size) {  super(parent, size); }
         @Override
         protected StateVerifier verify() {
-            super.verify();
             requireThat(req -> {
                 req.using(s("List must contain max "+this.size()+"."), this.getParentList().size() >= this.size());
                 return null;

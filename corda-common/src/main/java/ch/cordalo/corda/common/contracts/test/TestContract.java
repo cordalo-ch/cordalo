@@ -3,17 +3,13 @@ package ch.cordalo.corda.common.contracts.test;
 import ch.cordalo.corda.common.contracts.CommandVerifier;
 import ch.cordalo.corda.common.contracts.ReferenceContract;
 import ch.cordalo.corda.common.contracts.StateVerifier;
-import com.github.benmanes.caffeine.cache.CacheLoader;
 import kotlin.Pair;
 import net.corda.core.contracts.CommandData;
 import net.corda.core.contracts.Contract;
-import net.corda.core.contracts.ContractState;
-import net.corda.core.contracts.UniqueIdentifier;
 import net.corda.core.serialization.CordaSerializable;
 import net.corda.core.transactions.LedgerTransaction;
 
 import java.util.List;
-import java.util.function.Function;
 
 import static net.corda.core.contracts.ContractsDSL.requireThat;
 
@@ -81,7 +77,10 @@ public class TestContract implements Contract {
                         .notEmpty()
                         .notEmpty("should not be empty")
                         .moreThanZero()
-                        .moreThanZero(1)
+                        .count(1)
+                        .min(1)
+                        .max(2)
+                        .moreThan(0)
                         .one()
                         
                         .isNotEmpty(TestState::getLinearId, TestState::getProvider)
@@ -109,7 +108,9 @@ public class TestContract implements Contract {
                             .notEmpty()
                             .notEmpty("should not be empty")
                             .moreThanZero()
-                            .moreThanZero(1)
+                            .min(1)
+                            .max(100)
+                            .count(1)
                             .one()
                             .one("must be one")
                             .one(TestState.class)
@@ -140,7 +141,10 @@ public class TestContract implements Contract {
                             .output()
                             .notEmpty()
                             .moreThanOne()
-                            .moreThanOne(2)
+                            .min(1)
+                            .max(4)
+                            .moreThan(1)
+                            .count(2)
                             .objects();
 
                     TestState testSmallerThan100 = verifier
@@ -158,7 +162,9 @@ public class TestContract implements Contract {
                             .object();
                     List<TestState> sameThanList = verifier
                             .use(tests)
-                            .moreThanZero(2)
+                            .count(2)
+                            .lessThan(3)
+                            .moreThan(1)
                             .objects();
 
 
