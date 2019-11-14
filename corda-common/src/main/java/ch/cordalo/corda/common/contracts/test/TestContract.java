@@ -3,13 +3,17 @@ package ch.cordalo.corda.common.contracts.test;
 import ch.cordalo.corda.common.contracts.CommandVerifier;
 import ch.cordalo.corda.common.contracts.ReferenceContract;
 import ch.cordalo.corda.common.contracts.StateVerifier;
+import com.github.benmanes.caffeine.cache.CacheLoader;
 import kotlin.Pair;
 import net.corda.core.contracts.CommandData;
 import net.corda.core.contracts.Contract;
+import net.corda.core.contracts.ContractState;
+import net.corda.core.contracts.UniqueIdentifier;
 import net.corda.core.serialization.CordaSerializable;
 import net.corda.core.transactions.LedgerTransaction;
 
 import java.util.List;
+import java.util.function.Function;
 
 import static net.corda.core.contracts.ContractsDSL.requireThat;
 
@@ -135,8 +139,8 @@ public class TestContract implements Contract {
                     List<TestState> tests = verifier
                             .output()
                             .notEmpty()
-                            .moreThan()
-                            .moreThan(2)
+                            .moreThanOne()
+                            .moreThanOne(2)
                             .objects();
 
                     TestState testSmallerThan100 = verifier

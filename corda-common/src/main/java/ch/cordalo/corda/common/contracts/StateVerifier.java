@@ -189,10 +189,10 @@ public class StateVerifier {
     public StateVerifier min(int size) {
         return new Min(this, size).verify();
     }
-    public StateVerifier moreThan() {
+    public StateVerifier moreThanOne() {
         return new MoreThanOne(this).verify();
     }
-    public StateVerifier moreThan(int size) {
+    public StateVerifier moreThanOne(int size) {
         return new MoreThanOne(this, size).verify();
     }
     public StateVerifier amountNot0(String name, Function<ContractState, Amount> mapper) {
