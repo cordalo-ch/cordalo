@@ -21,6 +21,7 @@ public class CordaloTestEnvironment {
 
     public List<String> getCordappPackageNames() {
         return ImmutableList.of(
+                "ch.cordalo.corda.ext",
                 "ch.cordalo.corda.common.contracts");
     }
     public void setup(boolean withNodes, Class<? extends FlowLogic> ...responderClasses) {
