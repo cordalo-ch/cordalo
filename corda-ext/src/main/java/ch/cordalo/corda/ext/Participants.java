@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 public class Participants {
 
     public static String partyToX500(AbstractParty party) {
-        return party.nameOrNull().getX500Principal().getName();
+        return party == null ? "" : party.nameOrNull().getX500Principal().getName();
     }
 
     public static Participants fromParties(List<Party> parties) {
