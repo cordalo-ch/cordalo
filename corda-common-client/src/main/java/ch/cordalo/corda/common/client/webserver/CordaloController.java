@@ -1,6 +1,7 @@
 package ch.cordalo.corda.common.client.webserver;
 
 import ch.cordalo.corda.ext.CordaProxy;
+import net.corda.client.jackson.JacksonSupport;
 import net.corda.core.contracts.LinearState;
 import net.corda.core.flows.FlowLogic;
 import net.corda.core.identity.CordaX500Name;
@@ -37,6 +38,7 @@ public abstract class CordaloController {
             logger.error("NodeRPC connection + proxy is not initialized (null)");
             return;
         }
+        JacksonSupport.createDefaultMapper(this.getProxy());
     }
 
     public CordaRPCOps getProxy() {
@@ -69,9 +71,9 @@ public abstract class CordaloController {
     }
 
     public Party partyFromString(String partyString) {
-        return this.getProxy().wellKnownPartyFromX500Name(CordaX500Name.parse(partyString));
+        return partyString == null ?
+                null : this.getProxy().wellKnownPartyFromX500Name(CordaX500Name.parse(partyString));
     }
-
 
     protected <T> void checkStartFlow(@NotNull Class<? extends FlowLogic<? extends T>> logicType, @NotNull Object... args) {
         List<? extends Class<?>> collect = Arrays.stream(args).map(x -> x.getClass()).collect(Collectors.toList());
