@@ -175,6 +175,24 @@ public class TestContract implements Contract {
         }
 
 
+        class Delete implements TestContract.Commands {
+            @Override
+            public void verify(LedgerTransaction tx, StateVerifier verifier) throws IllegalArgumentException {
+                requireThat(req -> {
+                    TestState test = verifier
+                            .input()
+                            .one()
+                            .one("must contain only 1")
+                            .one(TestState.class)
+                            .object();
+                    verifier.output().empty();
+                    return null;
+                });
+
+            }
+        }
+
+
         class PartyChecks implements TestContract.Commands {
             @Override
             public void verify(LedgerTransaction tx, StateVerifier verifier) throws IllegalArgumentException {

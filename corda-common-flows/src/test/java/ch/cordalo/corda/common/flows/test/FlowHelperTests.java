@@ -1,10 +1,8 @@
 package ch.cordalo.corda.common.flows.test;
 
 import ch.cordalo.corda.common.contracts.CordaloTestEnvironment;
-import ch.cordalo.corda.common.contracts.StateVerifier;
 import ch.cordalo.corda.common.contracts.test.TestState;
 import ch.cordalo.corda.common.flows.FlowHelper;
-import com.google.common.collect.ImmutableList;
 import net.corda.core.contracts.StateAndRef;
 import net.corda.core.node.services.Vault;
 import net.corda.core.node.services.vault.QueryCriteria;
@@ -17,15 +15,16 @@ import org.junit.Test;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-public class FlowHelperTest extends CordaloTestEnvironment {
+public class FlowHelperTests extends CordaloTestEnvironment {
 
     @Before
     public void setup() {
         this.setup(
                 true,
-                TestBaseFlow.CreateResponder.class,
-                TestBaseFlow.UpdateProviderResponder.class
-
+                FindResponderClasses.find(TestBaseFlow.class)
+                //TestBaseFlow.CreateResponder.class,
+                //TestBaseFlow.UpdateProviderResponder.class,
+                //TestBaseFlow.DeleteResponder.class
         );
     }
     @After
@@ -53,7 +52,6 @@ public class FlowHelperTest extends CordaloTestEnvironment {
         Assert.assertEquals("last element has 45", new Integer(45), lastStatesByCriteria.get(1).getState().getData().getIntValue());
         Assert.assertEquals("2nd last element has 44", new Integer(44), lastStatesByCriteria.get(0).getState().getData().getIntValue());
     }
-
 
 
     @Test

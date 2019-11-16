@@ -1,6 +1,5 @@
 package ch.cordalo.corda.common.test;
 
-import ch.cordalo.corda.common.test.CordaTestNetwork;
 import net.corda.core.concurrent.CordaFuture;
 import net.corda.core.identity.AbstractParty;
 import net.corda.core.identity.CordaX500Name;

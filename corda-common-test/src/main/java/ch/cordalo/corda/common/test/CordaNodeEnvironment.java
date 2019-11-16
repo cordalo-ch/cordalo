@@ -10,7 +10,6 @@ import net.corda.testing.core.TestIdentity;
 import net.corda.testing.node.MockServices;
 import net.corda.testing.node.StartedMockNode;
 
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class CordaNodeEnvironment {

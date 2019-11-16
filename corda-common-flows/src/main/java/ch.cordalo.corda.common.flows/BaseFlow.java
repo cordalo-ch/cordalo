@@ -25,7 +25,7 @@ public abstract class BaseFlow extends FlowLogic<SignedTransaction> {
         super();
     }
 
-
+    @Suspendable
     protected TransactionBuilder getTransactionBuilderSignedBySigners(ImmutableList<PublicKey> requiredSigner, CommandData command) throws FlowException {
         List<PublicKey> uniqueSigners = new ArrayList<>(Sets.newLinkedHashSet(requiredSigner));
         TransactionBuilder transactionBuilder = new TransactionBuilder();
@@ -33,6 +33,7 @@ public abstract class BaseFlow extends FlowLogic<SignedTransaction> {
         transactionBuilder.addCommand(command, uniqueSigners);
         return transactionBuilder;
     }
+    @Suspendable
     protected TransactionBuilder getTransactionBuilderSignedByParties(List<AbstractParty> parties, CommandData command) throws FlowException {
         List<AbstractParty> uniqueParties = new ArrayList<>(Sets.newLinkedHashSet(parties));
         TransactionBuilder transactionBuilder = new TransactionBuilder();
@@ -41,6 +42,7 @@ public abstract class BaseFlow extends FlowLogic<SignedTransaction> {
         return transactionBuilder;
     }
 
+    @Suspendable
     protected TransactionBuilder getTransactionBuilderSignedByParticipants(ContractState state, CommandData command) throws FlowException {
         List<PublicKey> publicKeys = state.getParticipants().stream().map(AbstractParty::getOwningKey).collect(Collectors.toList());
         ImmutableList<PublicKey> requiredSigner = new ImmutableList.Builder<PublicKey>()
@@ -49,6 +51,7 @@ public abstract class BaseFlow extends FlowLogic<SignedTransaction> {
         return getTransactionBuilderSignedBySigners(requiredSigner, command);
     }
 
+    @Suspendable
     protected TransactionBuilder getMyTransactionBuilderSignedByMe(CommandData command) throws FlowException {
         return getTransactionBuilderSignedBySigners(
                 ImmutableList.of(getOurIdentity().getOwningKey()),
@@ -88,7 +91,7 @@ public abstract class BaseFlow extends FlowLogic<SignedTransaction> {
         return signSyncCollectAndFinalize(false, counterparties, transactionBuilder);
     }
 
-        @Suspendable
+    @Suspendable
     private SignedTransaction signSyncCollectAndFinalize(boolean syncIdentities, List<AbstractParty> counterparties, TransactionBuilder transactionBuilder) throws FlowException {
         List<AbstractParty> counterPartiesWithoutMe = new ArrayList<>(Sets.newLinkedHashSet(counterparties));;
         if (counterPartiesWithoutMe.contains(this.getOurIdentity())) {
@@ -143,6 +146,7 @@ public abstract class BaseFlow extends FlowLogic<SignedTransaction> {
         }
     }
 
+    @Suspendable
     protected Party getFirstNotary() throws FlowException {
         List<Party> notaries = getServiceHub().getNetworkMapCache().getNotaryIdentities();
         if (notaries.isEmpty()) {
@@ -214,7 +218,9 @@ public abstract class BaseFlow extends FlowLogic<SignedTransaction> {
     );
 
     @Override
-    public abstract ProgressTracker getProgressTracker();
+    public ProgressTracker getProgressTracker() {
+        return this.progressTracker_sync;
+    }
 
     public static class SignTxFlowNoChecking extends SignTransactionFlow {
         public SignTxFlowNoChecking(FlowSession otherFlow, ProgressTracker progressTracker) {

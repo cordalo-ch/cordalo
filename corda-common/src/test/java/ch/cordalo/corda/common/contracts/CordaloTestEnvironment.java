@@ -2,17 +2,13 @@ package ch.cordalo.corda.common.contracts;
 
 import ch.cordalo.corda.common.test.CordaNodeEnvironment;
 import ch.cordalo.corda.common.test.CordaTestNetwork;
+import ch.cordalo.corda.common.test.CordaloBaseTests;
 import com.google.common.collect.ImmutableList;
 import net.corda.core.flows.FlowLogic;
-import net.corda.testing.node.TestCordapp;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
-public class CordaloTestEnvironment {
+public class CordaloTestEnvironment extends CordaloBaseTests {
 
     protected CordaTestNetwork network;
     protected CordaNodeEnvironment testNode1;
@@ -24,7 +20,7 @@ public class CordaloTestEnvironment {
                 "ch.cordalo.corda.ext",
                 "ch.cordalo.corda.common.contracts");
     }
-    public void setup(boolean withNodes, Class<? extends FlowLogic> ...responderClasses) {
+    public CordaTestNetwork setup(boolean withNodes, Class<? extends FlowLogic> ...responderClasses) {
         this.network = new CordaTestNetwork(
                 withNodes,
                 this.getCordappPackageNames(),
@@ -34,6 +30,12 @@ public class CordaloTestEnvironment {
         this.testNode2 = network.startEnv("Test2", "O=Test 2 Inc.,L=Seattle,ST=WA,C=CH");
         this.testNode3 = network.startEnv("Test3", "O=Test 3 Inc.,L=Seattle,ST=WA,C=CH");
         this.network.startNodes();
+        return this.network;
+    }
+
+    @Override
+    public CordaTestNetwork getNetwork() {
+        return this.network;
     }
 
     public void tearDown() {
