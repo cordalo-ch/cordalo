@@ -29,8 +29,7 @@ public abstract class CordaloController {
 
     public CordaloController(RpcConnection rpcConnection) {
         if (CordaProxy.getInstance() == null) {
-            CordaProxy.register(new CordaRpcProxy(rpcConnection));
-            this.rpc = CordaProxy.getInstance();
+            this.rpc = new CordaRpcProxy(rpcConnection).register();
         } else {
             this.rpc = CordaProxy.getInstance();
         }

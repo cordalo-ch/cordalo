@@ -1,20 +1,22 @@
 package ch.cordalo.corda.ext;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
+import net.corda.core.contracts.UniqueIdentifier;
 import net.corda.core.crypto.NullKeys;
 import net.corda.core.identity.AbstractParty;
 import net.corda.core.identity.AnonymousParty;
 import net.corda.core.identity.CordaX500Name;
 import net.corda.core.identity.Party;
+import net.corda.testing.core.TestIdentity;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
 
 public class ParticipantsTest {
 
@@ -80,7 +82,7 @@ public class ParticipantsTest {
         Participants participants = Participants.fromParties(ImmutableList.of(element));
 
         assertThat(participants.getPublicKeys().size(), is(1));
-        assertThat(participants.getPublicKeys().get(0), is(NullKeys.NullPublicKey.INSTANCE));
+        assertThat(participants.getPublicKeys().get(0), is(element.getOwningKey()));
     }
 
     @NotNull
@@ -89,12 +91,83 @@ public class ParticipantsTest {
         return Participants.fromParties(parties);
     }
 
-    @NotNull
-    private Party newParty() {
-        CordaX500Name cordaX500Name = new CordaX500Name("commonName", "organisationUnit",
-                "organisation", "locality", "state", "CH");
 
-        return new Party(cordaX500Name, NullKeys.NullPublicKey.INSTANCE);
+    @Test
+    public void with3Party_addParties() {
+        Party element = newParty("peter", "company-A");
+        Participants participants = new Participants(element);
+
+        Party element2 = newParty("joe", "company-B");
+        Party element3 = newParty("mary", "company-C");
+        Participants participants2 = new Participants(element2, element3);
+
+        Participants result = participants.add(participants2);
+
+        assertThat(result.getParties().size(), is(3));
+        assertThat(result.getParties(), hasItem(element));
+        assertThat(result.getParties(), hasItem(element2));
+        assertThat(result.getParties(), hasItem(element3));
+    }
+
+    @Test
+    public void with1State() {
+        Party element = newParty("peter", "company-A");
+        Party element2 = newParty("joe", "company-B");
+        ParticipantsTestState state = new ParticipantsTestState(new UniqueIdentifier(), element, element2);
+
+        Participants result = new Participants(state);
+
+        assertThat(result.getParties().size(), is(2));
+        assertThat(result.getParties(), hasItem(element));
+        assertThat(result.getParties(), hasItem(element2));
+    }
+
+
+    @Test
+    public void with2Party_fromAbstractPartyList() {
+        AbstractParty element = newParty("peter", "company-A");
+        AbstractParty element2 = newParty("joe", "company-B");
+
+        Participants result = Participants.fromAbstractParties(Lists.newArrayList(element, element2));
+
+        assertThat(result.getParties().size(), is(2));
+        assertThat(result.getParties(), hasItem(element));
+        assertThat(result.getParties(), hasItem(element2));
+    }
+
+
+    @Test
+    public void with2Party_getImmutableKeys() {
+        AbstractParty element = newParty("peter", "company-A");
+        AbstractParty element2 = newParty("joe", "company-B");
+        Participants result = Participants.fromAbstractParties(Lists.newArrayList(element, element2));
+
+        assertThat(result.getPublicKeys(), is(result.getImmutablePublicKeys()));
+    }
+    @Test
+    public void with2States() {
+        Party element = newParty("peter", "company-A");
+        Party element2 = newParty("joe", "company-B");
+        ParticipantsTestState state = new ParticipantsTestState(new UniqueIdentifier(), element, element2);
+        Party element3 = newParty("mary", "company-B");
+        ParticipantsTestState state2 = new ParticipantsTestState(new UniqueIdentifier(), element, element3);
+
+        Participants result = new Participants(state, state2);
+
+        assertThat(result.getParties().size(), is(3));
+        assertThat(result.getParties(), hasItem(element));
+        assertThat(result.getParties(), hasItem(element2));
+        assertThat(result.getParties(), hasItem(element3));
+    }
+
+    @NotNull
+    private Party newParty(String commonName, String organizationUnit) {
+        CordaX500Name cordaX500Name = new CordaX500Name(commonName, organizationUnit,
+                "organisation", "locality", "state", "CH");
+        return new TestIdentity(cordaX500Name).getParty();
+    }
+    private Party newParty() {
+        return newParty("commonName", "organisationUnit");
     }
 
 }

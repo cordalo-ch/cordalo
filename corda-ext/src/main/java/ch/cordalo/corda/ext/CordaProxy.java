@@ -10,13 +10,18 @@ public abstract class CordaProxy {
     public static CordaProxy getInstance() {
         return instance;
     }
-    public static void register(CordaProxy proxy) {
+    private static void register(CordaProxy proxy) {
         instance = proxy;
     }
 
     public abstract Party getMe();
     public abstract Party getNotary ();
     public abstract CordaRPCOps getProxy();
+
+    public CordaProxy register() {
+        CordaProxy.register(this);
+        return this;
+    }
     public boolean isValid() {
         return this.getMe() != null;
     }

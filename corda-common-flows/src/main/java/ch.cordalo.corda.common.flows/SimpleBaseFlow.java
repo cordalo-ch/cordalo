@@ -1,5 +1,6 @@
 package ch.cordalo.corda.common.flows;
 
+import ch.cordalo.corda.ext.Participants;
 import co.paralleluniverse.fibers.Suspendable;
 import net.corda.core.contracts.CommandData;
 import net.corda.core.contracts.ContractState;
@@ -35,11 +36,12 @@ public abstract class SimpleBaseFlow extends BaseFlow {
         StateAndRef<T> stateRef = this.getLastStateByLinearId(stateClass, id);
         T state = this.getStateByRef(stateRef);
         T newState = creator.update(state);
+        Participants participants = new Participants(state, newState);
         getProgressTracker().setCurrentStep(BUILDING);
-        TransactionBuilder transactionBuilder = getTransactionBuilderSignedByParticipants(newState, command);
+        TransactionBuilder transactionBuilder = getTransactionBuilderSignedByParticipants(participants, command);
         transactionBuilder.addInputState(stateRef);
         transactionBuilder.addOutputState(newState);
-        return signSyncCollectAndFinalize(newState.getParticipants(), transactionBuilder);
+        return signSyncCollectAndFinalize(participants.getParties(), transactionBuilder);
     }
 
     @Suspendable

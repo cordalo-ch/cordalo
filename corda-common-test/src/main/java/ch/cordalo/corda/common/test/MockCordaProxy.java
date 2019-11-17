@@ -21,7 +21,7 @@ public class MockCordaProxy extends CordaProxy {
         this.rpc = new MockCordaRPCOps(env);
     }
     public void tearDown() {
-        CordaProxy.register(this.prevProxy);
+        if (this.prevProxy != null) this.prevProxy.register();
     }
 
     @Override
