@@ -24,7 +24,8 @@ public class TestBaseFlowTests extends CordaloTestEnvironment {
     public void testCreate()  {
         try {
             TestBaseFlow.Create flow = new TestBaseFlow.Create(testNode2.party, "my string", 42);
-            this.startFlow(testNode1, flow, TestState.class);
+            TestState testState = this.startFlowAndResult(testNode1, flow, TestState.class);
+            Assert.assertNotNull("test object found", testState);
         } catch (FlowException e) {
             e.printStackTrace();
             Assert.fail(e.getMessage());
@@ -36,10 +37,10 @@ public class TestBaseFlowTests extends CordaloTestEnvironment {
     public void testUpdate() {
         try {
             TestBaseFlow.Create flow = new TestBaseFlow.Create(testNode2.party, "my string", 42);
-            TestState test = this.startFlow(testNode1, flow, TestState.class);
+            TestState test = this.startFlowAndResult(testNode1, flow, TestState.class);
 
             TestBaseFlow.UpdateProvider flowU = new TestBaseFlow.UpdateProvider(test.getLinearId(), testNode3.party);
-            TestState test2 = this.startFlow(testNode1, flowU, TestState.class);
+            TestState test2 = this.startFlowAndResult(testNode1, flowU, TestState.class);
 
         } catch (FlowException e) {
             e.printStackTrace();
@@ -51,10 +52,10 @@ public class TestBaseFlowTests extends CordaloTestEnvironment {
     public void testDelete() {
         try {
             TestBaseFlow.Create flow = new TestBaseFlow.Create(testNode2.party, "my string", 42);
-            TestState test = this.startFlow(testNode1, flow, TestState.class);
+            TestState test = this.startFlowAndResult(testNode1, flow, TestState.class);
 
             TestBaseFlow.Delete flowU = new TestBaseFlow.Delete(test.getLinearId());
-            TestState test2 = this.startFlow(testNode1, flowU, TestState.class);
+            TestState test2 = this.startFlowAndResult(testNode1, flowU, TestState.class);
 
         } catch (FlowException e) {
             e.printStackTrace();
