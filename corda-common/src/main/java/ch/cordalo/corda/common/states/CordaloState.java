@@ -1,6 +1,5 @@
 package ch.cordalo.corda.common.states;
 
-import ch.cordalo.corda.ext.Parties;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import net.corda.core.contracts.ContractState;
 import net.corda.core.identity.AbstractParty;

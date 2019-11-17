@@ -1,4 +1,4 @@
-package ch.cordalo.corda.ext;
+package ch.cordalo.corda.common.states;
 
 import net.corda.core.contracts.Contract;
 import net.corda.core.transactions.LedgerTransaction;

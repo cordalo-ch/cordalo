@@ -1,7 +1,7 @@
 package ch.cordalo.corda.common.contracts.test;
 
 import ch.cordalo.corda.common.states.CordaloLinearState;
-import ch.cordalo.corda.ext.Parties;
+import ch.cordalo.corda.common.states.Parties;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import net.corda.core.contracts.Amount;
 import net.corda.core.contracts.BelongsToContract;

@@ -1,4 +1,4 @@
-package ch.cordalo.corda.ext;
+package ch.cordalo.corda.common.states;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
@@ -9,6 +9,8 @@ import net.corda.core.identity.AnonymousParty;
 import net.corda.core.identity.CordaX500Name;
 import net.corda.core.identity.Party;
 import net.corda.testing.core.TestIdentity;
+import org.hamcrest.CoreMatchers;
+import org.hamcrest.MatcherAssert;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 
@@ -23,7 +25,7 @@ public class PartiesTest {
     @Test
     public void withNullParty_partyToX500_expectEmptyString() {
         String x500 = Parties.partyToX500(null);
-        assertThat(x500, is(""));
+        MatcherAssert.assertThat(x500, CoreMatchers.is(""));
     }
 
     @Test
@@ -32,7 +34,7 @@ public class PartiesTest {
 
         try {
             String x500 = Parties.partyToX500(party);
-            assertThat(x500, is(""));
+            MatcherAssert.assertThat(x500, CoreMatchers.is(""));
         } catch (Exception e) {
             // TODO our code should not fail with anonymous party To be discuss
         }
@@ -43,21 +45,21 @@ public class PartiesTest {
         AbstractParty party = newParty();
 
         String x500 = Parties.partyToX500(party);
-        assertThat(x500, is("CN=commonName,OU=organisationUnit,O=organisation,L=locality,ST=state,C=CH"));
+        MatcherAssert.assertThat(x500, CoreMatchers.is("CN=commonName,OU=organisationUnit,O=organisation,L=locality,ST=state,C=CH"));
     }
 
     @Test
     public void withEmptyParties_fromParties_expectGetPartiesEmpty() {
         Parties noParties = getParticipantsFromEmptyParties();
 
-        assertThat(noParties, notNullValue());
+        MatcherAssert.assertThat(noParties, CoreMatchers.notNullValue());
     }
 
     @Test
     public void withEmptyParties_getParties_expectGetPartiesEmpty() {
         Parties noParties = getParticipantsFromEmptyParties();
 
-        assertThat(noParties.getParties().size(), is(0));
+        assertThat(noParties.getParties().size(), CoreMatchers.is(0));
     }
 
     @Test
@@ -65,15 +67,15 @@ public class PartiesTest {
         Party element = newParty();
         Parties parties = Parties.fromParties(ImmutableList.of(element));
 
-        assertThat(parties.getParties().size(), is(1));
-        assertThat(parties.getParties().get(0), is(element));
+        assertThat(parties.getParties().size(), CoreMatchers.is(1));
+        assertThat(parties.getParties().get(0), CoreMatchers.is(element));
     }
 
     @Test
     public void withEmptyParties_getPartiesX500_expectGetPartiesEmpty() {
         Parties noParties = getParticipantsFromEmptyParties();
 
-        assertThat(noParties.getPartiesX500().size(), is(0));
+        assertThat(noParties.getPartiesX500().size(), CoreMatchers.is(0));
     }
 
     @Test
@@ -81,8 +83,8 @@ public class PartiesTest {
         Party element = newParty();
         Parties parties = Parties.fromParties(ImmutableList.of(element));
 
-        assertThat(parties.getPublicKeys().size(), is(1));
-        assertThat(parties.getPublicKeys().get(0), is(element.getOwningKey()));
+        assertThat(parties.getPublicKeys().size(), CoreMatchers.is(1));
+        assertThat(parties.getPublicKeys().get(0), CoreMatchers.is(element.getOwningKey()));
     }
 
     @NotNull
@@ -103,10 +105,10 @@ public class PartiesTest {
 
         Parties result = parties.add(parties2);
 
-        assertThat(result.getParties().size(), is(3));
-        assertThat(result.getParties(), hasItem(element));
-        assertThat(result.getParties(), hasItem(element2));
-        assertThat(result.getParties(), hasItem(element3));
+        assertThat(result.getParties().size(), CoreMatchers.is(3));
+        assertThat(result.getParties(), CoreMatchers.hasItem(element));
+        assertThat(result.getParties(), CoreMatchers.hasItem(element2));
+        assertThat(result.getParties(), CoreMatchers.hasItem(element3));
     }
 
     @Test
@@ -117,9 +119,9 @@ public class PartiesTest {
 
         Parties result = new Parties(state);
 
-        assertThat(result.getParties().size(), is(2));
-        assertThat(result.getParties(), hasItem(element));
-        assertThat(result.getParties(), hasItem(element2));
+        assertThat(result.getParties().size(), CoreMatchers.is(2));
+        assertThat(result.getParties(), CoreMatchers.hasItem(element));
+        assertThat(result.getParties(), CoreMatchers.hasItem(element2));
     }
 
 
@@ -130,9 +132,9 @@ public class PartiesTest {
 
         Parties result = Parties.fromAbstractParties(Lists.newArrayList(element, element2));
 
-        assertThat(result.getParties().size(), is(2));
-        assertThat(result.getParties(), hasItem(element));
-        assertThat(result.getParties(), hasItem(element2));
+        assertThat(result.getParties().size(), CoreMatchers.is(2));
+        assertThat(result.getParties(), CoreMatchers.hasItem(element));
+        assertThat(result.getParties(), CoreMatchers.hasItem(element2));
     }
 
 
@@ -154,10 +156,10 @@ public class PartiesTest {
 
         Parties result = new Parties(state, state2);
 
-        assertThat(result.getParties().size(), is(3));
-        assertThat(result.getParties(), hasItem(element));
-        assertThat(result.getParties(), hasItem(element2));
-        assertThat(result.getParties(), hasItem(element3));
+        assertThat(result.getParties().size(), CoreMatchers.is(3));
+        assertThat(result.getParties(), CoreMatchers.hasItem(element));
+        assertThat(result.getParties(), CoreMatchers.hasItem(element2));
+        assertThat(result.getParties(), CoreMatchers.hasItem(element3));
     }
 
     @Test
@@ -169,10 +171,10 @@ public class PartiesTest {
         Parties result = Parties.fromParties(element, element2);
         result = result.add(element3);
 
-        assertThat(result.getParties().size(), is(3));
-        assertThat(result.getParties(), hasItem(element));
-        assertThat(result.getParties(), hasItem(element2));
-        assertThat(result.getParties(), hasItem(element3));
+        assertThat(result.getParties().size(), CoreMatchers.is(3));
+        assertThat(result.getParties(), CoreMatchers.hasItem(element));
+        assertThat(result.getParties(), CoreMatchers.hasItem(element2));
+        assertThat(result.getParties(), CoreMatchers.hasItem(element3));
     }
 
 
@@ -185,10 +187,10 @@ public class PartiesTest {
         Parties result = Parties.fromParties(element);
         result = result.add(Lists.newArrayList(element2, element3));
 
-        assertThat(result.getParties().size(), is(3));
-        assertThat(result.getParties(), hasItem(element));
-        assertThat(result.getParties(), hasItem(element2));
-        assertThat(result.getParties(), hasItem(element3));
+        assertThat(result.getParties().size(), CoreMatchers.is(3));
+        assertThat(result.getParties(), CoreMatchers.hasItem(element));
+        assertThat(result.getParties(), CoreMatchers.hasItem(element2));
+        assertThat(result.getParties(), CoreMatchers.hasItem(element3));
     }
 
 
@@ -201,10 +203,10 @@ public class PartiesTest {
         Parties result = Parties.fromParties(element);
         result = result.addAbstractParties(Lists.newArrayList(element2, element3));
 
-        assertThat(result.getParties().size(), is(3));
-        assertThat(result.getParties(), hasItem(element));
-        assertThat(result.getParties(), hasItem(element2));
-        assertThat(result.getParties(), hasItem(element3));
+        assertThat(result.getParties().size(), CoreMatchers.is(3));
+        assertThat(result.getParties(), CoreMatchers.hasItem(element));
+        assertThat(result.getParties(), CoreMatchers.hasItem(element2));
+        assertThat(result.getParties(), CoreMatchers.hasItem(element3));
     }
 
     @NotNull

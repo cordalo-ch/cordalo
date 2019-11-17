@@ -1,4 +1,4 @@
-package ch.cordalo.corda.ext;
+package ch.cordalo.corda.common.states;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;

@@ -1,6 +1,6 @@
 package ch.cordalo.corda.common.flows;
 
-import ch.cordalo.corda.ext.Parties;
+import ch.cordalo.corda.common.states.Parties;
 import co.paralleluniverse.fibers.Suspendable;
 import net.corda.core.contracts.CommandData;
 import net.corda.core.contracts.ContractState;
