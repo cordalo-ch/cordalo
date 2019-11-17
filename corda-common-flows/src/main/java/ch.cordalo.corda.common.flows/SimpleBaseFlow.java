@@ -32,6 +32,25 @@ public abstract class SimpleBaseFlow extends BaseFlow {
 
     @Suspendable
     public <T extends ContractState> SignedTransaction simpleFlow_Update(Class<T> stateClass, UniqueIdentifier id, SimpleFlow.Update<T> creator, CommandData command) throws FlowException {
+        return this.simpleFlow_UpdateBuilder(stateClass, id, new SimpleFlow.UpdateBuilder<T>() {
+            @Override
+            @Suspendable
+            public void updateBuilder(TransactionBuilder transactionBuilder, StateAndRef<T> stateRef, T state, T newState) throws FlowException {
+                transactionBuilder.addInputState(stateRef);
+                transactionBuilder.addOutputState(newState);
+            }
+
+            @Override
+            @Suspendable
+            public T update(T state) throws FlowException {
+                return creator.update(state);
+            }
+        }, command);
+    }
+
+
+    @Suspendable
+    public <T extends ContractState> SignedTransaction simpleFlow_UpdateBuilder(Class<T> stateClass, UniqueIdentifier id, SimpleFlow.UpdateBuilder<T> creator, CommandData command) throws FlowException {
         getProgressTracker().setCurrentStep(PREPARATION);
         StateAndRef<T> stateRef = this.getLastStateByLinearId(stateClass, id);
         T state = this.getStateByRef(stateRef);
@@ -39,16 +58,17 @@ public abstract class SimpleBaseFlow extends BaseFlow {
         Participants participants = new Participants(state, newState);
         getProgressTracker().setCurrentStep(BUILDING);
         TransactionBuilder transactionBuilder = getTransactionBuilderSignedByParticipants(participants, command);
-        transactionBuilder.addInputState(stateRef);
-        transactionBuilder.addOutputState(newState);
+        creator.updateBuilder(transactionBuilder, stateRef, state, newState);
         return signSyncCollectAndFinalize(participants.getParties(), transactionBuilder);
     }
 
+
     @Suspendable
-    public <T extends ContractState> SignedTransaction simpleFlow_Delete(Class<T> stateClass, UniqueIdentifier id, CommandData command) throws FlowException {
+    public <T extends ContractState> SignedTransaction simpleFlow_Delete(Class<T> stateClass, UniqueIdentifier id, SimpleFlow.Delete<T> deleter, CommandData command) throws FlowException {
         getProgressTracker().setCurrentStep(PREPARATION);
         StateAndRef<T> stateRef = this.getLastStateByLinearId(stateClass, id);
         T state = this.getStateByRef(stateRef);
+        deleter.validateToDelete(state);
         getProgressTracker().setCurrentStep(BUILDING);
         TransactionBuilder transactionBuilder = this.getTransactionBuilderSignedByParticipants(state, command);
         transactionBuilder.addInputState(stateRef);

@@ -81,7 +81,7 @@ public class TestBaseFlow  {
 
     @InitiatingFlow(version = 2)
     @StartableByRPC
-    public static class Delete extends SimpleBaseFlow {
+    public static class Delete extends SimpleBaseFlow implements SimpleFlow.Delete<TestState> {
         private final UniqueIdentifier id;
         public Delete(UniqueIdentifier id) {
             this.id = id;
@@ -92,8 +92,14 @@ public class TestBaseFlow  {
             return this.simpleFlow_Delete(
                     TestState.class,
                     this.id,
+                    this,
                     new TestContract.Commands.Delete()
             );
+        }
+
+        @Override
+        public void validateToDelete(TestState state) throws FlowException {
+            //throws exception if not possible to delete
         }
     }
 

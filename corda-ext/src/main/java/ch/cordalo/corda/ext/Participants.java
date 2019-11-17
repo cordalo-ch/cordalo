@@ -7,7 +7,9 @@ import net.corda.core.identity.AbstractParty;
 import net.corda.core.identity.Party;
 
 import java.security.PublicKey;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class Participants {
@@ -21,6 +23,9 @@ public class Participants {
                 parties.stream().map(x -> (AbstractParty)x).collect(Collectors.toList()));
     }
     public static Participants fromParties(Party... parties) {
+        return new Participants(parties);
+    }
+    public static Participants fromParties(AbstractParty... parties) {
         return new Participants(parties);
     }
     public static Participants fromAbstractParties(List<AbstractParty> parties) {
@@ -86,6 +91,21 @@ public class Participants {
         Set<AbstractParty> set = new HashSet<>(this.getParties());
         set.addAll(participants.getParties());
         return new Participants(Lists.newArrayList(set));
+    }
+    public Participants addAbstractParties(List<AbstractParty> list) {
+        List<AbstractParty> newParties = Lists.newArrayList(this.parties);
+        newParties.addAll(list);
+        return new Participants(Lists.newArrayList(newParties));
+    }
+    public Participants add(List<Party> list) {
+        List<AbstractParty> newParties = Lists.newArrayList(this.parties);
+        newParties.addAll(list);
+        return new Participants(Lists.newArrayList(newParties));
+    }
+    public Participants add(AbstractParty party) {
+        List<AbstractParty> newParties = Lists.newArrayList(this.parties);
+        newParties.add(party);
+        return new Participants(Lists.newArrayList(newParties));
     }
 
 }

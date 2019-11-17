@@ -6,6 +6,7 @@ import net.corda.core.node.NodeInfo;
 import net.corda.testing.node.MockNetwork;
 import net.corda.testing.node.MockNetworkParameters;
 import net.corda.testing.node.TestCordapp;
+import org.assertj.core.util.Lists;
 
 import java.util.HashMap;
 import java.util.List;
@@ -14,18 +15,25 @@ import java.util.stream.Collectors;
 
 public class CordaTestNetwork {
 
-    private final Class<? extends FlowLogic>[] responderClasses;
+    private final List<Class<? extends FlowLogic>> responderClasses;
     private MockNetwork network;
-    private List<TestCordapp> testCordapps;
-    private List<String> testPackageNames;
+    private final List<TestCordapp> testCordapps;
+    private final List<String> testPackageNames;
     private final boolean withNodes;
     private final Map<String, CordaNodeEnvironment> nodes = new HashMap();
 
-    public CordaTestNetwork(boolean withNodes, List<String> testPackageNames, Class<? extends FlowLogic>[] responderClasses) {
+    public CordaTestNetwork(boolean withNodes, List<String> testPackageNames, List<Class<? extends FlowLogic>> responderClasses) {
         this.testPackageNames = testPackageNames;
         this.testCordapps = testPackageNames.stream().map(x -> TestCordapp.findCordapp(x)).collect(Collectors.toList());
         this.withNodes = withNodes;
         this.responderClasses = responderClasses;
+        this.createNetwork();
+    }
+    public CordaTestNetwork(boolean withNodes, List<String> testPackageNames, Class responderMainClass) {
+        this.testPackageNames = testPackageNames;
+        this.testCordapps = testPackageNames.stream().map(x -> TestCordapp.findCordapp(x)).collect(Collectors.toList());
+        this.withNodes = withNodes;
+        this.responderClasses = FindResponderClasses.find(responderMainClass);
         this.createNetwork();
     }
 
@@ -63,7 +71,7 @@ public class CordaTestNetwork {
         return new MockNetworkMapCache(this);
     }
 
-    public Class<? extends FlowLogic>[] getResponderClasses() {
+    public List<Class<? extends FlowLogic>> getResponderClasses() {
         return this.responderClasses;
     }
 

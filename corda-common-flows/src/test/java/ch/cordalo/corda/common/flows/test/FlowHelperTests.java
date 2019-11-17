@@ -3,6 +3,7 @@ package ch.cordalo.corda.common.flows.test;
 import ch.cordalo.corda.common.contracts.CordaloTestEnvironment;
 import ch.cordalo.corda.common.contracts.test.TestState;
 import ch.cordalo.corda.common.flows.FlowHelper;
+import ch.cordalo.corda.common.test.FindResponderClasses;
 import net.corda.core.contracts.StateAndRef;
 import net.corda.core.node.services.Vault;
 import net.corda.core.node.services.vault.QueryCriteria;

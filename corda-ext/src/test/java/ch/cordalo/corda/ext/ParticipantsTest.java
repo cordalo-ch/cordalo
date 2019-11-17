@@ -160,6 +160,53 @@ public class ParticipantsTest {
         assertThat(result.getParties(), hasItem(element3));
     }
 
+    @Test
+    public void with3parties_add() {
+        Party element = newParty("peter", "company-A");
+        Party element2 = newParty("joe", "company-B");
+        Party element3 = newParty("mary", "company-B");
+
+        Participants result = Participants.fromParties(element, element2);
+        result = result.add(element3);
+
+        assertThat(result.getParties().size(), is(3));
+        assertThat(result.getParties(), hasItem(element));
+        assertThat(result.getParties(), hasItem(element2));
+        assertThat(result.getParties(), hasItem(element3));
+    }
+
+
+    @Test
+    public void with3parties_add2() {
+        Party element = newParty("peter", "company-A");
+        Party element2 = newParty("joe", "company-B");
+        Party element3 = newParty("mary", "company-B");
+
+        Participants result = Participants.fromParties(element);
+        result = result.add(Lists.newArrayList(element2, element3));
+
+        assertThat(result.getParties().size(), is(3));
+        assertThat(result.getParties(), hasItem(element));
+        assertThat(result.getParties(), hasItem(element2));
+        assertThat(result.getParties(), hasItem(element3));
+    }
+
+
+    @Test
+    public void with3parties_add2_abstractparties() {
+        AbstractParty element = newParty("peter", "company-A");
+        AbstractParty element2 = newParty("joe", "company-B");
+        AbstractParty element3 = newParty("mary", "company-B");
+
+        Participants result = Participants.fromParties(element);
+        result = result.addAbstractParties(Lists.newArrayList(element2, element3));
+
+        assertThat(result.getParties().size(), is(3));
+        assertThat(result.getParties(), hasItem(element));
+        assertThat(result.getParties(), hasItem(element2));
+        assertThat(result.getParties(), hasItem(element3));
+    }
+
     @NotNull
     private Party newParty(String commonName, String organizationUnit) {
         CordaX500Name cordaX500Name = new CordaX500Name(commonName, organizationUnit,

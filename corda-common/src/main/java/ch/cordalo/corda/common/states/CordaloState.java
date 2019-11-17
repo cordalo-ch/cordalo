@@ -26,6 +26,11 @@ public abstract class CordaloState implements ContractState {
     }
 
     @NotNull
+    public List<String> getParticipantsX500() {
+        return this.participants().getPartiesX500();
+    }
+
+    @NotNull
     @JsonIgnore
     public List<PublicKey> getParticipantKeys() {
         return new Participants(this.getParticipants()).getPublicKeys();
