@@ -1,5 +1,8 @@
 package ch.cordalo.corda.common.contracts.test;
 
+import ch.cordalo.corda.common.states.CordaloLinearState;
+import ch.cordalo.corda.ext.Participants;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Lists;
 import net.corda.core.contracts.Amount;
 import net.corda.core.contracts.BelongsToContract;
@@ -18,10 +21,8 @@ import java.util.stream.Collectors;
 
 
 @BelongsToContract (TestContract.class)
-public class TestState implements LinearState {
+public class TestState extends CordaloLinearState {
 
-    @NotNull
-    private UniqueIdentifier linearId;
     @NotNull
     private Party owner;
     @NotNull
@@ -40,7 +41,7 @@ public class TestState implements LinearState {
 
     @ConstructorForDeserialization
     public TestState(@NotNull UniqueIdentifier linearId, @NotNull Party owner, @NotNull Party provider, @NotNull Party cloneProvider, @NotNull String stringValue, @NotNull Integer intValue, @NotNull Amount<Currency> amount) {
-        this.linearId = linearId;
+        super(linearId);
         this.owner = owner;
         this.provider = provider;
         this.cloneProvider = cloneProvider;
@@ -49,7 +50,7 @@ public class TestState implements LinearState {
         this.amount = amount;
     }
     public TestState(@NotNull UniqueIdentifier linearId, @NotNull Party owner, @NotNull Party provider, @NotNull Party cloneProvider, @NotNull String stringValue, @NotNull Integer intValue) {
-        this.linearId = linearId;
+        super(linearId);
         this.owner = owner;
         this.provider = provider;
         this.cloneProvider = cloneProvider;
@@ -58,7 +59,7 @@ public class TestState implements LinearState {
         this.amount = CHF(intValue);
     }
     public TestState(@NotNull UniqueIdentifier linearId, @NotNull Party owner, @NotNull Party provider, @NotNull String stringValue, @NotNull Integer intValue) {
-        this.linearId = linearId;
+        super(linearId);
         this.owner = owner;
         this.provider = provider;
         this.cloneProvider = provider;
@@ -67,11 +68,6 @@ public class TestState implements LinearState {
         this.amount = CHF(intValue);
     }
 
-    @NotNull
-    @Override
-    public UniqueIdentifier getLinearId() {
-        return this.linearId;
-    }
     public Party getOwner() {
         return owner;
     }
@@ -96,14 +92,10 @@ public class TestState implements LinearState {
         return new TestState(this.linearId, this.owner, newParty, newParty, this.stringValue, this.intValue, CHF(this.intValue));
     }
 
-
     @NotNull
+    @JsonIgnore
     @Override
-    public List<AbstractParty> getParticipants() {
-        return Lists.newArrayList(this.owner, this.provider);
+    public Participants participants() {
+        return Participants.fromParties(this.owner, this.provider, this.cloneProvider);
     }
-    public List<PublicKey> getParticipantKeys() {
-        return getParticipants().stream().map(AbstractParty::getOwningKey).collect(Collectors.toList());
-    }
-
 }

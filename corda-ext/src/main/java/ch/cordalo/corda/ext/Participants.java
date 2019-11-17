@@ -20,6 +20,9 @@ public class Participants {
         return new Participants(
                 parties.stream().map(x -> (AbstractParty)x).collect(Collectors.toList()));
     }
+    public static Participants fromParties(Party... parties) {
+        return new Participants(parties);
+    }
     public static Participants fromAbstractParties(List<AbstractParty> parties) {
         return new Participants(parties);
     }
