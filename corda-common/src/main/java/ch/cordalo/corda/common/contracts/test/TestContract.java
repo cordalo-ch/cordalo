@@ -82,7 +82,6 @@ public class TestContract implements Contract {
                         .max(2)
                         .moreThan(0)
                         .one()
-                        
                         .isNotEmpty(TestState::getLinearId, TestState::getProvider)
                         .isEqual(TestState::getOwner, TestState::getOwner)
                         .isNotEqual(TestState::getOwner, TestState::getProvider)
@@ -130,6 +129,51 @@ public class TestContract implements Contract {
             }
         }
 
+
+        class CreatedInOut implements TestContract.Commands {
+            @Override
+            public void verify(LedgerTransaction tx, StateVerifier verifier) throws IllegalArgumentException {
+                requireThat(req -> {
+                    TestState in = verifier
+                            .input(TestState.class)
+                            .count(1)
+                            .object();
+                    List<TestState> out2 = verifier
+                            .output(TestState.class)
+                            .count(2)
+                            .objects();
+                    TestState diff = verifier
+                            .newOutput(TestState.class)
+                            .count(1)
+                            .object();
+                    return null;
+                });
+
+            }
+        }
+
+
+        class UnionInOut implements TestContract.Commands {
+            @Override
+            public void verify(LedgerTransaction tx, StateVerifier verifier) throws IllegalArgumentException {
+                requireThat(req -> {
+                    TestState in = verifier
+                            .input(TestState.class)
+                            .count(1)
+                            .object();
+                    List<TestState> out2 = verifier
+                            .output(TestState.class)
+                            .count(2)
+                            .objects();
+                    TestState diff = verifier
+                            .intersection(TestState.class)
+                            .count(1)
+                            .object();
+                    return null;
+                });
+
+            }
+        }
 
 
         class CreateMultipleOperators implements TestContract.Commands {

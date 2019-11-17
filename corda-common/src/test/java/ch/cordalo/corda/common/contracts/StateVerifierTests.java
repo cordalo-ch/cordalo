@@ -124,6 +124,36 @@ public class StateVerifierTests extends CordaloTestEnvironment {
 
 
     @Test
+    public void contract_difference_output() {
+        transaction(testNode1.ledgerServices, tx -> {
+            TestState test1 = newTest("test1", 99);
+            TestState test2 = newTest("test2", 100);
+            tx.input(TestContract.ID, test1);
+            tx.output(TestContract.ID, test1);
+            tx.output(TestContract.ID, test2);
+            tx.command(test1.getParticipantKeys(), new TestContract.Commands.CreatedInOut());
+            tx.verifies();
+            return null;
+        });
+    }
+
+
+
+    @Test
+    public void contract_union_output() {
+        transaction(testNode1.ledgerServices, tx -> {
+            TestState test1 = newTest("test1", 99);
+            TestState test2 = newTest("test2", 100);
+            tx.input(TestContract.ID, test1);
+            tx.output(TestContract.ID, test1);
+            tx.output(TestContract.ID, test2);
+            tx.command(test1.getParticipantKeys(), new TestContract.Commands.UnionInOut());
+            tx.verifies();
+            return null;
+        });
+    }
+
+    @Test
     public void contract_create_parties() {
         transaction(testNode1.ledgerServices, tx -> {
             TestState test1 = newTest("test1");

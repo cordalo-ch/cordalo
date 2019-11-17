@@ -1,6 +1,8 @@
 package ch.cordalo.corda.common.contracts;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import net.corda.core.contracts.*;
 import net.corda.core.identity.AbstractParty;
 import net.corda.core.node.ServiceHub;
@@ -140,6 +142,18 @@ public class StateVerifier {
     }
     public StateVerifier output(Class<? extends ContractState> stateClass) {
         return new OutputList(this, stateClass).verify();
+    }
+    public StateVerifier newOutput() {
+        return new NewOutputList(this).verify();
+    }
+    public StateVerifier newOutput(Class<? extends ContractState> stateClass) {
+        return new NewOutputList(this, stateClass).verify();
+    }
+    public StateVerifier intersection() {
+        return new IntersectionList<>(this).verify();
+    }
+    public StateVerifier intersection(Class<? extends ContractState> stateClass) {
+        return new IntersectionList(this, stateClass).verify();
     }
     public <T extends  ContractState> StateVerifier use(T state) {
         return new UseThis<T>(this, state).verify();
@@ -718,6 +732,52 @@ public class StateVerifier {
                 return tx.outputsOfType(this.stateClass);
             } else {
                 return tx.getOutputStates();
+            }
+        }
+    }
+
+    // output that are not in input based on EQUAL
+    class NewOutputList<T> extends StateList {
+        NewOutputList(StateVerifier parent) {  super(parent); }
+        NewOutputList(StateVerifier parent, Class<T> stateClass) {  super(parent, stateClass); }
+        @Override
+        public List<ContractState> getList() {
+            List<ContractState> allOutput = null;
+            List<ContractState> allInputs = null;
+            if (this.stateClass != null) {
+                allOutput = tx.outputsOfType(stateClass);
+                allInputs = tx.inputsOfType(stateClass);
+            } else {
+                allOutput = tx.getOutputStates();
+                allInputs = tx.getInputStates();
+            }
+            if (allOutput != null && allInputs != null) {
+                allOutput.removeAll(allInputs);
+            }
+            return allOutput;
+        }
+    }
+
+    // output that are not in input based on EQUAL
+    class IntersectionList<T> extends StateList {
+        IntersectionList(StateVerifier parent) {  super(parent); }
+        IntersectionList(StateVerifier parent, Class<T> stateClass) {  super(parent, stateClass); }
+        @Override
+        public List<ContractState> getList() {
+            List<ContractState> allOutput = null;
+            List<ContractState> allInputs = null;
+            if (this.stateClass != null) {
+                allOutput = tx.outputsOfType(stateClass);
+                allInputs = tx.inputsOfType(stateClass);
+            } else {
+                allOutput = tx.getOutputStates();
+                allInputs = tx.getInputStates();
+            }
+            if (allOutput != null && allInputs != null) {
+                Set<ContractState> diff = Sets.intersection(Sets.newHashSet(allOutput), Sets.newHashSet(allInputs));
+                return Lists.newArrayList(diff);
+            } else {
+                return Collections.EMPTY_LIST;
             }
         }
     }

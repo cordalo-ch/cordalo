@@ -1,0 +1,316 @@
+[Test worker] liquibase. - Creating database history table with name: PUBLIC.DATABASECHANGELOG
+[Test worker] liquibase. - Reading from PUBLIC.DATABASECHANGELOG
+[Test worker] liquibase. - master.changelog.json: migration/common.changelog-init.xml::1511451595465-1.3::R3.Corda: Skipping changeSet migration/common.changelog-init.xml::1511451595465-1.3::R3.Corda due to validation error(s): minValue is not allowed on h2
+[Test worker] liquibase. - master.changelog.json: migration/vault-schema.changelog-pkey.xml::non-clustered_pk-11::R3.Corda: Skipping changeSet migration/vault-schema.changelog-pkey.xml::non-clustered_pk-11::R3.Corda due to validation error(s): clustered is not allowed on h2
+[Test worker] liquibase. - master.changelog.json: migration/vault-schema.changelog-pkey.xml::non-clustered_pk-12::R3.Corda: Skipping changeSet migration/vault-schema.changelog-pkey.xml::non-clustered_pk-12::R3.Corda due to validation error(s): clustered is not allowed on h2
+[Test worker] liquibase. - master.changelog.json: migration/vault-schema.changelog-pkey.xml::non-clustered_pk-13::R3.Corda: Skipping changeSet migration/vault-schema.changelog-pkey.xml::non-clustered_pk-13::R3.Corda due to validation error(s): clustered is not allowed on h2
+[Test worker] liquibase. - master.changelog.json: migration/node-core.changelog-pkey.xml::non-clustered_pk-1::R3.Corda: Skipping changeSet migration/node-core.changelog-pkey.xml::non-clustered_pk-1::R3.Corda due to validation error(s): clustered is not allowed on h2
+[Test worker] liquibase. - master.changelog.json: migration/node-core.changelog-pkey.xml::non-clustered_pk-2::R3.Corda: Skipping changeSet migration/node-core.changelog-pkey.xml::non-clustered_pk-2::R3.Corda due to validation error(s): clustered is not allowed on h2
+[Test worker] liquibase. - master.changelog.json: migration/node-core.changelog-pkey.xml::non-clustered_pk-3::R3.Corda: Skipping changeSet migration/node-core.changelog-pkey.xml::non-clustered_pk-3::R3.Corda due to validation error(s): clustered is not allowed on h2
+[Test worker] liquibase. - master.changelog.json: migration/node-core.changelog-pkey.xml::non-clustered_pk-4::R3.Corda: Skipping changeSet migration/node-core.changelog-pkey.xml::non-clustered_pk-4::R3.Corda due to validation error(s): clustered is not allowed on h2
+[Test worker] liquibase. - master.changelog.json: migration/node-core.changelog-pkey.xml::non-clustered_pk-5::R3.Corda: Skipping changeSet migration/node-core.changelog-pkey.xml::non-clustered_pk-5::R3.Corda due to validation error(s): clustered is not allowed on h2
+[Test worker] liquibase. - master.changelog.json: migration/node-core.changelog-pkey.xml::non-clustered_pk-6::R3.Corda: Skipping changeSet migration/node-core.changelog-pkey.xml::non-clustered_pk-6::R3.Corda due to validation error(s): clustered is not allowed on h2
+[Test worker] liquibase. - master.changelog.json: migration/node-core.changelog-pkey.xml::non-clustered_pk-7::R3.Corda: Skipping changeSet migration/node-core.changelog-pkey.xml::non-clustered_pk-7::R3.Corda due to validation error(s): clustered is not allowed on h2
+[Test worker] liquibase. - Successfully acquired change log lock
+[Test worker] liquibase. - master.changelog.json: migration/common.changelog-init.xml::1511451595465-1.3::R3.Corda: Skipping changeSet migration/common.changelog-init.xml::1511451595465-1.3::R3.Corda due to validation error(s): minValue is not allowed on h2
+[Test worker] liquibase. - master.changelog.json: migration/vault-schema.changelog-pkey.xml::non-clustered_pk-11::R3.Corda: Skipping changeSet migration/vault-schema.changelog-pkey.xml::non-clustered_pk-11::R3.Corda due to validation error(s): clustered is not allowed on h2
+[Test worker] liquibase. - master.changelog.json: migration/vault-schema.changelog-pkey.xml::non-clustered_pk-12::R3.Corda: Skipping changeSet migration/vault-schema.changelog-pkey.xml::non-clustered_pk-12::R3.Corda due to validation error(s): clustered is not allowed on h2
+[Test worker] liquibase. - master.changelog.json: migration/vault-schema.changelog-pkey.xml::non-clustered_pk-13::R3.Corda: Skipping changeSet migration/vault-schema.changelog-pkey.xml::non-clustered_pk-13::R3.Corda due to validation error(s): clustered is not allowed on h2
+[Test worker] liquibase. - master.changelog.json: migration/node-core.changelog-pkey.xml::non-clustered_pk-1::R3.Corda: Skipping changeSet migration/node-core.changelog-pkey.xml::non-clustered_pk-1::R3.Corda due to validation error(s): clustered is not allowed on h2
+[Test worker] liquibase. - master.changelog.json: migration/node-core.changelog-pkey.xml::non-clustered_pk-2::R3.Corda: Skipping changeSet migration/node-core.changelog-pkey.xml::non-clustered_pk-2::R3.Corda due to validation error(s): clustered is not allowed on h2
+[Test worker] liquibase. - master.changelog.json: migration/node-core.changelog-pkey.xml::non-clustered_pk-3::R3.Corda: Skipping changeSet migration/node-core.changelog-pkey.xml::non-clustered_pk-3::R3.Corda due to validation error(s): clustered is not allowed on h2
+[Test worker] liquibase. - master.changelog.json: migration/node-core.changelog-pkey.xml::non-clustered_pk-4::R3.Corda: Skipping changeSet migration/node-core.changelog-pkey.xml::non-clustered_pk-4::R3.Corda due to validation error(s): clustered is not allowed on h2
+[Test worker] liquibase. - master.changelog.json: migration/node-core.changelog-pkey.xml::non-clustered_pk-5::R3.Corda: Skipping changeSet migration/node-core.changelog-pkey.xml::non-clustered_pk-5::R3.Corda due to validation error(s): clustered is not allowed on h2
+[Test worker] liquibase. - master.changelog.json: migration/node-core.changelog-pkey.xml::non-clustered_pk-6::R3.Corda: Skipping changeSet migration/node-core.changelog-pkey.xml::non-clustered_pk-6::R3.Corda due to validation error(s): clustered is not allowed on h2
+[Test worker] liquibase. - master.changelog.json: migration/node-core.changelog-pkey.xml::non-clustered_pk-7::R3.Corda: Skipping changeSet migration/node-core.changelog-pkey.xml::non-clustered_pk-7::R3.Corda due to validation error(s): clustered is not allowed on h2
+[Test worker] liquibase. - master.changelog.json: migration/common.changelog-init.xml::1511451595465-1.1::R3.Corda: Sequence hibernate_sequence created
+[Test worker] liquibase. - master.changelog.json: migration/common.changelog-init.xml::1511451595465-1.1::R3.Corda: ChangeSet migration/common.changelog-init.xml::1511451595465-1.1::R3.Corda ran successfully in 0ms
+[Test worker] liquibase. - master.changelog.json: migration/vault-schema.changelog-init.xml::1511451595465-22::R3.Corda: Table vault_fungible_states created
+[Test worker] liquibase. - master.changelog.json: migration/vault-schema.changelog-init.xml::1511451595465-22::R3.Corda: ChangeSet migration/vault-schema.changelog-init.xml::1511451595465-22::R3.Corda ran successfully in 1ms
+[Test worker] liquibase. - master.changelog.json: migration/vault-schema.changelog-init.xml::1511451595465-23::R3.Corda: Table vault_fungible_states_parts created
+[Test worker] liquibase. - master.changelog.json: migration/vault-schema.changelog-init.xml::1511451595465-23::R3.Corda: ChangeSet migration/vault-schema.changelog-init.xml::1511451595465-23::R3.Corda ran successfully in 0ms
+[Test worker] liquibase. - master.changelog.json: migration/vault-schema.changelog-init.xml::1511451595465-24::R3.Corda: Table vault_linear_states created
+[Test worker] liquibase. - master.changelog.json: migration/vault-schema.changelog-init.xml::1511451595465-24::R3.Corda: ChangeSet migration/vault-schema.changelog-init.xml::1511451595465-24::R3.Corda ran successfully in 0ms
+[Test worker] liquibase. - master.changelog.json: migration/vault-schema.changelog-init.xml::1511451595465-25::R3.Corda: Table vault_linear_states_parts created
+[Test worker] liquibase. - master.changelog.json: migration/vault-schema.changelog-init.xml::1511451595465-25::R3.Corda: ChangeSet migration/vault-schema.changelog-init.xml::1511451595465-25::R3.Corda ran successfully in 0ms
+[Test worker] liquibase. - master.changelog.json: migration/vault-schema.changelog-init.xml::1511451595465-26::R3.Corda: Table vault_states created
+[Test worker] liquibase. - master.changelog.json: migration/vault-schema.changelog-init.xml::1511451595465-26::R3.Corda: ChangeSet migration/vault-schema.changelog-init.xml::1511451595465-26::R3.Corda ran successfully in 0ms
+[Test worker] liquibase. - master.changelog.json: migration/vault-schema.changelog-init.xml::1511451595465-27::R3.Corda: Table vault_transaction_notes created
+[Test worker] liquibase. - master.changelog.json: migration/vault-schema.changelog-init.xml::1511451595465-27::R3.Corda: ChangeSet migration/vault-schema.changelog-init.xml::1511451595465-27::R3.Corda ran successfully in 1ms
+[Test worker] liquibase. - master.changelog.json: migration/vault-schema.changelog-init.xml::1511451595465-47::R3.Corda: Primary key added to vault_fungible_states (output_index, transaction_id)
+[Test worker] liquibase. - master.changelog.json: migration/vault-schema.changelog-init.xml::1511451595465-47::R3.Corda: ChangeSet migration/vault-schema.changelog-init.xml::1511451595465-47::R3.Corda ran successfully in 0ms
+[Test worker] liquibase. - master.changelog.json: migration/vault-schema.changelog-init.xml::1511451595465-48::R3.Corda: Primary key added to vault_linear_states (output_index, transaction_id)
+[Test worker] liquibase. - master.changelog.json: migration/vault-schema.changelog-init.xml::1511451595465-48::R3.Corda: ChangeSet migration/vault-schema.changelog-init.xml::1511451595465-48::R3.Corda ran successfully in 0ms
+[Test worker] liquibase. - master.changelog.json: migration/vault-schema.changelog-init.xml::1511451595465-49::R3.Corda: Primary key added to vault_states (output_index, transaction_id)
+[Test worker] liquibase. - master.changelog.json: migration/vault-schema.changelog-init.xml::1511451595465-49::R3.Corda: ChangeSet migration/vault-schema.changelog-init.xml::1511451595465-49::R3.Corda ran successfully in 0ms
+[Test worker] liquibase. - master.changelog.json: migration/vault-schema.changelog-init.xml::1511451595465-50::R3.Corda: Primary key added to vault_transaction_notes (seq_no)
+[Test worker] liquibase. - master.changelog.json: migration/vault-schema.changelog-init.xml::1511451595465-50::R3.Corda: ChangeSet migration/vault-schema.changelog-init.xml::1511451595465-50::R3.Corda ran successfully in 0ms
+[Test worker] liquibase. - master.changelog.json: migration/vault-schema.changelog-init.xml::1511451595465-53::R3.Corda: Index external_id_index created
+[Test worker] liquibase. - master.changelog.json: migration/vault-schema.changelog-init.xml::1511451595465-53::R3.Corda: ChangeSet migration/vault-schema.changelog-init.xml::1511451595465-53::R3.Corda ran successfully in 1ms
+[Test worker] liquibase. - master.changelog.json: migration/vault-schema.changelog-init.xml::1511451595465-55::R3.Corda: Index lock_id_idx created
+[Test worker] liquibase. - master.changelog.json: migration/vault-schema.changelog-init.xml::1511451595465-55::R3.Corda: ChangeSet migration/vault-schema.changelog-init.xml::1511451595465-55::R3.Corda ran successfully in 0ms
+[Test worker] liquibase. - master.changelog.json: migration/vault-schema.changelog-init.xml::1511451595465-58::R3.Corda: Index state_status_idx created
+[Test worker] liquibase. - master.changelog.json: migration/vault-schema.changelog-init.xml::1511451595465-58::R3.Corda: ChangeSet migration/vault-schema.changelog-init.xml::1511451595465-58::R3.Corda ran successfully in 0ms
+[Test worker] liquibase. - master.changelog.json: migration/vault-schema.changelog-init.xml::1511451595465-59::R3.Corda: Index transaction_id_index created
+[Test worker] liquibase. - master.changelog.json: migration/vault-schema.changelog-init.xml::1511451595465-59::R3.Corda: ChangeSet migration/vault-schema.changelog-init.xml::1511451595465-59::R3.Corda ran successfully in 1ms
+[Test worker] liquibase. - master.changelog.json: migration/vault-schema.changelog-init.xml::1511451595465-60::R3.Corda: Index uuid_index created
+[Test worker] liquibase. - master.changelog.json: migration/vault-schema.changelog-init.xml::1511451595465-60::R3.Corda: ChangeSet migration/vault-schema.changelog-init.xml::1511451595465-60::R3.Corda ran successfully in 0ms
+[Test worker] liquibase. - master.changelog.json: migration/vault-schema.changelog-init.xml::1511451595465-64::R3.Corda: Foreign key constraint added to vault_fungible_states_parts (output_index,transaction_id)
+[Test worker] liquibase. - master.changelog.json: migration/vault-schema.changelog-init.xml::1511451595465-64::R3.Corda: ChangeSet migration/vault-schema.changelog-init.xml::1511451595465-64::R3.Corda ran successfully in 0ms
+[Test worker] liquibase. - master.changelog.json: migration/vault-schema.changelog-init.xml::1511451595465-65::R3.Corda: Foreign key constraint added to vault_linear_states_parts (output_index,transaction_id)
+[Test worker] liquibase. - master.changelog.json: migration/vault-schema.changelog-init.xml::1511451595465-65::R3.Corda: ChangeSet migration/vault-schema.changelog-init.xml::1511451595465-65::R3.Corda ran successfully in 0ms
+[Test worker] liquibase. - master.changelog.json: migration/vault-schema.changelog-v3.xml::clean_vault::R3.Corda: Data deleted from vault_fungible_states_parts
+[Test worker] liquibase. - master.changelog.json: migration/vault-schema.changelog-v3.xml::clean_vault::R3.Corda: Data deleted from vault_fungible_states
+[Test worker] liquibase. - master.changelog.json: migration/vault-schema.changelog-v3.xml::clean_vault::R3.Corda: Data deleted from vault_linear_states_parts
+[Test worker] liquibase. - master.changelog.json: migration/vault-schema.changelog-v3.xml::clean_vault::R3.Corda: Data deleted from vault_linear_states
+[Test worker] liquibase. - master.changelog.json: migration/vault-schema.changelog-v3.xml::clean_vault::R3.Corda: Data deleted from vault_states
+[Test worker] liquibase. - master.changelog.json: migration/vault-schema.changelog-v3.xml::clean_vault::R3.Corda: Data deleted from vault_transaction_notes
+[Test worker] liquibase. - master.changelog.json: migration/vault-schema.changelog-v3.xml::clean_vault::R3.Corda: ChangeSet migration/vault-schema.changelog-v3.xml::clean_vault::R3.Corda ran successfully in 1ms
+[Test worker] liquibase. - master.changelog.json: migration/vault-schema.changelog-v4.xml::nullability::R3.Corda: Null constraint has been added to vault_fungible_states.quantity
+[Test worker] liquibase. - master.changelog.json: migration/vault-schema.changelog-v4.xml::nullability::R3.Corda: Null constraint has been added to vault_states.contract_state_class_name
+[Test worker] liquibase. - master.changelog.json: migration/vault-schema.changelog-v4.xml::nullability::R3.Corda: Null constraint has been added to vault_states.notary_name
+[Test worker] liquibase. - master.changelog.json: migration/vault-schema.changelog-v4.xml::nullability::R3.Corda: Null constraint has been added to vault_states.recorded_timestamp
+[Test worker] liquibase. - master.changelog.json: migration/vault-schema.changelog-v4.xml::nullability::R3.Corda: Index state_status_idx dropped from table vault_states
+[Test worker] liquibase. - master.changelog.json: migration/vault-schema.changelog-v4.xml::nullability::R3.Corda: Index lock_id_idx dropped from table vault_states
+[Test worker] liquibase. - master.changelog.json: migration/vault-schema.changelog-v4.xml::nullability::R3.Corda: Null constraint has been added to vault_states.state_status
+[Test worker] liquibase. - master.changelog.json: migration/vault-schema.changelog-v4.xml::nullability::R3.Corda: Index state_status_idx created
+[Test worker] liquibase. - master.changelog.json: migration/vault-schema.changelog-v4.xml::nullability::R3.Corda: Index lock_id_idx created
+[Test worker] liquibase. - master.changelog.json: migration/vault-schema.changelog-v4.xml::nullability::R3.Corda: Index transaction_id_index dropped from table vault_transaction_notes
+[Test worker] liquibase. - master.changelog.json: migration/vault-schema.changelog-v4.xml::nullability::R3.Corda: Null constraint has been added to vault_transaction_notes.note
+[Test worker] liquibase. - master.changelog.json: migration/vault-schema.changelog-v4.xml::nullability::R3.Corda: Null constraint has been added to vault_transaction_notes.transaction_id
+[Test worker] liquibase. - master.changelog.json: migration/vault-schema.changelog-v4.xml::nullability::R3.Corda: Index transaction_id_index created
+[Test worker] liquibase. - master.changelog.json: migration/vault-schema.changelog-v4.xml::nullability::R3.Corda: ChangeSet migration/vault-schema.changelog-v4.xml::nullability::R3.Corda ran successfully in 2ms
+[Test worker] liquibase. - master.changelog.json: migration/vault-schema.changelog-v5.xml::add_relevancy_status_column::R3.Corda: Columns relevancy_status(INT) added to vault_states
+[Test worker] liquibase. - master.changelog.json: migration/vault-schema.changelog-v5.xml::add_relevancy_status_column::R3.Corda: Data updated in vault_states
+[Test worker] liquibase. - master.changelog.json: migration/vault-schema.changelog-v5.xml::add_relevancy_status_column::R3.Corda: Null constraint has been added to vault_states.relevancy_status
+[Test worker] liquibase. - master.changelog.json: migration/vault-schema.changelog-v5.xml::add_relevancy_status_column::R3.Corda: ChangeSet migration/vault-schema.changelog-v5.xml::add_relevancy_status_column::R3.Corda ran successfully in 2ms
+[Test worker] liquibase. - master.changelog.json: migration/vault-schema.changelog-v6.xml::add_is_constraint_information_columns::R3.Corda: Columns constraint_type(INT) added to vault_states
+[Test worker] liquibase. - master.changelog.json: migration/vault-schema.changelog-v6.xml::add_is_constraint_information_columns::R3.Corda: Columns constraint_data(varbinary(563)) added to vault_states
+[Test worker] liquibase. - master.changelog.json: migration/vault-schema.changelog-v6.xml::add_is_constraint_information_columns::R3.Corda: ChangeSet migration/vault-schema.changelog-v6.xml::add_is_constraint_information_columns::R3.Corda ran successfully in 1ms
+[Test worker] liquibase. - master.changelog.json: migration/vault-schema.changelog-v7.xml::make_issuer_ref_nullable::R3.Corda: Null constraint dropped from vault_fungible_states.issuer_ref
+[Test worker] liquibase. - master.changelog.json: migration/vault-schema.changelog-v7.xml::make_issuer_ref_nullable::R3.Corda: ChangeSet migration/vault-schema.changelog-v7.xml::make_issuer_ref_nullable::R3.Corda ran successfully in 0ms
+[Test worker] liquibase. - master.changelog.json: migration/vault-schema.changelog-v8.xml::create-external-id-to-state-party-view::R3.Corda: Table state_party created
+[Test worker] liquibase. - master.changelog.json: migration/vault-schema.changelog-v8.xml::create-external-id-to-state-party-view::R3.Corda: Index state_pk_hash_idx created
+[Test worker] liquibase. - master.changelog.json: migration/vault-schema.changelog-v8.xml::create-external-id-to-state-party-view::R3.Corda: Table pk_hash_to_ext_id_map created
+[Test worker] liquibase. - master.changelog.json: migration/vault-schema.changelog-v8.xml::create-external-id-to-state-party-view::R3.Corda: Index pk_hash_to_xid_idx created
+[Test worker] liquibase. - master.changelog.json: migration/vault-schema.changelog-v8.xml::create-external-id-to-state-party-view::R3.Corda: View v_pkey_hash_ex_id_map created
+[Test worker] liquibase. - master.changelog.json: migration/vault-schema.changelog-v8.xml::create-external-id-to-state-party-view::R3.Corda: ChangeSet migration/vault-schema.changelog-v8.xml::create-external-id-to-state-party-view::R3.Corda ran successfully in 1ms
+[Test worker] liquibase. - master.changelog.json: migration/node-info.changelog-init.xml::1511451595465-4::R3.Corda: Table node_link_nodeinfo_party created
+[Test worker] liquibase. - master.changelog.json: migration/node-info.changelog-init.xml::1511451595465-4::R3.Corda: ChangeSet migration/node-info.changelog-init.xml::1511451595465-4::R3.Corda ran successfully in 0ms
+[Test worker] liquibase. - master.changelog.json: migration/node-info.changelog-init.xml::1511451595465-10::R3.Corda: Table node_info_hosts created
+[Test worker] liquibase. - master.changelog.json: migration/node-info.changelog-init.xml::1511451595465-10::R3.Corda: ChangeSet migration/node-info.changelog-init.xml::1511451595465-10::R3.Corda ran successfully in 0ms
+[Test worker] liquibase. - master.changelog.json: migration/node-info.changelog-init.xml::1511451595465-11::R3.Corda: Table node_info_party_cert created
+[Test worker] liquibase. - master.changelog.json: migration/node-info.changelog-init.xml::1511451595465-11::R3.Corda: ChangeSet migration/node-info.changelog-init.xml::1511451595465-11::R3.Corda ran successfully in 1ms
+[Test worker] liquibase. - master.changelog.json: migration/node-info.changelog-init.xml::1511451595465-12::R3.Corda: Table node_infos created
+[Test worker] liquibase. - master.changelog.json: migration/node-info.changelog-init.xml::1511451595465-12::R3.Corda: ChangeSet migration/node-info.changelog-init.xml::1511451595465-12::R3.Corda ran successfully in 0ms
+[Test worker] liquibase. - master.changelog.json: migration/node-info.changelog-init.xml::1511451595465-35::R3.Corda: Primary key added to node_info_hosts (host, port)
+[Test worker] liquibase. - master.changelog.json: migration/node-info.changelog-init.xml::1511451595465-35::R3.Corda: ChangeSet migration/node-info.changelog-init.xml::1511451595465-35::R3.Corda ran successfully in 0ms
+[Test worker] liquibase. - master.changelog.json: migration/node-info.changelog-init.xml::1511451595465-36::R3.Corda: Primary key added to node_info_party_cert (party_name)
+[Test worker] liquibase. - master.changelog.json: migration/node-info.changelog-init.xml::1511451595465-36::R3.Corda: ChangeSet migration/node-info.changelog-init.xml::1511451595465-36::R3.Corda ran successfully in 0ms
+[Test worker] liquibase. - master.changelog.json: migration/node-info.changelog-init.xml::1511451595465-37::R3.Corda: Primary key added to node_infos (node_info_id)
+[Test worker] liquibase. - master.changelog.json: migration/node-info.changelog-init.xml::1511451595465-37::R3.Corda: ChangeSet migration/node-info.changelog-init.xml::1511451595465-37::R3.Corda ran successfully in 0ms
+[Test worker] liquibase. - master.changelog.json: migration/node-info.changelog-init.xml::1511451595465-62::R3.Corda: Foreign key constraint added to node_link_nodeinfo_party (node_info_id)
+[Test worker] liquibase. - master.changelog.json: migration/node-info.changelog-init.xml::1511451595465-62::R3.Corda: ChangeSet migration/node-info.changelog-init.xml::1511451595465-62::R3.Corda ran successfully in 1ms
+[Test worker] liquibase. - master.changelog.json: migration/node-info.changelog-init.xml::1511451595465-63::R3.Corda: Foreign key constraint added to node_info_hosts (node_info_id)
+[Test worker] liquibase. - master.changelog.json: migration/node-info.changelog-init.xml::1511451595465-63::R3.Corda: ChangeSet migration/node-info.changelog-init.xml::1511451595465-63::R3.Corda ran successfully in 1ms
+[Test worker] liquibase. - master.changelog.json: migration/node-info.changelog-init.xml::remove_host_port_pk::R3.Corda: Data deleted from node_infos
+[Test worker] liquibase. - master.changelog.json: migration/node-info.changelog-init.xml::remove_host_port_pk::R3.Corda: Data deleted from node_link_nodeinfo_party
+[Test worker] liquibase. - master.changelog.json: migration/node-info.changelog-init.xml::remove_host_port_pk::R3.Corda: Data deleted from node_info_hosts
+[Test worker] liquibase. - master.changelog.json: migration/node-info.changelog-init.xml::remove_host_port_pk::R3.Corda: Data deleted from node_info_party_cert
+[Test worker] liquibase. - master.changelog.json: migration/node-info.changelog-init.xml::remove_host_port_pk::R3.Corda: Primary key dropped from node_info_hosts
+[Test worker] liquibase. - master.changelog.json: migration/node-info.changelog-init.xml::remove_host_port_pk::R3.Corda: Columns hosts_id(INT) added to node_info_hosts
+[Test worker] liquibase. - master.changelog.json: migration/node-info.changelog-init.xml::remove_host_port_pk::R3.Corda: Primary key added to node_info_hosts (hosts_id)
+[Test worker] liquibase. - master.changelog.json: migration/node-info.changelog-init.xml::remove_host_port_pk::R3.Corda: ChangeSet migration/node-info.changelog-init.xml::remove_host_port_pk::R3.Corda ran successfully in 1ms
+[Test worker] liquibase. - master.changelog.json: migration/node-info.changelog-v1.xml::key/value node properties table::R3.Corda: Table node_properties created
+[Test worker] liquibase. - master.changelog.json: migration/node-info.changelog-v1.xml::key/value node properties table::R3.Corda: ChangeSet migration/node-info.changelog-v1.xml::key/value node properties table::R3.Corda ran successfully in 0ms
+[Test worker] liquibase. - master.changelog.json: migration/node-info.changelog-v2.xml::1525962920::R3.Corda: Null constraint has been added to node_infos.node_info_hash
+[Test worker] liquibase. - master.changelog.json: migration/node-info.changelog-v2.xml::1525962920::R3.Corda: Null constraint has been added to node_infos.platform_version
+[Test worker] liquibase. - master.changelog.json: migration/node-info.changelog-v2.xml::1525962920::R3.Corda: Null constraint has been added to node_infos.serial
+[Test worker] liquibase. - master.changelog.json: migration/node-info.changelog-v2.xml::1525962920::R3.Corda: Null constraint dropped from node_info_hosts.host
+[Test worker] liquibase. - master.changelog.json: migration/node-info.changelog-v2.xml::1525962920::R3.Corda: Null constraint dropped from node_info_hosts.port
+[Test worker] liquibase. - master.changelog.json: migration/node-info.changelog-v2.xml::1525962920::R3.Corda: Null constraint has been added to node_info_party_cert.owning_key_hash
+[Test worker] liquibase. - master.changelog.json: migration/node-info.changelog-v2.xml::1525962920::R3.Corda: Null constraint has been added to node_info_party_cert.party_cert_binary
+[Test worker] liquibase. - master.changelog.json: migration/node-info.changelog-v2.xml::1525962920::R3.Corda: ChangeSet migration/node-info.changelog-v2.xml::1525962920::R3.Corda ran successfully in 1ms
+[Test worker] liquibase. - master.changelog.json: migration/node-info.changelog-v3.xml::column_host_name::R3.Corda: Column node_info_hosts.host renamed to host_name
+[Test worker] liquibase. - master.changelog.json: migration/node-info.changelog-v3.xml::column_host_name::R3.Corda: ChangeSet migration/node-info.changelog-v3.xml::column_host_name::R3.Corda ran successfully in 0ms
+[Test worker] liquibase. - master.changelog.json: migration/node-services.changelog-init.xml::1511451595465-5::R3.Corda: Table node_attachments created
+[Test worker] liquibase. - master.changelog.json: migration/node-services.changelog-init.xml::1511451595465-5::R3.Corda: ChangeSet migration/node-services.changelog-init.xml::1511451595465-5::R3.Corda ran successfully in 0ms
+[Test worker] liquibase. - master.changelog.json: migration/node-services.changelog-init.xml::1511451595465-7::R3.Corda: Table node_checkpoints created
+[Test worker] liquibase. - master.changelog.json: migration/node-services.changelog-init.xml::1511451595465-7::R3.Corda: ChangeSet migration/node-services.changelog-init.xml::1511451595465-7::R3.Corda ran successfully in 1ms
+[Test worker] liquibase. - master.changelog.json: migration/node-services.changelog-init.xml::1511451595465-8::R3.Corda: Table node_contract_upgrades created
+[Test worker] liquibase. - master.changelog.json: migration/node-services.changelog-init.xml::1511451595465-8::R3.Corda: ChangeSet migration/node-services.changelog-init.xml::1511451595465-8::R3.Corda ran successfully in 0ms
+[Test worker] liquibase. - master.changelog.json: migration/node-services.changelog-init.xml::1511451595465-9::R3.Corda: Table node_identities created
+[Test worker] liquibase. - master.changelog.json: migration/node-services.changelog-init.xml::1511451595465-9::R3.Corda: ChangeSet migration/node-services.changelog-init.xml::1511451595465-9::R3.Corda ran successfully in 0ms
+[Test worker] liquibase. - master.changelog.json: migration/node-services.changelog-init.xml::1511451595465-13::R3.Corda: Table node_message_ids created
+[Test worker] liquibase. - master.changelog.json: migration/node-services.changelog-init.xml::1511451595465-13::R3.Corda: ChangeSet migration/node-services.changelog-init.xml::1511451595465-13::R3.Corda ran successfully in 1ms
+[Test worker] liquibase. - master.changelog.json: migration/node-services.changelog-init.xml::1511451595465-14::R3.Corda: Table node_message_retry created
+[Test worker] liquibase. - master.changelog.json: migration/node-services.changelog-init.xml::1511451595465-14::R3.Corda: ChangeSet migration/node-services.changelog-init.xml::1511451595465-14::R3.Corda ran successfully in 0ms
+[Test worker] liquibase. - master.changelog.json: migration/node-services.changelog-init.xml::1511451595465-15::R3.Corda: Table node_named_identities created
+[Test worker] liquibase. - master.changelog.json: migration/node-services.changelog-init.xml::1511451595465-15::R3.Corda: ChangeSet migration/node-services.changelog-init.xml::1511451595465-15::R3.Corda ran successfully in 0ms
+[Test worker] liquibase. - master.changelog.json: migration/node-services.changelog-init.xml::1511451595465-17::R3.Corda: Table node_our_key_pairs created
+[Test worker] liquibase. - master.changelog.json: migration/node-services.changelog-init.xml::1511451595465-17::R3.Corda: ChangeSet migration/node-services.changelog-init.xml::1511451595465-17::R3.Corda ran successfully in 1ms
+[Test worker] liquibase. - master.changelog.json: migration/node-services.changelog-init.xml::1511451595465-19::R3.Corda: Table node_scheduled_states created
+[Test worker] liquibase. - master.changelog.json: migration/node-services.changelog-init.xml::1511451595465-19::R3.Corda: ChangeSet migration/node-services.changelog-init.xml::1511451595465-19::R3.Corda ran successfully in 1ms
+[Test worker] liquibase. - master.changelog.json: migration/node-services.changelog-init.xml::1511451595465-20::R3.Corda: Table node_transaction_mappings created
+[Test worker] liquibase. - master.changelog.json: migration/node-services.changelog-init.xml::1511451595465-20::R3.Corda: ChangeSet migration/node-services.changelog-init.xml::1511451595465-20::R3.Corda ran successfully in 1ms
+[Test worker] liquibase. - master.changelog.json: migration/node-services.changelog-init.xml::1511451595465-21::R3.Corda: Table node_transactions created
+[Test worker] liquibase. - master.changelog.json: migration/node-services.changelog-init.xml::1511451595465-21::R3.Corda: ChangeSet migration/node-services.changelog-init.xml::1511451595465-21::R3.Corda ran successfully in 1ms
+[Test worker] liquibase. - master.changelog.json: migration/node-services.changelog-init.xml::1511451595465-30::R3.Corda: Primary key added to node_attachments (att_id)
+[Test worker] liquibase. - master.changelog.json: migration/node-services.changelog-init.xml::1511451595465-30::R3.Corda: ChangeSet migration/node-services.changelog-init.xml::1511451595465-30::R3.Corda ran successfully in 0ms
+[Test worker] liquibase. - master.changelog.json: migration/node-services.changelog-init.xml::1511451595465-32::R3.Corda: Primary key added to node_checkpoints (checkpoint_id)
+[Test worker] liquibase. - master.changelog.json: migration/node-services.changelog-init.xml::1511451595465-32::R3.Corda: ChangeSet migration/node-services.changelog-init.xml::1511451595465-32::R3.Corda ran successfully in 1ms
+[Test worker] liquibase. - master.changelog.json: migration/node-services.changelog-init.xml::1511451595465-33::R3.Corda: Primary key added to node_contract_upgrades (state_ref)
+[Test worker] liquibase. - master.changelog.json: migration/node-services.changelog-init.xml::1511451595465-33::R3.Corda: ChangeSet migration/node-services.changelog-init.xml::1511451595465-33::R3.Corda ran successfully in 0ms
+[Test worker] liquibase. - master.changelog.json: migration/node-services.changelog-init.xml::1511451595465-34::R3.Corda: Primary key added to node_identities (pk_hash)
+[Test worker] liquibase. - master.changelog.json: migration/node-services.changelog-init.xml::1511451595465-34::R3.Corda: ChangeSet migration/node-services.changelog-init.xml::1511451595465-34::R3.Corda ran successfully in 1ms
+[Test worker] liquibase. - master.changelog.json: migration/node-services.changelog-init.xml::1511451595465-38::R3.Corda: Primary key added to node_message_ids (message_id)
+[Test worker] liquibase. - master.changelog.json: migration/node-services.changelog-init.xml::1511451595465-38::R3.Corda: ChangeSet migration/node-services.changelog-init.xml::1511451595465-38::R3.Corda ran successfully in 0ms
+[Test worker] liquibase. - master.changelog.json: migration/node-services.changelog-init.xml::1511451595465-39::R3.Corda: Primary key added to node_message_retry (message_id)
+[Test worker] liquibase. - master.changelog.json: migration/node-services.changelog-init.xml::1511451595465-39::R3.Corda: ChangeSet migration/node-services.changelog-init.xml::1511451595465-39::R3.Corda ran successfully in 0ms
+[Test worker] liquibase. - master.changelog.json: migration/node-services.changelog-init.xml::1511451595465-40::R3.Corda: Primary key added to node_named_identities (name)
+[Test worker] liquibase. - master.changelog.json: migration/node-services.changelog-init.xml::1511451595465-40::R3.Corda: ChangeSet migration/node-services.changelog-init.xml::1511451595465-40::R3.Corda ran successfully in 0ms
+[Test worker] liquibase. - master.changelog.json: migration/node-services.changelog-init.xml::1511451595465-42::R3.Corda: Primary key added to node_our_key_pairs (public_key_hash)
+[Test worker] liquibase. - master.changelog.json: migration/node-services.changelog-init.xml::1511451595465-42::R3.Corda: ChangeSet migration/node-services.changelog-init.xml::1511451595465-42::R3.Corda ran successfully in 0ms
+[Test worker] liquibase. - master.changelog.json: migration/node-services.changelog-init.xml::1511451595465-44::R3.Corda: Primary key added to node_scheduled_states (output_index, transaction_id)
+[Test worker] liquibase. - master.changelog.json: migration/node-services.changelog-init.xml::1511451595465-44::R3.Corda: ChangeSet migration/node-services.changelog-init.xml::1511451595465-44::R3.Corda ran successfully in 1ms
+[Test worker] liquibase. - master.changelog.json: migration/node-services.changelog-init.xml::1511451595465-45::R3.Corda: Primary key added to node_transaction_mappings (tx_id)
+[Test worker] liquibase. - master.changelog.json: migration/node-services.changelog-init.xml::1511451595465-45::R3.Corda: ChangeSet migration/node-services.changelog-init.xml::1511451595465-45::R3.Corda ran successfully in 1ms
+[Test worker] liquibase. - master.changelog.json: migration/node-services.changelog-init.xml::1511451595465-46::R3.Corda: Primary key added to node_transactions (tx_id)
+[Test worker] liquibase. - master.changelog.json: migration/node-services.changelog-init.xml::1511451595465-46::R3.Corda: ChangeSet migration/node-services.changelog-init.xml::1511451595465-46::R3.Corda ran successfully in 0ms
+[Test worker] liquibase. - master.changelog.json: migration/node-services.changelog-init.xml::1511451595465-61::R3.Corda: Foreign key constraint added to node_link_nodeinfo_party (party_name)
+[Test worker] liquibase. - master.changelog.json: migration/node-services.changelog-init.xml::1511451595465-61::R3.Corda: ChangeSet migration/node-services.changelog-init.xml::1511451595465-61::R3.Corda ran successfully in 0ms
+[Test worker] liquibase. - master.changelog.json: migration/node-services.changelog-init.xml::add index att_id::R3.Corda: Index att_id_idx created
+[Test worker] liquibase. - master.changelog.json: migration/node-services.changelog-init.xml::add index att_id::R3.Corda: ChangeSet migration/node-services.changelog-init.xml::add index att_id::R3.Corda ran successfully in 1ms
+[Test worker] liquibase. - master.changelog.json: migration/node-services.changelog-init.xml::add_contract_attachment::R3.Corda: Table node_attchments_contracts created
+[Test worker] liquibase. - master.changelog.json: migration/node-services.changelog-init.xml::add_contract_attachment::R3.Corda: Foreign key constraint added to node_attchments_contracts (att_id)
+[Test worker] liquibase. - master.changelog.json: migration/node-services.changelog-init.xml::add_contract_attachment::R3.Corda: Data deleted from node_attachments
+[Test worker] liquibase. - master.changelog.json: migration/node-services.changelog-init.xml::add_contract_attachment::R3.Corda: ChangeSet migration/node-services.changelog-init.xml::add_contract_attachment::R3.Corda ran successfully in 1ms
+[Test worker] liquibase. - master.changelog.json: migration/node-services.changelog-init.xml::add_dedup_columns::R3.Corda: Columns sender(NVARCHAR(64)),sequence_number(BIGINT) added to node_message_ids
+[Test worker] liquibase. - master.changelog.json: migration/node-services.changelog-init.xml::add_dedup_columns::R3.Corda: ChangeSet migration/node-services.changelog-init.xml::add_dedup_columns::R3.Corda ran successfully in 1ms
+[Test worker] liquibase. - master.changelog.json: migration/node-core.changelog-v4.xml::attchments_rename::R3.Corda: Table node_attchments_contracts renamed to node_attachments_contracts
+[Test worker] liquibase. - master.changelog.json: migration/node-core.changelog-v4.xml::attchments_rename::R3.Corda: ChangeSet migration/node-core.changelog-v4.xml::attchments_rename::R3.Corda ran successfully in 0ms
+[Test worker] liquibase. - master.changelog.json: migration/node-core.changelog-v4.xml::nullability::R3.Corda: Null constraint has been added to node_identities.identity_value
+[Test worker] liquibase. - master.changelog.json: migration/node-core.changelog-v4.xml::nullability::R3.Corda: Null constraint has been added to node_attachments.content
+[Test worker] liquibase. - master.changelog.json: migration/node-core.changelog-v4.xml::nullability::R3.Corda: Null constraint has been added to node_attachments_contracts.contract_class_name
+[Test worker] liquibase. - master.changelog.json: migration/node-core.changelog-v4.xml::nullability::R3.Corda: Null constraint has been added to node_checkpoints.checkpoint_value
+[Test worker] liquibase. - master.changelog.json: migration/node-core.changelog-v4.xml::nullability::R3.Corda: Null constraint has been added to node_contract_upgrades.contract_class_name
+[Test worker] liquibase. - master.changelog.json: migration/node-core.changelog-v4.xml::nullability::R3.Corda: Null constraint has been added to node_message_ids.insertion_time
+[Test worker] liquibase. - master.changelog.json: migration/node-core.changelog-v4.xml::nullability::R3.Corda: Null constraint has been added to node_message_retry.message
+[Test worker] liquibase. - master.changelog.json: migration/node-core.changelog-v4.xml::nullability::R3.Corda: Null constraint has been added to node_message_retry.recipients
+[Test worker] liquibase. - master.changelog.json: migration/node-core.changelog-v4.xml::nullability::R3.Corda: Null constraint has been added to node_named_identities.pk_hash
+[Test worker] liquibase. - master.changelog.json: migration/node-core.changelog-v4.xml::nullability::R3.Corda: Null constraint has been added to node_our_key_pairs.private_key
+[Test worker] liquibase. - master.changelog.json: migration/node-core.changelog-v4.xml::nullability::R3.Corda: Null constraint has been added to node_our_key_pairs.public_key
+[Test worker] liquibase. - master.changelog.json: migration/node-core.changelog-v4.xml::nullability::R3.Corda: Null constraint has been added to node_transaction_mappings.state_machine_run_id
+[Test worker] liquibase. - master.changelog.json: migration/node-core.changelog-v4.xml::nullability::R3.Corda: Null constraint has been added to node_transactions.transaction_value
+[Test worker] liquibase. - master.changelog.json: migration/node-core.changelog-v4.xml::nullability::R3.Corda: ChangeSet migration/node-core.changelog-v4.xml::nullability::R3.Corda ran successfully in 1ms
+[Test worker] liquibase. - master.changelog.json: migration/node-core.changelog-v5.xml::remove_unused_node_message_retry::R3.Corda: Table node_message_retry dropped
+[Test worker] liquibase. - master.changelog.json: migration/node-core.changelog-v5.xml::remove_unused_node_message_retry::R3.Corda: ChangeSet migration/node-core.changelog-v5.xml::remove_unused_node_message_retry::R3.Corda ran successfully in 1ms
+[Test worker] liquibase. - master.changelog.json: migration/node-core.changelog-v8.xml::conditional_attchments_rename::R3.Corda: Marking ChangeSet: migration/node-core.changelog-v8.xml::conditional_attchments_rename::R3.Corda ran despite precondition failure due to onFail='MARK_RAN': 
+          master.changelog.json : Table PUBLIC.NODE_ATTCHMENTS_CONTRACTS does not exist
+
+[Test worker] liquibase. - master.changelog.json: migration/node-core.changelog-v8.xml::conditional_attchments_contracts::R3.Corda: Marking ChangeSet: migration/node-core.changelog-v8.xml::conditional_attchments_contracts::R3.Corda ran despite precondition failure due to onFail='MARK_RAN': 
+          master.changelog.json : Table PUBLIC.NODE_ATTACHMENTS_CONTRACT_CLASS_NAME does not exist
+
+[Test worker] liquibase. - master.changelog.json: migration/node-core.changelog-v8.xml::add_signers::R3.Corda: Table node_attachments_signers created
+[Test worker] liquibase. - master.changelog.json: migration/node-core.changelog-v8.xml::add_signers::R3.Corda: Foreign key constraint added to node_attachments_signers (att_id)
+[Test worker] liquibase. - master.changelog.json: migration/node-core.changelog-v8.xml::add_signers::R3.Corda: ChangeSet migration/node-core.changelog-v8.xml::add_signers::R3.Corda ran successfully in 1ms
+[Test worker] liquibase. - master.changelog.json: migration/node-core.changelog-tx-mapping.xml::add_tx_mapping_column::R3.Corda: Columns state_machine_run_id(NVARCHAR(36)) added to node_transactions
+[Test worker] liquibase. - master.changelog.json: migration/node-core.changelog-tx-mapping.xml::add_tx_mapping_column::R3.Corda: Custom SQL executed
+[Test worker] liquibase. - master.changelog.json: migration/node-core.changelog-tx-mapping.xml::add_tx_mapping_column::R3.Corda: Table node_transaction_mappings dropped
+[Test worker] liquibase. - master.changelog.json: migration/node-core.changelog-tx-mapping.xml::add_tx_mapping_column::R3.Corda: ChangeSet migration/node-core.changelog-tx-mapping.xml::add_tx_mapping_column::R3.Corda ran successfully in 1ms
+[Test worker] liquibase. - master.changelog.json: migration/node-services.changelog-init.xml::add_network_parameters_storage::R3.Corda: Table node_network_parameters created
+[Test worker] liquibase. - master.changelog.json: migration/node-services.changelog-init.xml::add_network_parameters_storage::R3.Corda: ChangeSet migration/node-services.changelog-init.xml::add_network_parameters_storage::R3.Corda ran successfully in 0ms
+[Test worker] liquibase. - master.changelog.json: migration/node-services.changelog-init.xml::network_parameters_pk::R3.Corda: Primary key added to node_network_parameters (hash)
+[Test worker] liquibase. - master.changelog.json: migration/node-services.changelog-init.xml::network_parameters_pk::R3.Corda: ChangeSet migration/node-services.changelog-init.xml::network_parameters_pk::R3.Corda ran successfully in 0ms
+[Test worker] liquibase. - master.changelog.json: migration/node-services.changelog-init.xml::add_version_column::R3.Corda: Columns version(INT) added to node_attachments
+[Test worker] liquibase. - master.changelog.json: migration/node-services.changelog-init.xml::add_version_column::R3.Corda: Custom SQL executed
+[Test worker] liquibase. - master.changelog.json: migration/node-services.changelog-init.xml::add_version_column::R3.Corda: Null constraint has been added to node_attachments.version
+[Test worker] liquibase. - master.changelog.json: migration/node-services.changelog-init.xml::add_version_column::R3.Corda: ChangeSet migration/node-services.changelog-init.xml::add_version_column::R3.Corda ran successfully in 1ms
+[Test worker] persistence.AttachmentVersionNumberMigration. - Start executing...
+[Test worker] persistence.AttachmentVersionNumberMigration. - Attachment version creation from whitelisted JARs using network parameters from build/mock-network/20191113-084827.059/nodes/4/network-parameters, whitelistedContractImplementations: {}.
+[Test worker] persistence.AttachmentVersionNumberMigration. - Attachment version creation from whitelisted JARs skipped, no attachments not found.
+[Test worker] liquibase. - master.changelog.json: migration/node-services.changelog-init.xml::update-version-of-whitelisted-jars::R3.Corda: null
+[Test worker] liquibase. - master.changelog.json: migration/node-services.changelog-init.xml::update-version-of-whitelisted-jars::R3.Corda: ChangeSet migration/node-services.changelog-init.xml::update-version-of-whitelisted-jars::R3.Corda ran successfully in 3ms
+[Test worker] migration.VaultStateMigration. - Migrating vault state data to V4 tables
+[Test worker] persistence.HibernateConfiguration.<init> - Init HibernateConfiguration for schemas: [VaultMigrationSchemaV1(name=net.corda.node.migration.VaultMigrationSchema, version=1), VaultSchemaV1(name=net.corda.node.services.vault.VaultSchema, version=1)]
+[Test worker] persistence.HibernateConfiguration. - Creating session factory for schemas: [VaultMigrationSchemaV1(name=net.corda.node.migration.VaultMigrationSchema, version=1), VaultSchemaV1(name=net.corda.node.services.vault.VaultSchema, version=1)]
+[Test worker] internal.ConnectionProviderInitiator. - HHH000130: Instantiating explicit connection provider: net.corda.nodeapi.internal.persistence.HibernateConfiguration$NodeDatabaseConnectionProvider
+[Test worker] dialect.Dialect.<init> - HHH000400: Using dialect: org.hibernate.dialect.H2Dialect
+[Test worker] type.BasicTypeRegistry. - HHH000270: Type registration [materialized_blob] overrides previous : org.hibernate.type.MaterializedBlobType@7a4c32d
+[Test worker] connections.access. - HHH10001501: Connection obtained from JdbcConnectionAccess [org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator$ConnectionProviderJdbcConnectionAccess@6a16eb66] for (non-JTA) DDL execution was not in auto-commit mode; the Connection 'local transaction' will be committed and the Connection will be set into auto-commit mode.
+[Test worker] persistence.HibernateConfiguration. - Created session factory for schemas: [VaultMigrationSchemaV1(name=net.corda.node.migration.VaultMigrationSchema, version=1), VaultSchemaV1(name=net.corda.node.services.vault.VaultSchema, version=1)]
+[Test worker] internal.QueryTranslatorFactoryInitiator. - HHH000397: Using ASTQueryTranslatorFactory
+[Test worker] migration.VaultStateMigration. - Finished performing vault state data migration for 0 states
+[Test worker] liquibase. - master.changelog.json: migration/vault-schema.changelog-v9.xml::update-vault-states::R3.Corda: null
+[Test worker] liquibase. - master.changelog.json: migration/vault-schema.changelog-v9.xml::update-vault-states::R3.Corda: ChangeSet migration/vault-schema.changelog-v9.xml::update-vault-states::R3.Corda ran successfully in 42ms
+[Test worker] liquibase. - Successfully released change log lock
+[Test worker] internal.InternalMockNetwork$MockNode. - Connected to H2 database.
+[Test worker] internal.InternalMockNetwork$MockNode. - identity-private-key not found in key store, generating fresh key!
+[Test worker] persistence.HibernateConfiguration.<init> - Init HibernateConfiguration for schemas: [CommonSchemaV1(name=net.corda.core.schemas.CommonSchema, version=1), VaultSchemaV1(name=net.corda.node.services.vault.VaultSchema, version=1), NodeInfoSchemaV1(name=net.corda.node.internal.schemas.NodeInfoSchema, version=1), NodeCoreV1(name=net.corda.node.services.schema.NodeSchemaService$NodeCore, version=1)]
+[Test worker] persistence.HibernateConfiguration. - Creating session factory for schemas: [CommonSchemaV1(name=net.corda.core.schemas.CommonSchema, version=1), VaultSchemaV1(name=net.corda.node.services.vault.VaultSchema, version=1), NodeInfoSchemaV1(name=net.corda.node.internal.schemas.NodeInfoSchema, version=1), NodeCoreV1(name=net.corda.node.services.schema.NodeSchemaService$NodeCore, version=1)]
+[Test worker] internal.ConnectionProviderInitiator. - HHH000130: Instantiating explicit connection provider: net.corda.nodeapi.internal.persistence.HibernateConfiguration$NodeDatabaseConnectionProvider
+[Test worker] dialect.Dialect.<init> - HHH000400: Using dialect: org.hibernate.dialect.H2Dialect
+[Test worker] type.BasicTypeRegistry. - HHH000270: Type registration [materialized_blob] overrides previous : org.hibernate.type.MaterializedBlobType@7a4c32d
+[Test worker] connections.access. - HHH10001501: Connection obtained from JdbcConnectionAccess [org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator$ConnectionProviderJdbcConnectionAccess@7b9adb92] for (non-JTA) DDL execution was not in auto-commit mode; the Connection 'local transaction' will be committed and the Connection will be set into auto-commit mode.
+[Test worker] persistence.HibernateConfiguration. - Created session factory for schemas: [CommonSchemaV1(name=net.corda.core.schemas.CommonSchema, version=1), VaultSchemaV1(name=net.corda.node.services.vault.VaultSchema, version=1), NodeInfoSchemaV1(name=net.corda.node.internal.schemas.NodeInfoSchema, version=1), NodeCoreV1(name=net.corda.node.services.schema.NodeSchemaService$NodeCore, version=1)]
+[Test worker] internal.QueryTranslatorFactoryInitiator. - HHH000397: Using ASTQueryTranslatorFactory
+[Test worker] internal.InternalMockNetwork$MockNode. - Node-info has changed so submitting update. Old node-info was null
+[Test worker] network.PersistentNetworkMapCache. - Adding node with info: NodeInfo(addresses=[mock.node:1000], legalIdentitiesAndCerts=[O=Company-C, L=Zug, ST=ZG, C=CH], platformVersion=4, serial=1573634909957)
+[Test worker] network.PersistentNetworkMapCache. - No previous node found
+[Test worker] internal.InternalMockNetwork$MockNode. - New node-info: NodeInfo(addresses=[mock.node:1000], legalIdentitiesAndCerts=[O=Company-C, L=Zug, ST=ZG, C=CH], platformVersion=4, serial=1573634909957)
+[Test worker] network.NetworkMapUpdater. - Auto-accept enabled for network parameter changes which modify only: [epoch, modifiedTime, packageOwnership, whitelistedContractImplementations]
+[MockNode-61-2] network.PersistentNetworkMapCache. - Adding node with info: NodeInfo(addresses=[mock.node:1000], legalIdentitiesAndCerts=[O=Company-C, L=Zug, ST=ZG, C=CH], platformVersion=4, serial=1573634909957)
+[MockNode-61-2] network.PersistentNetworkMapCache. - Previous node was identical to incoming one - doing nothing
+[Test worker] ClassloaderUtils. - Contracts loading for '/var/folders/m4/17h8qhhs44q19w47j2w3gxd40000gn/T/attachment8556187794142301084.jar' took 25 msec
+[Test worker] persistence.NodeAttachmentService. - Stored new attachment: id=6B6366ACC10F60ABD6CCD64CCD95C9DC85C0B1291F0DB51292536F0B70116584 uploader=app filename=null
+[Test worker] ClassloaderUtils. - Contracts loading for '/var/folders/m4/17h8qhhs44q19w47j2w3gxd40000gn/T/attachment4274482244302811170.jar' took 21 msec
+[Test worker] persistence.NodeAttachmentService. - Stored new attachment: id=73096DEC8B68666E799521200B7A6B4E76BE6753A791DEB749BE3FAF93378719 uploader=app filename=null
+[Test worker] statemachine.SingleThreadedStateMachineManager. - Node ready, info: NodeInfo(addresses=[mock.node:1000], legalIdentitiesAndCerts=[O=Company-C, L=Zug, ST=ZG, C=CH], platformVersion=4, serial=1573634909957)
+[Test worker] network.PersistentNetworkMapCache. - Adding node with info: NodeInfo(addresses=[mock.node:1000], legalIdentitiesAndCerts=[O=Notary Service, L=Zurich, C=CH], platformVersion=4, serial=1573634907556)
+[Test worker] network.PersistentNetworkMapCache. - No previous node found
+[Test worker] network.PersistentNetworkMapCache. - Adding node with info: NodeInfo(addresses=[mock.node:1000], legalIdentitiesAndCerts=[O=Company-C, L=Zug, ST=ZG, C=CH], platformVersion=4, serial=1573634909957)
+[Test worker] network.PersistentNetworkMapCache. - No previous node found
+[Test worker] network.PersistentNetworkMapCache. - Adding node with info: NodeInfo(addresses=[mock.node:1000], legalIdentitiesAndCerts=[O=Notary, L=Zurich, ST=ZH, C=CH], platformVersion=4, serial=1573634908061)
+[Test worker] network.PersistentNetworkMapCache. - No previous node found
+[Test worker] network.PersistentNetworkMapCache. - Adding node with info: NodeInfo(addresses=[mock.node:1000], legalIdentitiesAndCerts=[O=Company-C, L=Zug, ST=ZG, C=CH], platformVersion=4, serial=1573634909957)
+[Test worker] network.PersistentNetworkMapCache. - No previous node found
+[Test worker] network.PersistentNetworkMapCache. - Adding node with info: NodeInfo(addresses=[mock.node:1000], legalIdentitiesAndCerts=[O=Company-A, L=Zurich, ST=ZH, C=CH], platformVersion=4, serial=1573634908684)
+[Test worker] network.PersistentNetworkMapCache. - No previous node found
+[Test worker] network.PersistentNetworkMapCache. - Adding node with info: NodeInfo(addresses=[mock.node:1000], legalIdentitiesAndCerts=[O=Company-C, L=Zug, ST=ZG, C=CH], platformVersion=4, serial=1573634909957)
+[Test worker] network.PersistentNetworkMapCache. - No previous node found
+[Test worker] network.PersistentNetworkMapCache. - Adding node with info: NodeInfo(addresses=[mock.node:1000], legalIdentitiesAndCerts=[O=Company-B, L=Winterthur, ST=ZH, C=CH], platformVersion=4, serial=1573634909353)
+[Test worker] network.PersistentNetworkMapCache. - No previous node found
+[Test worker] network.PersistentNetworkMapCache. - Adding node with info: NodeInfo(addresses=[mock.node:1000], legalIdentitiesAndCerts=[O=Company-C, L=Zug, ST=ZG, C=CH], platformVersion=4, serial=1573634909957)
+[Test worker] network.PersistentNetworkMapCache. - No previous node found
+[Test worker] network.PersistentNetworkMapCache. - Adding node with info: NodeInfo(addresses=[mock.node:1000], legalIdentitiesAndCerts=[O=Company-C, L=Zug, ST=ZG, C=CH], platformVersion=4, serial=1573634909957)
+[Test worker] network.PersistentNetworkMapCache. - Previous node was identical to incoming one - doing nothing
+[Test worker] network.PersistentNetworkMapCache. - Adding node with info: NodeInfo(addresses=[mock.node:1000], legalIdentitiesAndCerts=[O=Company-C, L=Zug, ST=ZG, C=CH], platformVersion=4, serial=1573634909957)
+[Test worker] network.PersistentNetworkMapCache. - Previous node was identical to incoming one - doing nothing
+[Test worker] internal.NodeFlowManager. - Registered com.cordalo.template.flows.ChatMessageFlow$Send to initiate com.cordalo.template.flows.ChatMessageFlow$SendResponder (version 2)
+[Test worker] internal.NodeFlowManager. - Registered com.cordalo.template.flows.ChatMessageFlow$Reply to initiate com.cordalo.template.flows.ChatMessageFlow$ReplyResponder (version 2)
+[Test worker] cordapp.JarScanningCordappLoader.<init> - Loading CorDapps from RestrictedURL(url=file:/Users/Lolo/git/cordalo-template/workflows/build/generated-custom-cordapps/20191113-084709.563/custom-cordapp_1_4_eeb70d85-10b2-4f5d-92c8-b96755ec66fb.jar, rootPackageName=null), RestrictedURL(url=file:/Users/Lolo/git/cordalo-template/workflows/build/generated-custom-cordapps/20191113-084709.563/custom-cordapp_1_4_1b2113e5-2b78-493f-b182-d050cfac82b4.jar, rootPackageName=null)
+[Test worker] cordapp.JarScanningCordappLoader. - Scanning CorDapp in file:/Users/Lolo/git/cordalo-template/workflows/build/generated-custom-cordapps/20191113-084709.563/custom-cordapp_1_4_eeb70d85-10b2-4f5d-92c8-b96755ec66fb.jar
+[Test worker] cordapp.JarScanningCordappLoader. - Scanning CorDapp in file:/Users/Lolo/git/cordalo-template/workflows/build/generated-custom-cordapps/20191113-084709.563/custom-cordapp_1_4_1b2113e5-2b78-493f-b182-d050cfac82b4.jar
+[Test worker] ClassloaderUtils. - Contracts loading for '/var/folders/m4/17h8qhhs44q19w47j2w3gxd40000gn/T/attachment6386619873283779352.jar' took 21 msec
+[Test worker] ClassloaderUtils. - Contracts loading for '/var/folders/m4/17h8qhhs44q19w47j2w3gxd40000gn/T/attachment4709731980716140308.jar' took 20 msec
+[Test worker] cordapp.JarScanningCordappLoader. - Looking for CorDapps in [build/mock-network/20191113-084827.059/nodes/5/cordapps]
+[Test worker] cordapp.JarScanningCordappLoader.<init> - Loading CorDapps from RestrictedURL(url=file:/Users/Lolo/git/cordalo-template/workflows/build/mock-network/20191113-084827.059/nodes/5/cordapps/corda-common-contracts-0.8-SNAPSHOT.jar, rootPackageName=null), RestrictedURL(url=file:/Users/Lolo/git/cordalo-template/workflows/build/mock-network/20191113-084827.059/nodes/5/cordapps/contracts-0.1.jar, rootPackageName=null)
+[Test worker] cordapp.JarScanningCordappLoader. - Scanning CorDapp in file:/Users/Lolo/git/cordalo-template/workflows/build/mock-network/20191113-084827.059/nodes/5/cordapps/corda-common-contracts-0.8-SNAPSHOT.jar
+[Test worker] cordapp.JarScanningCordappLoader. - Scanning CorDapp in file:/Users/Lolo/git/cordalo-template/workflows/build/mock-network/20191113-084827.059/nodes/5/cordapps/contracts-0.1.jar
+[Test worker] internal.InternalMockNetwork$MockNode. - Node starting up ...
+[Test worker] internal.InternalMockNetwork$MockNode. - Loaded network parameters: NetworkParameters {
+      minimumPlatformVersion=1
+      notaries=[NotaryInfo(identity=O=Notary Service, L=Zurich, C=CH, validating=true)]
+      maxMessageSize=10485760
+      maxTransactionSize=524288000
+      whitelistedContractImplementations {
+        
+      }
+      eventHorizon=PT720H
+      packageOwnership {
+        
+      }
+      modifiedTime=2019-11-13T08:48:27.059Z
+      epoch=1
+  }
+[Test worker] hikari.HikariDataSource.<init> - HikariPool-62 - Started.

@@ -17,6 +17,7 @@ import java.math.BigDecimal;
 import java.security.PublicKey;
 import java.util.Currency;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 
@@ -97,5 +98,25 @@ public class TestState extends CordaloLinearState {
     @Override
     public Participants participants() {
         return Participants.fromParties(this.owner, this.provider, this.cloneProvider);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof TestState)) return false;
+        if (!super.equals(o)) return false;
+        TestState testState = (TestState) o;
+        return super.equals(o) &&
+                getOwner().equals(testState.getOwner()) &&
+                getProvider().equals(testState.getProvider()) &&
+                getCloneProvider().equals(testState.getCloneProvider()) &&
+                Objects.equals(getStringValue(), testState.getStringValue()) &&
+                Objects.equals(getIntValue(), testState.getIntValue()) &&
+                Objects.equals(getAmount(), testState.getAmount());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), getOwner(), getProvider(), getCloneProvider(), getStringValue(), getIntValue(), getAmount());
     }
 }
