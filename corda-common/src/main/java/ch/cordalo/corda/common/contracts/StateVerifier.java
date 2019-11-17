@@ -167,6 +167,9 @@ public class StateVerifier {
     public <T extends ContractState> StateVerifier filterWhere(Function<T, Boolean> mapper) {
         return new FilterWhere(this, mapper).verify();
     }
+    public <T extends ContractState> StateVerifier notThis(T state) {
+        return new FilterWhere(this, x -> !x.equals(state)).verify();
+    }
 
 
     public StateVerifier one() { return new One(this).verify(); }

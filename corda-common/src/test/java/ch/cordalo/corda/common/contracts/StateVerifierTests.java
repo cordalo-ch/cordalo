@@ -153,6 +153,23 @@ public class StateVerifierTests extends CordaloTestEnvironment {
         });
     }
 
+
+
+    @Test
+    public void contract_notThis() {
+        transaction(testNode1.ledgerServices, tx -> {
+            TestState test1 = newTest("test1", 99);
+            TestState test2 = newTest("test2", 100);
+            tx.input(TestContract.ID, test1);
+            tx.output(TestContract.ID, test1);
+            tx.output(TestContract.ID, test2);
+            tx.command(test1.getParticipantKeys(), new TestContract.Commands.NotThis());
+            tx.verifies();
+            return null;
+        });
+    }
+
+
     @Test
     public void contract_create_parties() {
         transaction(testNode1.ledgerServices, tx -> {
