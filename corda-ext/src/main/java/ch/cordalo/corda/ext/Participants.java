@@ -5,6 +5,7 @@ import com.google.common.collect.Lists;
 import net.corda.core.contracts.ContractState;
 import net.corda.core.identity.AbstractParty;
 import net.corda.core.identity.Party;
+import net.corda.core.serialization.CordaSerializable;
 
 import java.security.PublicKey;
 import java.util.HashSet;
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@CordaSerializable
 public class Participants {
 
     public static String partyToX500(AbstractParty party) {

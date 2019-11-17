@@ -3,10 +3,12 @@ package ch.cordalo.corda.common.states;
 import net.corda.core.contracts.LinearState;
 import net.corda.core.contracts.UniqueIdentifier;
 import net.corda.core.serialization.ConstructorForDeserialization;
+import net.corda.core.serialization.CordaSerializable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
+@CordaSerializable
 public abstract class CordaloLinearState extends CordaloState implements LinearState {
     protected final UniqueIdentifier linearId;
     @ConstructorForDeserialization

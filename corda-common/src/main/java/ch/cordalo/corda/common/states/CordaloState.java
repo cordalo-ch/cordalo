@@ -4,11 +4,13 @@ import ch.cordalo.corda.ext.Participants;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import net.corda.core.contracts.ContractState;
 import net.corda.core.identity.AbstractParty;
+import net.corda.core.serialization.CordaSerializable;
 import org.jetbrains.annotations.NotNull;
 
 import java.security.PublicKey;
 import java.util.List;
 
+@CordaSerializable
 public abstract class CordaloState implements ContractState {
 
     public CordaloState() {
