@@ -18,18 +18,18 @@ public abstract class CordaloState implements ContractState {
 
     @NotNull
     @JsonIgnore
-    protected abstract Parties parties();
+    protected abstract Parties getParties();
 
     @NotNull
     @JsonIgnore
     @Override
     public List<AbstractParty> getParticipants() {
-        return this.parties().getParties();
+        return this.getParties().getParties();
     }
 
     @NotNull
     public List<String> getParticipantsX500() {
-        return this.parties().getPartiesX500();
+        return this.getParties().getPartiesX500();
     }
 
     @NotNull

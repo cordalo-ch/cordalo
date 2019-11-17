@@ -90,7 +90,7 @@ public class TestState extends CordaloLinearState {
     @NotNull
     @JsonIgnore
     @Override
-    protected Parties parties() {
+    protected Parties getParties() {
         return Parties.fromParties(this.owner, this.provider, this.cloneProvider);
     }
 
