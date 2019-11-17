@@ -1,6 +1,6 @@
 package ch.cordalo.corda.common.flows;
 
-import ch.cordalo.corda.ext.Participants;
+import ch.cordalo.corda.ext.Parties;
 import co.paralleluniverse.fibers.Suspendable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -52,8 +52,8 @@ public abstract class BaseFlow extends FlowLogic<SignedTransaction> {
         return getTransactionBuilderSignedBySigners(requiredSigner, command);
     }
     @Suspendable
-    protected TransactionBuilder getTransactionBuilderSignedByParticipants(Participants participants, CommandData command) throws FlowException {
-        return getTransactionBuilderSignedBySigners(participants.getImmutablePublicKeys(), command);
+    protected TransactionBuilder getTransactionBuilderSignedByParticipants(Parties parties, CommandData command) throws FlowException {
+        return getTransactionBuilderSignedBySigners(parties.getImmutablePublicKeys(), command);
     }
 
     @Suspendable
@@ -81,8 +81,8 @@ public abstract class BaseFlow extends FlowLogic<SignedTransaction> {
         return signSyncCollectAndFinalize(true, counterparties, transactionBuilder);
     }
     @Suspendable
-    protected SignedTransaction signSyncCollectAndFinalize(Participants participants, TransactionBuilder transactionBuilder) throws FlowException {
-        return signSyncCollectAndFinalize(true, participants.getParties(), transactionBuilder);
+    protected SignedTransaction signSyncCollectAndFinalize(Parties parties, TransactionBuilder transactionBuilder) throws FlowException {
+        return signSyncCollectAndFinalize(true, parties.getParties(), transactionBuilder);
     }
 
 
@@ -96,8 +96,8 @@ public abstract class BaseFlow extends FlowLogic<SignedTransaction> {
     }
 
     @Suspendable
-    protected SignedTransaction signCollectAndFinalize(Participants participants, TransactionBuilder transactionBuilder) throws FlowException {
-        return signSyncCollectAndFinalize(false, participants.getParties(), transactionBuilder);
+    protected SignedTransaction signCollectAndFinalize(Parties parties, TransactionBuilder transactionBuilder) throws FlowException {
+        return signSyncCollectAndFinalize(false, parties.getParties(), transactionBuilder);
     }
     @Suspendable
     protected SignedTransaction signCollectAndFinalize(List<AbstractParty> counterparties, TransactionBuilder transactionBuilder) throws FlowException {

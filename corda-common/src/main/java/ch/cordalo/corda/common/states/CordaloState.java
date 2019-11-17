@@ -1,6 +1,6 @@
 package ch.cordalo.corda.common.states;
 
-import ch.cordalo.corda.ext.Participants;
+import ch.cordalo.corda.ext.Parties;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import net.corda.core.contracts.ContractState;
 import net.corda.core.identity.AbstractParty;
@@ -18,23 +18,23 @@ public abstract class CordaloState implements ContractState {
 
     @NotNull
     @JsonIgnore
-    public abstract Participants participants();
+    protected abstract Parties parties();
 
     @NotNull
     @JsonIgnore
     @Override
     public List<AbstractParty> getParticipants() {
-        return this.participants().getParties();
+        return this.parties().getParties();
     }
 
     @NotNull
     public List<String> getParticipantsX500() {
-        return this.participants().getPartiesX500();
+        return this.parties().getPartiesX500();
     }
 
     @NotNull
     @JsonIgnore
     public List<PublicKey> getParticipantKeys() {
-        return new Participants(this.getParticipants()).getPublicKeys();
+        return new Parties(this.getParticipants()).getPublicKeys();
     }
 }

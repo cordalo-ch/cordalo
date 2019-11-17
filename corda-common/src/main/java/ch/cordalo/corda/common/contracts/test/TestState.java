@@ -1,24 +1,18 @@
 package ch.cordalo.corda.common.contracts.test;
 
 import ch.cordalo.corda.common.states.CordaloLinearState;
-import ch.cordalo.corda.ext.Participants;
+import ch.cordalo.corda.ext.Parties;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.google.common.collect.Lists;
 import net.corda.core.contracts.Amount;
 import net.corda.core.contracts.BelongsToContract;
-import net.corda.core.contracts.LinearState;
 import net.corda.core.contracts.UniqueIdentifier;
-import net.corda.core.identity.AbstractParty;
 import net.corda.core.identity.Party;
 import net.corda.core.serialization.ConstructorForDeserialization;
 import org.jetbrains.annotations.NotNull;
 
 import java.math.BigDecimal;
-import java.security.PublicKey;
 import java.util.Currency;
-import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 
 @BelongsToContract (TestContract.class)
@@ -96,8 +90,8 @@ public class TestState extends CordaloLinearState {
     @NotNull
     @JsonIgnore
     @Override
-    public Participants participants() {
-        return Participants.fromParties(this.owner, this.provider, this.cloneProvider);
+    protected Parties parties() {
+        return Parties.fromParties(this.owner, this.provider, this.cloneProvider);
     }
 
     @Override

@@ -14,35 +14,35 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @CordaSerializable
-public class Participants {
+public class Parties {
 
     public static String partyToX500(AbstractParty party) {
         return party == null ? "" : party.nameOrNull().getX500Principal().getName();
     }
 
-    public static Participants fromParties(List<Party> parties) {
-        return new Participants(
+    public static Parties fromParties(List<Party> parties) {
+        return new Parties(
                 parties.stream().map(x -> (AbstractParty)x).collect(Collectors.toList()));
     }
-    public static Participants fromParties(Party... parties) {
-        return new Participants(parties);
+    public static Parties fromParties(Party... parties) {
+        return new Parties(parties);
     }
-    public static Participants fromParties(AbstractParty... parties) {
-        return new Participants(parties);
+    public static Parties fromParties(AbstractParty... parties) {
+        return new Parties(parties);
     }
-    public static Participants fromAbstractParties(List<AbstractParty> parties) {
-        return new Participants(parties);
+    public static Parties fromAbstractParties(List<AbstractParty> parties) {
+        return new Parties(parties);
     }
 
     private final List<AbstractParty> parties;
 
-    public Participants(List<AbstractParty> parties) {
+    public Parties(List<AbstractParty> parties) {
         this.parties = parties;
     }
-    public Participants(ContractState state) {
+    public Parties(ContractState state) {
         this(state.getParticipants());
     }
-    public Participants(ContractState... states) {
+    public Parties(ContractState... states) {
         Set<AbstractParty> set = new HashSet<>();
         if (states != null) {
             for (ContractState state : states) {
@@ -54,7 +54,7 @@ public class Participants {
         this.parties = Lists.newArrayList(set);
     }
 
-    public Participants(AbstractParty... parties) {
+    public Parties(AbstractParty... parties) {
         this.parties = unique(parties);
     }
 
@@ -78,7 +78,7 @@ public class Participants {
         return this.parties;
     }
     public List<String> getPartiesX500() {
-        return this.getParties().stream().map(Participants::partyToX500).collect(Collectors.toList());
+        return this.getParties().stream().map(Parties::partyToX500).collect(Collectors.toList());
     }
     public List<PublicKey> getPublicKeys() {
         return this.getParties().stream().map(AbstractParty::getOwningKey).collect(Collectors.toList());
@@ -89,25 +89,25 @@ public class Participants {
                 .build();
     }
 
-    public Participants add(Participants participants) {
+    public Parties add(Parties parties) {
         Set<AbstractParty> set = new HashSet<>(this.getParties());
-        set.addAll(participants.getParties());
-        return new Participants(Lists.newArrayList(set));
+        set.addAll(parties.getParties());
+        return new Parties(Lists.newArrayList(set));
     }
-    public Participants addAbstractParties(List<AbstractParty> list) {
+    public Parties addAbstractParties(List<AbstractParty> list) {
         List<AbstractParty> newParties = Lists.newArrayList(this.parties);
         newParties.addAll(list);
-        return new Participants(Lists.newArrayList(newParties));
+        return new Parties(Lists.newArrayList(newParties));
     }
-    public Participants add(List<Party> list) {
+    public Parties add(List<Party> list) {
         List<AbstractParty> newParties = Lists.newArrayList(this.parties);
         newParties.addAll(list);
-        return new Participants(Lists.newArrayList(newParties));
+        return new Parties(Lists.newArrayList(newParties));
     }
-    public Participants add(AbstractParty party) {
+    public Parties add(AbstractParty party) {
         List<AbstractParty> newParties = Lists.newArrayList(this.parties);
         newParties.add(party);
-        return new Participants(Lists.newArrayList(newParties));
+        return new Parties(Lists.newArrayList(newParties));
     }
 
 }

@@ -18,11 +18,11 @@ import java.util.List;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class ParticipantsTest {
+public class PartiesTest {
 
     @Test
     public void withNullParty_partyToX500_expectEmptyString() {
-        String x500 = Participants.partyToX500(null);
+        String x500 = Parties.partyToX500(null);
         assertThat(x500, is(""));
     }
 
@@ -31,7 +31,7 @@ public class ParticipantsTest {
         AbstractParty party = new AnonymousParty(NullKeys.NullPublicKey.INSTANCE);
 
         try {
-            String x500 = Participants.partyToX500(party);
+            String x500 = Parties.partyToX500(party);
             assertThat(x500, is(""));
         } catch (Exception e) {
             // TODO our code should not fail with anonymous party To be discuss
@@ -42,66 +42,66 @@ public class ParticipantsTest {
     public void withParty_partyToX500_expectX500() {
         AbstractParty party = newParty();
 
-        String x500 = Participants.partyToX500(party);
+        String x500 = Parties.partyToX500(party);
         assertThat(x500, is("CN=commonName,OU=organisationUnit,O=organisation,L=locality,ST=state,C=CH"));
     }
 
     @Test
     public void withEmptyParties_fromParties_expectGetPartiesEmpty() {
-        Participants noParticipants = getParticipantsFromEmptyParties();
+        Parties noParties = getParticipantsFromEmptyParties();
 
-        assertThat(noParticipants, notNullValue());
+        assertThat(noParties, notNullValue());
     }
 
     @Test
     public void withEmptyParties_getParties_expectGetPartiesEmpty() {
-        Participants noParticipants = getParticipantsFromEmptyParties();
+        Parties noParties = getParticipantsFromEmptyParties();
 
-        assertThat(noParticipants.getParties().size(), is(0));
+        assertThat(noParties.getParties().size(), is(0));
     }
 
     @Test
     public void witOneParty_getParties_expectGetParties() {
         Party element = newParty();
-        Participants participants = Participants.fromParties(ImmutableList.of(element));
+        Parties parties = Parties.fromParties(ImmutableList.of(element));
 
-        assertThat(participants.getParties().size(), is(1));
-        assertThat(participants.getParties().get(0), is(element));
+        assertThat(parties.getParties().size(), is(1));
+        assertThat(parties.getParties().get(0), is(element));
     }
 
     @Test
     public void withEmptyParties_getPartiesX500_expectGetPartiesEmpty() {
-        Participants noParticipants = getParticipantsFromEmptyParties();
+        Parties noParties = getParticipantsFromEmptyParties();
 
-        assertThat(noParticipants.getPartiesX500().size(), is(0));
+        assertThat(noParties.getPartiesX500().size(), is(0));
     }
 
     @Test
     public void withParties_getPublicKeys_expectGetPartiesEmpty() {
         Party element = newParty();
-        Participants participants = Participants.fromParties(ImmutableList.of(element));
+        Parties parties = Parties.fromParties(ImmutableList.of(element));
 
-        assertThat(participants.getPublicKeys().size(), is(1));
-        assertThat(participants.getPublicKeys().get(0), is(element.getOwningKey()));
+        assertThat(parties.getPublicKeys().size(), is(1));
+        assertThat(parties.getPublicKeys().get(0), is(element.getOwningKey()));
     }
 
     @NotNull
-    private Participants getParticipantsFromEmptyParties() {
+    private Parties getParticipantsFromEmptyParties() {
         List<Party> parties = new ArrayList<>();
-        return Participants.fromParties(parties);
+        return Parties.fromParties(parties);
     }
 
 
     @Test
     public void with3Party_addParties() {
         Party element = newParty("peter", "company-A");
-        Participants participants = new Participants(element);
+        Parties parties = new Parties(element);
 
         Party element2 = newParty("joe", "company-B");
         Party element3 = newParty("mary", "company-C");
-        Participants participants2 = new Participants(element2, element3);
+        Parties parties2 = new Parties(element2, element3);
 
-        Participants result = participants.add(participants2);
+        Parties result = parties.add(parties2);
 
         assertThat(result.getParties().size(), is(3));
         assertThat(result.getParties(), hasItem(element));
@@ -113,9 +113,9 @@ public class ParticipantsTest {
     public void with1State() {
         Party element = newParty("peter", "company-A");
         Party element2 = newParty("joe", "company-B");
-        ParticipantsTestState state = new ParticipantsTestState(new UniqueIdentifier(), element, element2);
+        PartiesTestState state = new PartiesTestState(new UniqueIdentifier(), element, element2);
 
-        Participants result = new Participants(state);
+        Parties result = new Parties(state);
 
         assertThat(result.getParties().size(), is(2));
         assertThat(result.getParties(), hasItem(element));
@@ -128,7 +128,7 @@ public class ParticipantsTest {
         AbstractParty element = newParty("peter", "company-A");
         AbstractParty element2 = newParty("joe", "company-B");
 
-        Participants result = Participants.fromAbstractParties(Lists.newArrayList(element, element2));
+        Parties result = Parties.fromAbstractParties(Lists.newArrayList(element, element2));
 
         assertThat(result.getParties().size(), is(2));
         assertThat(result.getParties(), hasItem(element));
@@ -140,7 +140,7 @@ public class ParticipantsTest {
     public void with2Party_getImmutableKeys() {
         AbstractParty element = newParty("peter", "company-A");
         AbstractParty element2 = newParty("joe", "company-B");
-        Participants result = Participants.fromAbstractParties(Lists.newArrayList(element, element2));
+        Parties result = Parties.fromAbstractParties(Lists.newArrayList(element, element2));
 
         assertThat(result.getPublicKeys(), is(result.getImmutablePublicKeys()));
     }
@@ -148,11 +148,11 @@ public class ParticipantsTest {
     public void with2States() {
         Party element = newParty("peter", "company-A");
         Party element2 = newParty("joe", "company-B");
-        ParticipantsTestState state = new ParticipantsTestState(new UniqueIdentifier(), element, element2);
+        PartiesTestState state = new PartiesTestState(new UniqueIdentifier(), element, element2);
         Party element3 = newParty("mary", "company-B");
-        ParticipantsTestState state2 = new ParticipantsTestState(new UniqueIdentifier(), element, element3);
+        PartiesTestState state2 = new PartiesTestState(new UniqueIdentifier(), element, element3);
 
-        Participants result = new Participants(state, state2);
+        Parties result = new Parties(state, state2);
 
         assertThat(result.getParties().size(), is(3));
         assertThat(result.getParties(), hasItem(element));
@@ -166,7 +166,7 @@ public class ParticipantsTest {
         Party element2 = newParty("joe", "company-B");
         Party element3 = newParty("mary", "company-B");
 
-        Participants result = Participants.fromParties(element, element2);
+        Parties result = Parties.fromParties(element, element2);
         result = result.add(element3);
 
         assertThat(result.getParties().size(), is(3));
@@ -182,7 +182,7 @@ public class ParticipantsTest {
         Party element2 = newParty("joe", "company-B");
         Party element3 = newParty("mary", "company-B");
 
-        Participants result = Participants.fromParties(element);
+        Parties result = Parties.fromParties(element);
         result = result.add(Lists.newArrayList(element2, element3));
 
         assertThat(result.getParties().size(), is(3));
@@ -198,7 +198,7 @@ public class ParticipantsTest {
         AbstractParty element2 = newParty("joe", "company-B");
         AbstractParty element3 = newParty("mary", "company-B");
 
-        Participants result = Participants.fromParties(element);
+        Parties result = Parties.fromParties(element);
         result = result.addAbstractParties(Lists.newArrayList(element2, element3));
 
         assertThat(result.getParties().size(), is(3));

@@ -3,10 +3,10 @@ package ch.cordalo.corda.ext;
 import net.corda.core.contracts.Contract;
 import net.corda.core.transactions.LedgerTransaction;
 
-public class ParticipantsTestContract implements Contract {
-    public static final String ID = ParticipantsTestContract.class.getName();
+public class PartiesTestContract implements Contract {
+    public static final String ID = PartiesTestContract.class.getName();
 
-    public ParticipantsTestContract() {}
+    public PartiesTestContract() {}
 
     public void verify(LedgerTransaction tx) throws IllegalArgumentException {
     }
