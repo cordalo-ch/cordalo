@@ -5,6 +5,9 @@
 
 
 ./gradlew clean
+rm -R `find . -name out`
+rm -R `find . -name bin`
+rm -R `find . -name logs | grep -v git`
 ./gradlew jar -x signArchives
 #./gradlew --info check test
 ./gradlew check test
