@@ -28,6 +28,7 @@ buildscript {
         classpath "org.springframework.boot:spring-boot-gradle-plugin:$spring_boot_gradle_plugin_version"
         classpath "net.saliman:gradle-cobertura-plugin:2.5.4"
         classpath "com.github.kt3k.coveralls:com.github.kt3k.coveralls.gradle.plugin:2.8.4"
+        classpath 'com.github.jk1:gradle-license-report:1.11'
     }
 }
 allprojects {
@@ -139,6 +140,7 @@ ext {
 
 apply plugin: 'net.corda.plugins.quasar-utils'
 apply plugin: 'com.github.kt3k.coveralls'
+apply plugin: 'com.github.jk1.dependency-license-report'
 
 cobertura {
     rootProject.subprojects.each {

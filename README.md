@@ -38,6 +38,11 @@ Install in that order:
 * https://rubygems.org/gems/travis should be enough with  
     ```gem install travis```
 
+# licenses report
+
+run `gradle generateLicenseReport`
+report is available at `build/reports/dependency-license/index.html`
+
 # Annexes
 ## How to create the release instruction in .travis.yml
 To create the release part in your .travis.yml file, run the following command in the root of your project:
