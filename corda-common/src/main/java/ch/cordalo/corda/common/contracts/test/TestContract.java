@@ -26,7 +26,7 @@ public class TestContract implements Contract {
 
     public interface Commands extends CommandData {
         public void verify(LedgerTransaction tx, StateVerifier verifier) throws IllegalArgumentException;
-
+        
         class CreateCommandVerifier implements TestContract.Commands {
             @Override
             public void verify(LedgerTransaction tx, StateVerifier verifier) throws IllegalArgumentException {

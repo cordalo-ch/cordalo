@@ -16,7 +16,7 @@ public class TestBaseFlow  {
 
     @InitiatingFlow(version = 2)
     @StartableByRPC
-    public static class Create extends SimpleBaseFlow implements SimpleFlow.Create<TestState> {
+    public static class Create extends SimpleBaseFlow<SignedTransaction> implements SimpleFlow.Create<TestState> {
         private final Party provider;
         private final String value;
         private final Integer intValue;
@@ -50,7 +50,7 @@ public class TestBaseFlow  {
 
     @InitiatingFlow(version = 2)
     @StartableByRPC
-    public static class UpdateProvider extends SimpleBaseFlow implements SimpleFlow.Update<TestState> {
+    public static class UpdateProvider extends SimpleBaseFlow<SignedTransaction> implements SimpleFlow.Update<TestState> {
         private final UniqueIdentifier id;
         private final Party provider;
 
@@ -81,7 +81,7 @@ public class TestBaseFlow  {
 
     @InitiatingFlow(version = 2)
     @StartableByRPC
-    public static class Delete extends SimpleBaseFlow implements SimpleFlow.Delete<TestState> {
+    public static class Delete extends SimpleBaseFlow<SignedTransaction> implements SimpleFlow.Delete<TestState> {
         private final UniqueIdentifier id;
         public Delete(UniqueIdentifier id) {
             this.id = id;

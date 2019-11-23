@@ -21,7 +21,7 @@ import java.security.PublicKey;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public abstract class BaseFlow extends FlowLogic<SignedTransaction> {
+public abstract class BaseFlow<S> extends FlowLogic<S> {
     public BaseFlow() {
         super();
     }

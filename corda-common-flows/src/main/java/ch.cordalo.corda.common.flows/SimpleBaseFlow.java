@@ -10,7 +10,7 @@ import net.corda.core.flows.FlowException;
 import net.corda.core.transactions.SignedTransaction;
 import net.corda.core.transactions.TransactionBuilder;
 
-public abstract class SimpleBaseFlow extends BaseFlow {
+public abstract class SimpleBaseFlow<S> extends BaseFlow<S> {
 
     @Suspendable
     public <T extends ContractState> SignedTransaction simpleFlow_Create(SimpleFlow.Create<T> creator, CommandData command) throws FlowException {

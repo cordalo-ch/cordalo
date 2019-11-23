@@ -63,4 +63,20 @@ public class TestBaseFlowTests extends CordaloTestEnvironment {
         }
     }
 
+
+    @Test
+    public void testShare() {
+        try {
+            TestBaseFlow.Create flow = new TestBaseFlow.Create(testNode2.party, "my string", 42);
+            TestState test = this.startFlowAndResult(testNode1, flow, TestState.class);
+
+            TestBaseFlow.Delete flowU = new TestBaseFlow.Delete(test.getLinearId());
+            TestState test2 = this.startFlowAndResult(testNode1, flowU, TestState.class);
+
+        } catch (FlowException e) {
+            e.printStackTrace();
+            Assert.fail(e.getMessage());
+        }
+    }
+
 }
