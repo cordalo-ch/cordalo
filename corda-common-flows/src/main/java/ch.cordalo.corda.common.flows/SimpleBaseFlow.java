@@ -19,6 +19,9 @@ import net.corda.core.flows.FlowException;
 import net.corda.core.transactions.SignedTransaction;
 import net.corda.core.transactions.TransactionBuilder;
 
+import static ch.cordalo.corda.common.flows.CordaloProgressTracker.BUILDING;
+import static ch.cordalo.corda.common.flows.CordaloProgressTracker.PREPARATION;
+
 public abstract class SimpleBaseFlow<S> extends BaseFlow<S> {
 
     @Suspendable

@@ -15,6 +15,9 @@ import net.corda.confidential.IdentitySyncFlow;
 import net.corda.core.contracts.ContractState;
 import net.corda.core.crypto.SecureHash;
 import net.corda.core.flows.*;
+import net.corda.core.utilities.ProgressTracker;
+
+import static ch.cordalo.corda.common.flows.CordaloProgressTracker.PROGRESSTRACKER_SYNC;
 
 abstract public class ResponderBaseFlow<T extends ContractState>  extends FlowLogic<Unit> {
     protected final FlowSession otherFlow;
@@ -35,6 +38,12 @@ abstract public class ResponderBaseFlow<T extends ContractState>  extends FlowLo
         }
         return Unit.INSTANCE;
     }
+
+    @Override
+    public ProgressTracker getProgressTracker() {
+        return PROGRESSTRACKER_SYNC;
+    }
+
     @Suspendable
     protected Unit receiveCounterpartiesNoTxChecking() throws FlowException {
         if (otherFlow.getCounterpartyFlowInfo().getFlowVersion() >= 2) {

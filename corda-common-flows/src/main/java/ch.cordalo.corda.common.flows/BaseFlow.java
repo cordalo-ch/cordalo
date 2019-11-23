@@ -30,6 +30,8 @@ import java.security.PublicKey;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static ch.cordalo.corda.common.flows.CordaloProgressTracker.*;
+
 public abstract class BaseFlow<S> extends FlowLogic<S> {
     public BaseFlow() {
         super();
@@ -191,57 +193,9 @@ public abstract class BaseFlow<S> extends FlowLogic<S> {
         return ref.getState().getData();
     }
 
-    protected final ProgressTracker.Step PREPARATION = new ProgressTracker.Step("Obtaining data from vault.");
-    protected final ProgressTracker.Step BUILDING = new ProgressTracker.Step("Building transaction.");
-    protected final ProgressTracker.Step VERIFYING = new ProgressTracker.Step("Verifying transaction.");
-    protected final ProgressTracker.Step SIGNING = new ProgressTracker.Step("Signing transaction.");
-    protected final ProgressTracker.Step SYNCING = new ProgressTracker.Step("Syncing identities.") {
-        @Override
-        public ProgressTracker childProgressTracker() {
-            return IdentitySyncFlow.Send.Companion.tracker();
-        }
-    };
-    protected final ProgressTracker.Step COLLECTING = new ProgressTracker.Step("Collecting counterparty signature.") {
-        @Override
-        public ProgressTracker childProgressTracker() {
-            return CollectSignaturesFlow.Companion.tracker();
-        }
-    };
-    protected final ProgressTracker.Step FINALISING = new ProgressTracker.Step("Finalising transaction.") {
-        @Override
-        public ProgressTracker childProgressTracker() {
-            return FinalityFlow.Companion.tracker();
-        }
-    };
-
-    protected final ProgressTracker progressTracker_sync = new ProgressTracker(
-            PREPARATION,    // none
-            BUILDING,       // none
-            VERIFYING,      // none
-            SIGNING,        // none
-            SYNCING,        // + Identity Sync Flow: Unit / Void
-            COLLECTING,     // + Collect Signatures Flow: SignedTransaction
-            FINALISING      // + Finality Flow: SignedTransaction
-    );
-    protected final ProgressTracker progressTracker_nosync = new ProgressTracker(
-            PREPARATION,    // none
-            BUILDING,       // none
-            VERIFYING,      // none
-            SIGNING,        // none
-            COLLECTING,     // + Collect Signatures Flow: SignedTransaction
-            FINALISING      // + Finality Flow: SignedTransaction
-    );
-    protected final ProgressTracker progressTracker_nosync_nocollect = new ProgressTracker(
-            PREPARATION,    // none
-            BUILDING,       // none
-            VERIFYING,      // none
-            SIGNING,        // none
-            FINALISING      // + Finality Flow: SignedTransaction
-    );
-
     @Override
     public ProgressTracker getProgressTracker() {
-        return this.progressTracker_sync;
+        return PROGRESSTRACKER_SYNC;
     }
 
     public static class SignTxFlowNoChecking extends SignTransactionFlow {
