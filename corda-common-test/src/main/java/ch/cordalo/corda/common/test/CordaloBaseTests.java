@@ -66,6 +66,19 @@ abstract public class CordaloBaseTests {
     }
 
 
+    @Suspendable
+    public <T extends ContractState> T startFlowAndState(CordaNodeEnvironment env, FlowLogic<T> flow) throws FlowException {
+        CordaFuture<T> future = env.node.startFlow(flow);
+        env.network.runNetwork();
+        try {
+            return future.get();
+        } catch (InterruptedException var5) {
+            throw new FlowException("InterruptedException while start flow", var5);
+        } catch (ExecutionException var6) {
+            throw new FlowException("ExecutionException while start flow", var6);
+        }
+    }
+
 
     @Suspendable
     public StateVerifier startFlow(

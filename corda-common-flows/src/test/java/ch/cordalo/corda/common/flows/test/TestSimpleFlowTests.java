@@ -10,9 +10,11 @@
 package ch.cordalo.corda.common.flows.test;
 
 import ch.cordalo.corda.common.contracts.CordaloTestEnvironment;
+import ch.cordalo.corda.common.contracts.StateVerifier;
 import ch.cordalo.corda.common.contracts.test.TestSimpleState;
 import ch.cordalo.corda.common.test.CordaNodeEnvironment;
 import ch.cordalo.corda.common.test.FindResponderClasses;
+import net.corda.core.contracts.UniqueIdentifier;
 import net.corda.core.flows.FlowException;
 import org.junit.After;
 import org.junit.Assert;
@@ -20,6 +22,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class TestSimpleFlowTests extends CordaloTestEnvironment {
 
@@ -51,6 +54,16 @@ public class TestSimpleFlowTests extends CordaloTestEnvironment {
                 new TestSimpleFlow.Share(state.getLinearId(), partner.party),
                 TestSimpleState.class);
     }
+    private StateVerifier newDelete(CordaNodeEnvironment env, TestSimpleState state) throws FlowException {
+        return this.startFlow(
+                env,
+                new TestSimpleFlow.Delete(state.getLinearId()));
+    }
+    private TestSimpleState newSearch(CordaNodeEnvironment env, UniqueIdentifier linearId, CordaNodeEnvironment partner) throws FlowException {
+        return this.startFlowAndState(
+                env,
+                new TestSimpleFlow.Search(linearId, partner.party));
+    }
 
     @Test
     public void testCreate()  {
@@ -80,6 +93,48 @@ public class TestSimpleFlowTests extends CordaloTestEnvironment {
         try {
             TestSimpleState test = newSimple(this.testNode1, "Test1", "Value");
             TestSimpleState shared = newShare(this.testNode1, test, this.testNode2);
+        } catch (FlowException e) {
+            e.printStackTrace();
+            Assert.fail(e.getMessage());
+        }
+    }
+
+    @Test
+    public void testSearch()  {
+        try {
+            /* save state in Node 1 */
+            String randomKey = "RandomKey-"+new Random().nextInt();
+            TestSimpleState test = newSimple(this.testNode1, randomKey, "Value");
+
+            /* search state from Node 2 via Node 1 using linear id */
+            TestSimpleState receivedState = newSearch(this.testNode2, test.getLinearId(), this.testNode1);
+            Assert.assertEquals("received key is = to random key from other node", randomKey, receivedState.getKey());
+
+        } catch (FlowException e) {
+            e.printStackTrace();
+            Assert.fail(e.getMessage());
+        }
+    }
+
+    @Test
+    public void testDelete()  {
+        try {
+            TestSimpleState test = newSimple(this.testNode1, "Test1", "Value");
+            StateVerifier stateVerifier = newDelete(this.testNode1, test);
+            stateVerifier.output().empty();
+        } catch (FlowException e) {
+            e.printStackTrace();
+            Assert.fail(e.getMessage());
+        }
+    }
+
+    @Test
+    public void testDelete_aftershare()  {
+        try {
+            TestSimpleState test = newSimple(this.testNode1, "Test1", "Value");
+            TestSimpleState shared = newShare(this.testNode1, test, this.testNode2);
+            StateVerifier stateVerifier = newDelete(this.testNode1, shared);
+            stateVerifier.output().empty();
         } catch (FlowException e) {
             e.printStackTrace();
             Assert.fail(e.getMessage());

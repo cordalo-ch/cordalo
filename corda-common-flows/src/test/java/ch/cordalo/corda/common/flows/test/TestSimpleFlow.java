@@ -12,15 +12,18 @@ package ch.cordalo.corda.common.flows.test;
 import ch.cordalo.corda.common.contracts.test.TestSimpleContract;
 import ch.cordalo.corda.common.contracts.test.TestSimpleState;
 import ch.cordalo.corda.common.contracts.test.TestState;
+import ch.cordalo.corda.common.flows.FlowHelper;
 import ch.cordalo.corda.common.flows.ResponderBaseFlow;
 import ch.cordalo.corda.common.flows.SimpleBaseFlow;
 import ch.cordalo.corda.common.flows.SimpleFlow;
 import co.paralleluniverse.fibers.Suspendable;
 import kotlin.Unit;
+import net.corda.core.contracts.StateAndRef;
 import net.corda.core.contracts.UniqueIdentifier;
 import net.corda.core.flows.*;
 import net.corda.core.identity.Party;
 import net.corda.core.transactions.SignedTransaction;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -137,6 +140,55 @@ public class TestSimpleFlow {
         }
     }
 
+
+    @InitiatingFlow(version = 2)
+    @StartableByRPC
+    public static class Search extends SimpleBaseFlow<TestSimpleState> {
+
+        @NotNull
+        private final UniqueIdentifier id;
+        @NotNull
+        private final Party owner;
+
+        public Search(@NotNull UniqueIdentifier id, @NotNull Party owner) {
+            this.id = id;
+            this.owner = owner;
+        }
+
+        @Suspendable
+        @Override
+        public TestSimpleState call() throws FlowException {
+
+            FlowHelper<TestSimpleState> flowHelper = new FlowHelper<>(this.getServiceHub());
+
+            /* search on local vault if already shared */
+            StateAndRef<TestSimpleState> localStateByLinearId =
+                    flowHelper.getLastStateByLinearId(TestSimpleState.class, this.id);
+            if (localStateByLinearId != null) {
+                return localStateByLinearId.getState().getData();
+            }
+
+            /* initiate flow at counterparty to get LinearId from vaul after successful sharing within responder */
+            FlowSession flowSession = this.initiateFlow(this.owner);
+            UniqueIdentifier receivedLinearId = flowSession.sendAndReceive(UniqueIdentifier.class, this.id).unwrap(id -> {
+                return id;
+            });
+
+            /* linear id not found at counter party */
+            if (receivedLinearId == null) {
+                return null;
+            }
+            /* state found and synched with linear Id */
+            StateAndRef<TestSimpleState> receivedStateByLinearId = flowHelper
+                    .getLastStateByLinearId(TestSimpleState.class, receivedLinearId);
+            if (receivedStateByLinearId == null) {
+                throw new FlowException("state not found in vault after search & share id="+receivedLinearId);
+            }
+            return receivedStateByLinearId.getState().getData();
+        }
+
+    }
+
     @InitiatedBy(Create.class)
     public static class CreateResponder extends ResponderBaseFlow<TestState> {
 
@@ -192,4 +244,48 @@ public class TestSimpleFlow {
             return this.receiveIdentitiesCounterpartiesNoTxChecking();
         }
     }
+
+
+
+    /* running in counter party node */
+    @InitiatedBy(Search.class)
+    public static class SearchResponder extends ResponderBaseFlow<TestSimpleState> {
+
+        public SearchResponder(FlowSession otherFlow) {
+            super(otherFlow);
+        }
+
+
+        @Suspendable
+        @Override
+        public Unit call() throws FlowException {
+            FlowHelper<TestSimpleState> flowHelper = new FlowHelper<>(this.getServiceHub());
+
+            /* receive the requested StammNr from sender */
+            UniqueIdentifier searchLinearId = this.otherFlow.receive(UniqueIdentifier.class).unwrap(data -> {
+                return data;
+            });
+
+            /* search unconsumed state by linear id */
+            StateAndRef<TestSimpleState> localStateByLinearId =
+                    flowHelper.getLastStateByLinearId(TestSimpleState.class, searchLinearId);
+            if (localStateByLinearId == null) {
+                /* send no result back to sender */
+                this.otherFlow.send(null);
+                return null;
+            }
+
+            TestSimpleState state = localStateByLinearId.getState().getData();
+
+            /* try to share officially with corda the state and send back. Using this principle.
+            Updates will be shared in the future --> sigle point of truth and not copy */
+            Share shareFlow = new Share(state.getLinearId(), this.otherFlow.getCounterparty());
+            subFlow(shareFlow);
+
+            /* send back state linear id to counter party */
+            this.otherFlow.send(state.getLinearId());
+            return null;
+        }
+    }
+
 }
