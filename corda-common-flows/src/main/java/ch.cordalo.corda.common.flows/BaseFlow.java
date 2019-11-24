@@ -30,9 +30,10 @@ import java.security.PublicKey;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static ch.cordalo.corda.common.flows.CordaloProgressTracker.*;
-
 public abstract class BaseFlow<S> extends FlowLogic<S> {
+
+    protected final CordaloProgressTracker progress = new CordaloProgressTracker();
+
     public BaseFlow() {
         super();
     }
@@ -122,10 +123,10 @@ public abstract class BaseFlow<S> extends FlowLogic<S> {
             counterPartiesWithoutMe.remove(this.getOurIdentity());
         }
         ProgressTracker tracker = this.getProgressTracker();
-        tracker.setCurrentStep(VERIFYING);
+        tracker.setCurrentStep(progress.VERIFYING);
         transactionBuilder.verify(getServiceHub());
 
-        tracker.setCurrentStep(SIGNING);
+        tracker.setCurrentStep(progress.SIGNING);
         // We sign the transaction with our private key, making it immutable.
         SignedTransaction signedTx = getServiceHub().signInitialTransaction(transactionBuilder);
 
@@ -146,27 +147,27 @@ public abstract class BaseFlow<S> extends FlowLogic<S> {
 
             // Send any keys and certificates so the signers can verify each other's identity
             if (syncIdentities) {
-                tracker.setCurrentStep(SYNCING);
-                subFlow(new IdentitySyncFlow.Send(otherPartySessions, signedTx.getTx(), SYNCING.childProgressTracker()));
+                tracker.setCurrentStep(progress.SYNCING);
+                subFlow(new IdentitySyncFlow.Send(otherPartySessions, signedTx.getTx(), progress.SYNCING.childProgressTracker()));
             }
 
             // Send the state to all counterPartiesWithoutMe, and receive it back with their signature.
-            tracker.setCurrentStep(COLLECTING);
+            tracker.setCurrentStep(progress.COLLECTING);
             final SignedTransaction fullySignedTx = subFlow(
                     new CollectSignaturesFlow(
                             signedTx,
                             otherPartySessions,
                             ImmutableSet.of(getOurIdentity().getOwningKey()),
-                            COLLECTING.childProgressTracker()));
+                            progress.COLLECTING.childProgressTracker()));
             signedTx = fullySignedTx;
         }
         // We get the transaction notarised and recorded automatically by the platform.
         // send a copy to current issuer
-        tracker.setCurrentStep(FINALISING);
+        tracker.setCurrentStep(progress.FINALISING);
         if (otherPartiesFlowVersion == 1) {
-            return subFlow(new FinalityFlow(signedTx, Collections.emptyList(), FINALISING.childProgressTracker()));
+            return subFlow(new FinalityFlow(signedTx, Collections.emptyList(), progress.FINALISING.childProgressTracker()));
         } else {
-            return subFlow(new FinalityFlow(signedTx, otherPartySessions, FINALISING.childProgressTracker()));
+            return subFlow(new FinalityFlow(signedTx, otherPartySessions, progress.FINALISING.childProgressTracker()));
         }
     }
 
@@ -195,7 +196,7 @@ public abstract class BaseFlow<S> extends FlowLogic<S> {
 
     @Override
     public ProgressTracker getProgressTracker() {
-        return PROGRESSTRACKER_SYNC;
+        return progress.PROGRESSTRACKER_SYNC;
     }
 
     public static class SignTxFlowNoChecking extends SignTransactionFlow {

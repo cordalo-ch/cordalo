@@ -19,17 +19,14 @@ import net.corda.core.flows.FlowException;
 import net.corda.core.transactions.SignedTransaction;
 import net.corda.core.transactions.TransactionBuilder;
 
-import static ch.cordalo.corda.common.flows.CordaloProgressTracker.BUILDING;
-import static ch.cordalo.corda.common.flows.CordaloProgressTracker.PREPARATION;
-
 public abstract class SimpleBaseFlow<S> extends BaseFlow<S> {
 
     @Suspendable
     public <T extends ContractState> SignedTransaction simpleFlow_Create(SimpleFlow.Create<T> creator, CommandData command) throws FlowException {
-        getProgressTracker().setCurrentStep(PREPARATION);
+        getProgressTracker().setCurrentStep(progress.PREPARATION);
         try {
             ContractState state = creator.create();
-            getProgressTracker().setCurrentStep(BUILDING);
+            getProgressTracker().setCurrentStep(progress.BUILDING);
             TransactionBuilder transactionBuilder = this.getTransactionBuilderSignedByParticipants(
                     state,
                     command);
@@ -63,12 +60,12 @@ public abstract class SimpleBaseFlow<S> extends BaseFlow<S> {
 
     @Suspendable
     public <T extends ContractState> SignedTransaction simpleFlow_UpdateBuilder(Class<T> stateClass, UniqueIdentifier id, SimpleFlow.UpdateBuilder<T> creator, CommandData command) throws FlowException {
-        getProgressTracker().setCurrentStep(PREPARATION);
+        getProgressTracker().setCurrentStep(progress.PREPARATION);
         StateAndRef<T> stateRef = this.getLastStateByLinearId(stateClass, id);
         T state = this.getStateByRef(stateRef);
         T newState = creator.update(state);
         Parties parties = new Parties(state, newState);
-        getProgressTracker().setCurrentStep(BUILDING);
+        getProgressTracker().setCurrentStep(progress.BUILDING);
         TransactionBuilder transactionBuilder = getTransactionBuilderSignedByParticipants(parties, command);
         creator.updateBuilder(transactionBuilder, stateRef, state, newState);
         return signSyncCollectAndFinalize(parties.getParties(), transactionBuilder);
@@ -77,11 +74,11 @@ public abstract class SimpleBaseFlow<S> extends BaseFlow<S> {
 
     @Suspendable
     public <T extends ContractState> SignedTransaction simpleFlow_Delete(Class<T> stateClass, UniqueIdentifier id, SimpleFlow.Delete<T> deleter, CommandData command) throws FlowException {
-        getProgressTracker().setCurrentStep(PREPARATION);
+        getProgressTracker().setCurrentStep(progress.PREPARATION);
         StateAndRef<T> stateRef = this.getLastStateByLinearId(stateClass, id);
         T state = this.getStateByRef(stateRef);
         deleter.validateToDelete(state);
-        getProgressTracker().setCurrentStep(BUILDING);
+        getProgressTracker().setCurrentStep(progress.BUILDING);
         TransactionBuilder transactionBuilder = this.getTransactionBuilderSignedByParticipants(state, command);
         transactionBuilder.addInputState(stateRef);
         // no output state - means consume it

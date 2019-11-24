@@ -13,55 +13,59 @@ package ch.cordalo.corda.common.flows;
 import net.corda.confidential.IdentitySyncFlow;
 import net.corda.core.flows.CollectSignaturesFlow;
 import net.corda.core.flows.FinalityFlow;
+import net.corda.core.serialization.CordaSerializable;
 import net.corda.core.utilities.ProgressTracker;
+import net.corda.core.utilities.ProgressTracker.Step;
+import org.jetbrains.annotations.NotNull;
 
+@CordaSerializable
 public class CordaloProgressTracker {
 
-    public final static ProgressTracker.Step PREPARATION = new ProgressTracker.Step("Obtaining data from vault.");
-    public final static ProgressTracker.Step BUILDING = new ProgressTracker.Step("Building transaction.");
-    public final static ProgressTracker.Step VERIFYING = new ProgressTracker.Step("Verifying transaction.");
-    public final static ProgressTracker.Step SIGNING = new ProgressTracker.Step("Signing transaction.");
-    public final static ProgressTracker.Step SYNCING = new ProgressTracker.Step("Syncing identities.") {
+    @CordaSerializable
+    public static class SyncSteo extends Step {
+        public SyncSteo(@NotNull String label) {
+            super(label);
+        }
         @Override
         public ProgressTracker childProgressTracker() {
             return IdentitySyncFlow.Send.Companion.tracker();
         }
-    };
-    public final static ProgressTracker.Step COLLECTING = new ProgressTracker.Step("Collecting counterparty signature.") {
+    }
+    @CordaSerializable
+    public static class CollectingStep extends Step {
+        public CollectingStep(@NotNull String label) {
+            super(label);
+        }
         @Override
         public ProgressTracker childProgressTracker() {
             return CollectSignaturesFlow.Companion.tracker();
         }
-    };
-    public final static ProgressTracker.Step FINALISING = new ProgressTracker.Step("Finalising transaction.") {
+    }
+    @CordaSerializable
+    public static class FinalisingStep extends Step {
+        public FinalisingStep(@NotNull String label) { super(label); }
         @Override
-        public ProgressTracker childProgressTracker() {
-            return FinalityFlow.Companion.tracker();
-        }
-    };
+        public ProgressTracker childProgressTracker() { return FinalityFlow.Companion.tracker(); }
+    }
 
-    public final static ProgressTracker PROGRESSTRACKER_SYNC = new ProgressTracker(
+    public CordaloProgressTracker() {
+    }
+
+    public final Step PREPARATION = new Step("Obtaining data from vault.");
+    public final Step BUILDING = new Step("Building transaction.");
+    public final Step VERIFYING = new Step("Verifying transaction.");
+    public final Step SIGNING = new Step("Signing transaction.");
+    public final Step SYNCING = new SyncSteo("Syncing identities.");
+    public final Step COLLECTING = new CollectingStep("Collecting counterparty signature.");
+    public final Step FINALISING = new FinalisingStep("Finalising transaction.");
+
+    public final ProgressTracker PROGRESSTRACKER_SYNC = new ProgressTracker(
             PREPARATION,    // none
             BUILDING,       // none
             VERIFYING,      // none
             SIGNING,        // none
             SYNCING,        // + Identity Sync Flow: Unit / Void
             COLLECTING,     // + Collect Signatures Flow: SignedTransaction
-            FINALISING      // + Finality Flow: SignedTransaction
-    );
-    public final static ProgressTracker PROGRESS_TRACKER_NOSYNC = new ProgressTracker(
-            PREPARATION,    // none
-            BUILDING,       // none
-            VERIFYING,      // none
-            SIGNING,        // none
-            COLLECTING,     // + Collect Signatures Flow: SignedTransaction
-            FINALISING      // + Finality Flow: SignedTransaction
-    );
-    public final static ProgressTracker PROGRESS_TRACKER_NOSYNC_NOCOLLECT = new ProgressTracker(
-            PREPARATION,    // none
-            BUILDING,       // none
-            VERIFYING,      // none
-            SIGNING,        // none
             FINALISING      // + Finality Flow: SignedTransaction
     );
 }

@@ -17,10 +17,9 @@ import net.corda.core.crypto.SecureHash;
 import net.corda.core.flows.*;
 import net.corda.core.utilities.ProgressTracker;
 
-import static ch.cordalo.corda.common.flows.CordaloProgressTracker.PROGRESSTRACKER_SYNC;
-
 abstract public class ResponderBaseFlow<T extends ContractState>  extends FlowLogic<Unit> {
     protected final FlowSession otherFlow;
+    protected final CordaloProgressTracker progress = new CordaloProgressTracker();
 
     public ResponderBaseFlow(FlowSession otherFlow) {
         this.otherFlow = otherFlow;
@@ -41,7 +40,7 @@ abstract public class ResponderBaseFlow<T extends ContractState>  extends FlowLo
 
     @Override
     public ProgressTracker getProgressTracker() {
-        return PROGRESSTRACKER_SYNC;
+        return progress.PROGRESSTRACKER_SYNC;
     }
 
     @Suspendable
