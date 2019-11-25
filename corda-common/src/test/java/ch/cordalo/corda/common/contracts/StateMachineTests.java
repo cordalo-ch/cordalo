@@ -14,6 +14,9 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+
 public class StateMachineTests {
 
     @Before
@@ -32,6 +35,7 @@ public class StateMachineTests {
     public void testActions() {
         State state = ExampleStateMachine.State("CREATED");
         Assert.assertTrue("no valid next actions", state.getNextActions().size() > 0);
+        assertThat(state.getNextActions().get(0), is("REGISTER"));
     }
 
     @Test
