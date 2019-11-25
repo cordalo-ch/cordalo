@@ -1,6 +1,8 @@
 package ch.cordalo.corda.common.states;
 
 import net.corda.core.contracts.UniqueIdentifier;
+import net.corda.core.crypto.NullKeys;
+import net.corda.core.identity.AnonymousParty;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 
@@ -11,6 +13,8 @@ import static org.junit.Assert.assertThat;
 public class CordaloLinearStateTest {
 
     private class UnderTest extends CordaloLinearState {
+
+        private AnonymousParty owner = new AnonymousParty(NullKeys.NullPublicKey.INSTANCE);
 
         public UnderTest(UniqueIdentifier linearId) {
             super(linearId);
@@ -26,8 +30,13 @@ public class CordaloLinearStateTest {
         @NotNull
         @Override
         protected Parties getParties() {
-            return null;
+            return Parties.fromParties(this.owner);
         }
+
+        public AnonymousParty getOwner() {
+            return owner;
+        }
+
     }
 
     @Test
@@ -102,6 +111,18 @@ public class CordaloLinearStateTest {
 
         // Assert
         assertThat(hashCode, is(notNullValue()));
+    }
+
+    @Test
+    public void newCordaloLinearState_getParties_expectParty() {
+        // Arrange
+        UnderTest cordaloLinearState = new UnderTest();
+
+        //Act
+        Parties parties = cordaloLinearState.getParties();
+
+        // Assert
+        assertThat(parties, is(notNullValue()));
     }
 
 }
