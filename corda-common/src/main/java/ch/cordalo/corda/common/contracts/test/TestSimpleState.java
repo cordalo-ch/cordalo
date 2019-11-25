@@ -65,7 +65,7 @@ public class TestSimpleState extends CordaloLinearState {
     public TestSimpleState share(Party partner) {
         Set<Party> set = new HashSet<>(this.partners);
         set.add(partner);
-        return new TestSimpleState(this.getLinearId(), this.getOwner(),this.getKey(), this.getValue(), Lists.newArrayList(set));
+        return new TestSimpleState(this.getLinearId(), this.getOwner(), this.getKey(), this.getValue(), Lists.newArrayList(set));
     }
 
     public TestSimpleState update(String key, String value) {

@@ -37,8 +37,11 @@ public class FlowHelperTests extends CordaloTestEnvironment {
                 TestBaseFlow.class
         );
     }
+
     @After
-    public void tearDown() { super.tearDown(); }
+    public void tearDown() {
+        super.tearDown();
+    }
 
     @Test
     public void test_getLastStatesByCriteria() throws ExecutionException, InterruptedException {
@@ -56,7 +59,7 @@ public class FlowHelperTests extends CordaloTestEnvironment {
                 null,
                 Vault.StateStatus.ALL,
                 null);
-        FlowHelper<TestState> helper  = new FlowHelper(flow.getServiceHub());
+        FlowHelper<TestState> helper = new FlowHelper(flow.getServiceHub());
         List<StateAndRef<TestState>> lastStatesByCriteria = helper.getLastStatesByCriteria(TestState.class, queryCriteria, 2);
         Assert.assertEquals("shall be 2", 2, lastStatesByCriteria.size());
         Assert.assertEquals("last element has 45", new Integer(45), lastStatesByCriteria.get(1).getState().getData().getIntValue());
@@ -86,7 +89,7 @@ public class FlowHelperTests extends CordaloTestEnvironment {
                 null,
                 Vault.StateStatus.ALL,
                 null);
-        FlowHelper<TestState> helper  = new FlowHelper(flow.getServiceHub());
+        FlowHelper<TestState> helper = new FlowHelper(flow.getServiceHub());
         List<StateAndRef<TestState>> lastStatesByCriteria = helper.getLastStatesByCriteria(TestState.class, queryCriteria, 3);
         Assert.assertEquals("shall be 3", 3, lastStatesByCriteria.size());
         Assert.assertEquals("last element has 48", new Integer(48), lastStatesByCriteria.get(2).getState().getData().getIntValue());
@@ -101,7 +104,7 @@ public class FlowHelperTests extends CordaloTestEnvironment {
                 SimpleBaseFlow.class,
                 ResponderBaseFlow.class
         };
-        for (Class clazz: flowClasses) {
+        for (Class clazz : flowClasses) {
             FlowTestSupporter.validateAllMethodsMustHaveSuspendable(clazz);
         }
     }

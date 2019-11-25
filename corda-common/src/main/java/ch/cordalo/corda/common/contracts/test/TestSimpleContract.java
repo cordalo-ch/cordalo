@@ -25,11 +25,12 @@ import static net.corda.core.contracts.ContractsDSL.requireThat;
 public class TestSimpleContract implements Contract {
     public static final String ID = TestSimpleContract.class.getName();
 
-    public TestSimpleContract() {}
+    public TestSimpleContract() {
+    }
 
     public void verify(LedgerTransaction tx) throws IllegalArgumentException {
         StateVerifier verifier = StateVerifier.fromTransaction(tx, TestSimpleContract.Commands.class);
-        TestSimpleContract.Commands commandData = (TestSimpleContract.Commands)verifier.command();
+        TestSimpleContract.Commands commandData = (TestSimpleContract.Commands) verifier.command();
         commandData.verify(tx, verifier);
     }
 
@@ -79,7 +80,7 @@ public class TestSimpleContract implements Contract {
                     Set<Party> set2 = Sets.newLinkedHashSet(updateState.getPartners());
                     Sets.SetView<Party> diffUpdates = Sets.difference(set2, set1);
                     req.using("1 new partner in partners", diffUpdates.size() == 1);
-                    for (Party p: diffUpdates) {
+                    for (Party p : diffUpdates) {
                         req.using("partner cannot be owner", !p.equals(updateState.getOwner()));
                     }
                     return null;

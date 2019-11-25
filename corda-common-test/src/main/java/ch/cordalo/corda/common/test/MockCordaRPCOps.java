@@ -291,7 +291,7 @@ public class MockCordaRPCOps implements CordaRPCOps {
     @NotNull
     @Override
     public <T extends ContractState> Vault.Page<T> vaultQueryBy(@NotNull QueryCriteria criteria, @NotNull PageSpecification paging, @NotNull Sort sorting, @NotNull Class<? extends T> contractStateType) {
-        return this.env.ledgerServices.getVaultService().queryBy(contractStateType,criteria,paging,sorting);
+        return this.env.ledgerServices.getVaultService().queryBy(contractStateType, criteria, paging, sorting);
     }
 
     @NotNull
@@ -303,13 +303,13 @@ public class MockCordaRPCOps implements CordaRPCOps {
     @NotNull
     @Override
     public <T extends ContractState> Vault.Page<T> vaultQueryByWithPagingSpec(@NotNull Class<? extends T> contractStateType, @NotNull QueryCriteria criteria, @NotNull PageSpecification paging) {
-        return this.env.ledgerServices.getVaultService().queryBy(contractStateType,criteria,paging);
+        return this.env.ledgerServices.getVaultService().queryBy(contractStateType, criteria, paging);
     }
 
     @NotNull
     @Override
     public <T extends ContractState> Vault.Page<T> vaultQueryByWithSorting(@NotNull Class<? extends T> contractStateType, @NotNull QueryCriteria criteria, @NotNull Sort sorting) {
-        return this.env.ledgerServices.getVaultService().queryBy(contractStateType,criteria,sorting);
+        return this.env.ledgerServices.getVaultService().queryBy(contractStateType, criteria, sorting);
     }
 
     @NotNull

@@ -25,17 +25,18 @@ import static net.corda.core.contracts.ContractsDSL.requireThat;
 public class TestContract implements Contract {
     public static final String ID = TestContract.class.getName();
 
-    public TestContract() {}
+    public TestContract() {
+    }
 
     public void verify(LedgerTransaction tx) throws IllegalArgumentException {
         StateVerifier verifier = StateVerifier.fromTransaction(tx, TestContract.Commands.class);
-        TestContract.Commands commandData = (TestContract.Commands)verifier.command();
+        TestContract.Commands commandData = (TestContract.Commands) verifier.command();
         commandData.verify(tx, verifier);
     }
 
     public interface Commands extends CommandData {
         public void verify(LedgerTransaction tx, StateVerifier verifier) throws IllegalArgumentException;
-        
+
         class CreateCommandVerifier implements TestContract.Commands {
             @Override
             public void verify(LedgerTransaction tx, StateVerifier verifier) throws IllegalArgumentException {
@@ -75,7 +76,6 @@ public class TestContract implements Contract {
         }
 
 
-
         class CreateSingleOperators implements TestContract.Commands {
             @Override
             public void verify(LedgerTransaction tx, StateVerifier verifier) throws IllegalArgumentException {
@@ -98,10 +98,10 @@ public class TestContract implements Contract {
                         .isNotEmpty(TestState::getLinearId, TestState::getProvider)
                         .isEqual(TestState::getOwner, TestState::getOwner)
                         .isNotEqual(TestState::getOwner, TestState::getProvider)
-                        
+
                         .one("must be one")
                         .one(TestState.class)
-                        .amountNot0("amount", x -> ((TestState)x).getAmount())
+                        .amountNot0("amount", x -> ((TestState) x).getAmount())
                         .object();
             }
         }
@@ -127,7 +127,7 @@ public class TestContract implements Contract {
                             .one("must be one")
                             .filter(TestState.class)
                             .one(TestState.class)
-                            .amountNot0("amount", x -> ((TestState)x).getAmount())
+                            .amountNot0("amount", x -> ((TestState) x).getAmount())
                             .object();
 
                     CommandVerifier.Parameters<TestState> params = new CommandVerifier.Parameters<>();
@@ -234,7 +234,7 @@ public class TestContract implements Contract {
                             .notEmpty()
                             .filter(TestState.class)
                             .filterWhere(
-                                    x -> ((TestState)x).getAmount().getQuantity() < 100*100)
+                                    x -> ((TestState) x).getAmount().getQuantity() < 100 * 100)
                             .one()
                             .object();
 
@@ -287,20 +287,19 @@ public class TestContract implements Contract {
                             .one(TestState.class)
                             .participantsAreSigner()
                             .participantsAreSigner("all are signers")
-                            .signer("owner", x -> ((TestState)(x)).getOwner())
+                            .signer("owner", x -> ((TestState) (x)).getOwner())
                             .differentParty(
-                                    "owner", x -> ((TestState)(x)).getOwner(),
-                                    "provider", x -> ((TestState)(x)).getProvider())
+                                    "owner", x -> ((TestState) (x)).getOwner(),
+                                    "provider", x -> ((TestState) (x)).getProvider())
                             .sameParty(
-                                    "provider", x -> ((TestState)(x)).getProvider(),
-                                    "clone", x -> ((TestState)(x)).getCloneProvider())
+                                    "provider", x -> ((TestState) (x)).getProvider(),
+                                    "clone", x -> ((TestState) (x)).getCloneProvider())
                             .object();
                     return null;
                 });
 
             }
         }
-
 
 
         @CordaSerializable

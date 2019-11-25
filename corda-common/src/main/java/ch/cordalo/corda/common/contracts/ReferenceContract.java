@@ -41,6 +41,7 @@ public class ReferenceContract<T extends ContractState> implements Contract {
                     return null;
                 });
             }
+
             public T getMyState() {
                 return this.myState;
             }
@@ -52,7 +53,7 @@ public class ReferenceContract<T extends ContractState> implements Contract {
         StateVerifier verifier = StateVerifier.fromTransaction(tx, ReferenceContract.Commands.class);
         CommandData commandData = verifier.command();
         if (commandData instanceof ReferenceContract.Commands.Reference) {
-            ReferenceContract.Commands.Reference cmd = (ReferenceContract.Commands.Reference)commandData;
+            ReferenceContract.Commands.Reference cmd = (ReferenceContract.Commands.Reference) commandData;
             cmd.verify(tx);
         }
     }

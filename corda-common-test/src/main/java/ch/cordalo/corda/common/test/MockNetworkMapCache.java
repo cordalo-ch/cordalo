@@ -36,6 +36,7 @@ public class MockNetworkMapCache implements NetworkMapCache {
     public MockNetworkMapCache(CordaTestNetwork network) {
         this.network = network;
     }
+
     @Nullable
     @Override
     public NodeInfo getNodeByLegalIdentity(@NotNull AbstractParty party) {
@@ -81,7 +82,7 @@ public class MockNetworkMapCache implements NetworkMapCache {
     @Override
     public NodeInfo getNodeByLegalName(@NotNull CordaX500Name name) {
         List<NodeInfo> nodesByLegalName = this.getNodesByLegalName(name);
-        return nodesByLegalName.isEmpty() ?  null : nodesByLegalName.get(0);
+        return nodesByLegalName.isEmpty() ? null : nodesByLegalName.get(0);
     }
 
     @NotNull

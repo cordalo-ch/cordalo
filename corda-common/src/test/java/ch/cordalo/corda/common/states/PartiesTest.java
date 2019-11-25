@@ -155,6 +155,7 @@ public class PartiesTest {
 
         assertThat(result.getPublicKeys(), is(result.getImmutablePublicKeys()));
     }
+
     @Test
     public void with2States() {
         Party element = newParty("peter", "company-A");
@@ -224,6 +225,7 @@ public class PartiesTest {
                 "organisation", "locality", "state", "CH");
         return new TestIdentity(cordaX500Name).getParty();
     }
+
     private Party newParty() {
         return newParty("commonName", "organisationUnit");
     }

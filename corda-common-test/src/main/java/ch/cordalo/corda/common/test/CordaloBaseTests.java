@@ -24,17 +24,22 @@ import java.util.concurrent.ExecutionException;
 abstract public class CordaloBaseTests {
 
     public abstract CordaTestNetwork setup(boolean withNodes, List<Class<? extends FlowLogic>> responderClasses);
+
     public abstract CordaTestNetwork getNetwork();
 
     public CordaTestNetwork setup(boolean withNodes, Class responderMainClasses) {
         return setup(withNodes, FlowTestSupporter.findResponderClasses(responderMainClasses));
     }
-    public CordaTestNetwork setup(boolean withNodes, Class<? extends FlowLogic> ...responderClasses) {
+
+    public CordaTestNetwork setup(boolean withNodes, Class<? extends FlowLogic>... responderClasses) {
         return setup(withNodes, Lists.newArrayList(responderClasses));
     }
+
     public void tearDown() {
         if (this.getNetwork() != null) this.getNetwork().stopNodes();
-    };
+    }
+
+    ;
 
     @Suspendable
     public <T extends ContractState> T startFlowAndResult(
@@ -53,6 +58,7 @@ abstract public class CordaloBaseTests {
             return null;
         }
     }
+
     @Suspendable
     public <T extends ContractState> List<T> startFlowAndResults(
             CordaNodeEnvironment env,

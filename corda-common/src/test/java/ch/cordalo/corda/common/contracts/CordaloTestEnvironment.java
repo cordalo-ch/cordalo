@@ -29,6 +29,7 @@ public class CordaloTestEnvironment extends CordaloBaseTests {
                 "ch.cordalo.corda.ext",
                 "ch.cordalo.corda.common.contracts");
     }
+
     public CordaTestNetwork setup(boolean withNodes, List<Class<? extends FlowLogic>> responderClasses) {
         this.network = new CordaTestNetwork(
                 withNodes,
@@ -49,6 +50,8 @@ public class CordaloTestEnvironment extends CordaloBaseTests {
 
     public void tearDown() {
         if (network != null) network.stopNodes();
-    };
+    }
+
+    ;
 
 }

@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 
-@BelongsToContract (PartiesTestContract.class)
+@BelongsToContract(PartiesTestContract.class)
 public class PartiesTestState implements LinearState {
 
     @NotNull
@@ -29,6 +29,7 @@ public class PartiesTestState implements LinearState {
     private Party owner;
     @NotNull
     private Party provider;
+
     @ConstructorForDeserialization
     public PartiesTestState(@NotNull UniqueIdentifier linearId, @NotNull Party owner, @NotNull Party provider) {
         this.linearId = linearId;
@@ -41,9 +42,11 @@ public class PartiesTestState implements LinearState {
     public UniqueIdentifier getLinearId() {
         return this.linearId;
     }
+
     public Party getOwner() {
         return owner;
     }
+
     public Party getProvider() {
         return provider;
     }

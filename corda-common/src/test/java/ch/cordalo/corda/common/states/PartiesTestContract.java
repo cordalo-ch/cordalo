@@ -15,7 +15,8 @@ import net.corda.core.transactions.LedgerTransaction;
 public class PartiesTestContract implements Contract {
     public static final String ID = PartiesTestContract.class.getName();
 
-    public PartiesTestContract() {}
+    public PartiesTestContract() {
+    }
 
     public void verify(LedgerTransaction tx) throws IllegalArgumentException {
     }

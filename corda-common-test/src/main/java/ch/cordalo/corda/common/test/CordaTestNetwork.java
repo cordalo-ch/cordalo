@@ -37,6 +37,7 @@ public class CordaTestNetwork {
         this.responderClasses = responderClasses;
         this.createNetwork();
     }
+
     public CordaTestNetwork(boolean withNodes, List<String> testPackageNames, Class responderMainClass) {
         this.testPackageNames = testPackageNames;
         this.testCordapps = testPackageNames.stream().map(x -> TestCordapp.findCordapp(x)).collect(Collectors.toList());
@@ -50,6 +51,7 @@ public class CordaTestNetwork {
             network = new MockNetwork(new MockNetworkParameters(testCordapps));
         }
     }
+
     private CordaNodeEnvironment startNode(CordaNodeEnvironment env) {
         env.startWith(this);
         nodes.put(env.name, env);
@@ -59,15 +61,19 @@ public class CordaTestNetwork {
     public List<String> getCordappPackageNames() {
         return this.testPackageNames;
     }
+
     public List<TestCordapp> getCordapps() {
         return this.testCordapps;
     }
+
     public MockNetwork getNetwork() {
         return this.network;
     }
-    public List<Party>peers() {
+
+    public List<Party> peers() {
         return this.nodes.values().stream().map(x -> x.party).collect(Collectors.toList());
     }
+
     public List<NodeInfo> networkMapSnapshot() {
         return this.nodes.values().stream().map(x -> x.getNodeInfo()).collect(Collectors.toList());
     }
@@ -75,6 +81,7 @@ public class CordaTestNetwork {
     public List<Party> getNotaryIdentities() {
         return this.nodes.values().stream().filter(x -> x.isNotary()).map(x -> x.party).collect(Collectors.toList());
     }
+
     public MockNetworkMapCache getNetworkMapCache() {
         return new MockNetworkMapCache(this);
     }
@@ -85,12 +92,14 @@ public class CordaTestNetwork {
 
     public CordaNodeEnvironment startEnv(String name, String x500) {
         return this.startNode(
-                new CordaNodeEnvironment(this,name, x500));
+                new CordaNodeEnvironment(this, name, x500));
     }
+
     public CordaNodeEnvironment startNotaryEnv(String name, String x500) {
         return this.startNode(
-                new CordaNotaryNodeEnvironment(this,name, x500));
+                new CordaNotaryNodeEnvironment(this, name, x500));
     }
+
     public CordaNodeEnvironment getEnv(String name) {
         return this.nodes.get(name);
     }

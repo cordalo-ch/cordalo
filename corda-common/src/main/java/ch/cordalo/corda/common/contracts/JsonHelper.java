@@ -48,7 +48,7 @@ public class JsonHelper {
 
     public static Map<String, Object> filterByGroupId(Map<String, Object> dataObject, String[] groupIDs) {
         Map<String, Object> sharedMap = new LinkedHashMap<>();
-        for (String s: groupIDs) {
+        for (String s : groupIDs) {
             if (dataObject.get(s) != null) {
                 sharedMap.put(s, dataObject.get(s));
             }
@@ -63,8 +63,8 @@ public class JsonHelper {
             map.put(updateEntry.getKey(), updateEntry.getValue());
         } else {
             if (oldValue instanceof Map<?, ?>) {
-                Map<String, Object> oldMap = (Map)oldValue;
-                Map<String, Object> newMap = (Map)updateEntry.getValue();
+                Map<String, Object> oldMap = (Map) oldValue;
+                Map<String, Object> newMap = (Map) updateEntry.getValue();
                 map.put(updateEntry.getKey(), updateMapWithMap(oldMap, newMap));
             } else {
                 map.put(updateEntry.getKey(), updateEntry.getValue());
@@ -72,13 +72,15 @@ public class JsonHelper {
         }
         return map;
     }
+
     private static Map<String, Object> updateMapWithMap(Map<String, Object> map, Map<String, Object> updateMap) {
         Map<String, Object> newMap = map;
-        for ( Map.Entry<String, Object> entry : updateMap.entrySet()) {
+        for (Map.Entry<String, Object> entry : updateMap.entrySet()) {
             newMap = updateMapWithEntry(map, entry);
         }
         return newMap;
     }
+
     public static Map<String, Object> updateValues(Map<String, Object> map, String dataUpdateString) {
         Map<String, Object> oldMap = new LinkedHashMap<>(map);
         Map<String, Object> newMap = JsonHelper.convertStringToJson(dataUpdateString);
@@ -89,7 +91,7 @@ public class JsonHelper {
         String[] keys = attributesSeperatedByPoint.split("\\.");
         Object result = map;
         for (String k : keys) {
-            Map<String, Object> tempMap = (Map<String, Object>)result;
+            Map<String, Object> tempMap = (Map<String, Object>) result;
             if (tempMap == null) {
                 return null;
             }

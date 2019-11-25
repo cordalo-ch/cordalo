@@ -27,6 +27,7 @@ public class TestSimpleContractTests extends CordaloTestEnvironment {
     public void setup() {
         this.setup(false);
     }
+
     @After
     public void after() {
         this.tearDown();
@@ -55,7 +56,7 @@ public class TestSimpleContractTests extends CordaloTestEnvironment {
             TestSimpleState test1 = newSimpleTest(this.testNode1, "key", "value");
             TestSimpleState testUpdate = test1.update("key-1", "value-1");
 
-            tx.input(TestSimpleContract.ID,test1);
+            tx.input(TestSimpleContract.ID, test1);
             tx.output(TestSimpleContract.ID, testUpdate);
             tx.command(test1.getParticipantKeys(), new TestSimpleContract.Commands.Update());
             tx.verifies();
@@ -69,7 +70,7 @@ public class TestSimpleContractTests extends CordaloTestEnvironment {
             TestSimpleState test1 = newSimpleTest(this.testNode1, "key", "value");
             TestSimpleState testUpdate = test1.share(this.testNode2.party);
 
-            tx.input(TestSimpleContract.ID,test1);
+            tx.input(TestSimpleContract.ID, test1);
             tx.output(TestSimpleContract.ID, testUpdate);
             tx.command(test1.getParticipantKeys(), new TestSimpleContract.Commands.Share());
             tx.verifies();

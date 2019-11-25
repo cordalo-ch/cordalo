@@ -29,6 +29,7 @@ public class MockCordaProxy extends CordaProxy {
         this.env = env;
         this.rpc = new MockCordaRPCOps(env);
     }
+
     public void tearDown() {
         if (this.prevProxy != null) this.prevProxy.register();
     }
@@ -51,7 +52,7 @@ public class MockCordaProxy extends CordaProxy {
     public static CordaProxy updateInstance(CordaNodeEnvironment env) {
         CordaProxy instance = CordaProxy.getInstance();
         if (instance instanceof MockCordaProxy) {
-            ((MockCordaProxy)instance).setEnv(env);
+            ((MockCordaProxy) instance).setEnv(env);
         }
         return instance;
     }

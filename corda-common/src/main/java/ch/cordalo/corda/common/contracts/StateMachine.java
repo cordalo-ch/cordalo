@@ -38,10 +38,13 @@ public abstract class StateMachine {
         this.initStates();
         this.initTransitions();
     }
+
     public String getName() {
         return this.name;
     }
+
     public abstract void initStates();
+
     public abstract void initTransitions();
 
     public StateMachine.State state(String name) {
@@ -54,22 +57,28 @@ public abstract class StateMachine {
             return null;
         }
     }
+
     public StateMachine.StateTransition transition(String name) {
         StateTransition stateTransition = this.transitionMap.get(name);
-        if (stateTransition == null) throw new IllegalArgumentException(name+" is not a valid state transition in state machine "+this.name);
+        if (stateTransition == null)
+            throw new IllegalArgumentException(name + " is not a valid state transition in state machine " + this.name);
         return stateTransition;
     }
+
     public StateMachine.State newState(String value, StateMachine.StateType type) {
         State state = new State(this.name, value, type);
         this.stateMap.put(value, state);
         return state;
     }
+
     public StateMachine.State newState(String value, String type) {
         return this.newState(value, StateType.valueOf(type));
     }
+
     public StateMachine.State newState(String value) {
         return newState(value, StateMachine.StateType.CONDITIONAL);
     }
+
     public StateMachine.StateTransition newTransition(String action, State next, String... previous) {
         if (previous != null) {
             StateMachine.State[] prevStates = new State[previous.length];
@@ -106,9 +115,10 @@ public abstract class StateMachine {
             String[] currentStates = Arrays.copyOfRange(values, 1, values.length - 1);
             return newTransition(action, null, currentStates);
         } else {
-            return newTransition(action, (State)null);
+            return newTransition(action, (State) null);
         }
     }
+
     public void addTransitionToState(StateTransition stateTransition, State state) {
         List<StateTransition> stateTransitions = this.stateTransitions.get(state.getValue());
         if (stateTransitions == null) {
@@ -121,6 +131,7 @@ public abstract class StateMachine {
     public List<StateTransition> getTransitions(String state) {
         return this.stateTransitions.get(state);
     }
+
     public List<StateTransition> getTransitions(State state) {
         List<StateTransition> stateTransitions = this.stateTransitions.get(state.getValue());
         return stateTransitions != null ? stateTransitions : Collections.EMPTY_LIST;
@@ -147,6 +158,7 @@ public abstract class StateMachine {
             this.value = value;
             this.type = type;
         }
+
         public State(String stateMachine, String value) {
             this(stateMachine, value, StateType.CONDITIONAL);
         }
@@ -154,12 +166,27 @@ public abstract class StateMachine {
         public String getStateMachine() {
             return this.stateMachine;
         }
-        public StateType getType() { return this.type; }
-        public String getValue() { return this.value; }
-        public boolean isFinalState() { return this.type == StateType.FINAL; }
+
+        public StateType getType() {
+            return this.type;
+        }
+
+        public String getValue() {
+            return this.value;
+        }
+
+        public boolean isFinalState() {
+            return this.type == StateType.FINAL;
+        }
+
         @JsonIgnore
-        public boolean isSharingState() { return this.type == StateType.SHARE_STATE; }
-        public boolean isInitialState() { return this.type == StateType.INITIAL; }
+        public boolean isSharingState() {
+            return this.type == StateType.SHARE_STATE;
+        }
+
+        public boolean isInitialState() {
+            return this.type == StateType.INITIAL;
+        }
 
         @JsonIgnore
         public List<StateTransition> getTransitions() {
@@ -170,14 +197,17 @@ public abstract class StateMachine {
             if (this.isFinalState()) return Collections.EMPTY_LIST;
             return this.getTransitions().stream().map(x -> x.toString()).collect(Collectors.toList());
         }
+
         public boolean isValidAction(String action) {
             if (this.isFinalState()) return false;
             return this.getTransitions().stream().anyMatch(x -> x.getValue().equals(action));
         }
+
         public boolean isLaterState(State state) {
             if (this.equals(state)) return false;
             return state.hasLaterState(this);
         }
+
         public boolean isEarlierState(State state) {
             if (this.equals(state)) return false;
             return state.hasEarlierState(this);
@@ -187,6 +217,7 @@ public abstract class StateMachine {
             if (this.equals(state)) return false;
             return hasLaterState(state, new HashSet<>());
         }
+
         private boolean hasLaterState(State state, Set<State> visited) {
             if (visited.contains(this)) return false;
             visited.add(this);
@@ -198,6 +229,7 @@ public abstract class StateMachine {
             }
             return false;
         }
+
         public boolean hasEarlierState(State state) {
             if (this.equals(state)) return false;
             return state.hasLaterState(this);
@@ -207,8 +239,9 @@ public abstract class StateMachine {
         public boolean equals(Object o) {
             if (this == o) return true;
             if (o instanceof String) {
-            return this.getValue().equals(o);
-            };
+                return this.getValue().equals(o);
+            }
+            ;
             if (!(o instanceof State)) return false;
             State state = (State) o;
             return getValue().equals(state.getValue());
@@ -237,41 +270,49 @@ public abstract class StateMachine {
             this.currentStates = currentStates;
             this.nextState = nextState;
         }
+
         StateTransition(String stateMachine, String value, State nextState) {
             this.stateMachine = stateMachine;
             this.value = value;
             this.currentStates = EMPTY_STATES;
             this.nextState = nextState;
         }
+
         public String getStateMachine() {
             return this.stateMachine;
         }
+
         public String getValue() {
             return this.value;
         }
+
         @JsonIgnore
         public boolean willBeInFinalState() {
             return this.nextState.isFinalState();
         }
+
         @JsonIgnore
         public State getNextState() {
             return this.nextState;
         }
+
         @JsonIgnore
         public boolean willBeSharingState() {
             return this.nextState.isSharingState();
         }
+
         public State getNextStateFrom(State from) throws IllegalStateException {
             if (from.isFinalState()) {
-                throw new IllegalStateException("state <"+from.getValue()+"> is final state and cannot be transitioned");
+                throw new IllegalStateException("state <" + from.getValue() + "> is final state and cannot be transitioned");
             }
-            for(State s : this.currentStates) {
+            for (State s : this.currentStates) {
                 if (s.equals(from)) {
                     return this.nextState != null ? this.nextState : from;
                 }
             }
-            throw new IllegalStateException("state <"+from.getValue()+"> is not allowed in this current transition");
+            throw new IllegalStateException("state <" + from.getValue() + "> is not allowed in this current transition");
         }
+
         @JsonIgnore
         public State getInitialState() throws IllegalStateException {
             if (this.currentStates.length == 0) {

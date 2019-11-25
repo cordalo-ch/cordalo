@@ -52,9 +52,13 @@ public abstract class CordaloController {
         return this.rpc.getProxy();
     }
 
-    public Party getMe() { return this.rpc.getMe(); }
+    public Party getMe() {
+        return this.rpc.getMe();
+    }
 
-    public Party getNotary() {  return this.rpc.getNotary(); }
+    public Party getNotary() {
+        return this.rpc.getNotary();
+    }
 
     public boolean isValid() {
         return this.getProxy() != null;
@@ -64,14 +68,17 @@ public abstract class CordaloController {
         return ResponseEntity.status(status)
                 .body(new StateAndLinks<T>().error(message));
     }
+
     public <T extends LinearState> ResponseEntity<StateAndLinks<T>> buildResponseFromException(HttpStatus status, Throwable exception) {
         return ResponseEntity.status(status)
                 .body(new StateAndLinks<T>().error(exception));
     }
+
     public <T extends LinearState> ResponseEntity<List<StateAndLinks<T>>> buildResponsesFromException(HttpStatus status, String message) {
         return ResponseEntity.status(status)
                 .body(Arrays.asList(new StateAndLinks<T>().error(message)));
     }
+
     public <T extends LinearState> ResponseEntity<List<StateAndLinks<T>>> buildResponsesFromException(HttpStatus status, Throwable exception) {
         return ResponseEntity.status(status)
                 .body(Arrays.asList(new StateAndLinks<T>().error(exception)));
@@ -94,7 +101,7 @@ public abstract class CordaloController {
             if (constructor != null) {
                 constructor.newInstance(args);
             } else {
-                throw new RuntimeException("No constructor found for "+logicType.getCanonicalName());
+                throw new RuntimeException("No constructor found for " + logicType.getCanonicalName());
             }
         } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException("Error while instantiating flow", e);
@@ -105,8 +112,6 @@ public abstract class CordaloController {
         checkStartFlow(logicType, args);
         return this.getProxy().startTrackedFlowDynamic(logicType, args).getReturnValue().get();
     }
-
-
 
 
 }

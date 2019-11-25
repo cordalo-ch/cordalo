@@ -46,6 +46,7 @@ public abstract class BaseFlow<S> extends FlowLogic<S> {
         transactionBuilder.addCommand(command, uniqueSigners);
         return transactionBuilder;
     }
+
     @Suspendable
     protected TransactionBuilder getTransactionBuilderSignedByParties(List<AbstractParty> parties, CommandData command) throws FlowException {
         List<AbstractParty> uniqueParties = new ArrayList<>(Sets.newLinkedHashSet(parties));
@@ -63,6 +64,7 @@ public abstract class BaseFlow<S> extends FlowLogic<S> {
                 .build();
         return getTransactionBuilderSignedBySigners(requiredSigner, command);
     }
+
     @Suspendable
     protected TransactionBuilder getTransactionBuilderSignedByParticipants(Parties parties, CommandData command) throws FlowException {
         return getTransactionBuilderSignedBySigners(parties.getImmutablePublicKeys(), command);
@@ -88,10 +90,12 @@ public abstract class BaseFlow<S> extends FlowLogic<S> {
         }
         return signSyncCollectAndFinalize(true, set, transactionBuilder);
     }
+
     @Suspendable
     protected SignedTransaction signSyncCollectAndFinalize(List<AbstractParty> counterparties, TransactionBuilder transactionBuilder) throws FlowException {
         return signSyncCollectAndFinalize(true, counterparties, transactionBuilder);
     }
+
     @Suspendable
     protected SignedTransaction signSyncCollectAndFinalize(Parties parties, TransactionBuilder transactionBuilder) throws FlowException {
         return signSyncCollectAndFinalize(true, parties.getParties(), transactionBuilder);
@@ -111,6 +115,7 @@ public abstract class BaseFlow<S> extends FlowLogic<S> {
     protected SignedTransaction signCollectAndFinalize(Parties parties, TransactionBuilder transactionBuilder) throws FlowException {
         return signSyncCollectAndFinalize(false, parties.getParties(), transactionBuilder);
     }
+
     @Suspendable
     protected SignedTransaction signCollectAndFinalize(List<AbstractParty> counterparties, TransactionBuilder transactionBuilder) throws FlowException {
         return signSyncCollectAndFinalize(false, counterparties, transactionBuilder);
@@ -118,7 +123,8 @@ public abstract class BaseFlow<S> extends FlowLogic<S> {
 
     @Suspendable
     private SignedTransaction signSyncCollectAndFinalize(boolean syncIdentities, List<AbstractParty> counterparties, TransactionBuilder transactionBuilder) throws FlowException {
-        List<AbstractParty> counterPartiesWithoutMe = new ArrayList<>(Sets.newLinkedHashSet(counterparties));;
+        List<AbstractParty> counterPartiesWithoutMe = new ArrayList<>(Sets.newLinkedHashSet(counterparties));
+        ;
         if (counterPartiesWithoutMe.contains(this.getOurIdentity())) {
             counterPartiesWithoutMe.remove(this.getOurIdentity());
         }
@@ -139,7 +145,7 @@ public abstract class BaseFlow<S> extends FlowLogic<S> {
             for (int i = 0; i < counterPartiesWithoutMe.size(); i++) {
                 AbstractParty counterparty = counterPartiesWithoutMe.get(i);
                 if (counterparty instanceof Party) {
-                    FlowSession flowSession = initiateFlow((Party)counterparty);
+                    FlowSession flowSession = initiateFlow((Party) counterparty);
                     otherPartiesFlowVersion = flowSession.getCounterpartyFlowInfo().getFlowVersion();
                     otherPartySessions.add(flowSession);
                 }
@@ -190,7 +196,7 @@ public abstract class BaseFlow<S> extends FlowLogic<S> {
     }
 
     @Suspendable
-    protected <T extends ContractState>T getStateByRef(StateAndRef<T> ref){
+    protected <T extends ContractState> T getStateByRef(StateAndRef<T> ref) {
         return ref.getState().getData();
     }
 

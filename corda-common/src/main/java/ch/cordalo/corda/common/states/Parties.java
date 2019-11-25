@@ -31,14 +31,17 @@ public class Parties {
 
     public static Parties fromParties(List<Party> parties) {
         return new Parties(
-                parties.stream().map(x -> (AbstractParty)x).collect(Collectors.toList()));
+                parties.stream().map(x -> (AbstractParty) x).collect(Collectors.toList()));
     }
+
     public static Parties fromParties(Party... parties) {
         return new Parties(parties);
     }
+
     public static Parties fromParties(AbstractParty... parties) {
         return new Parties(parties);
     }
+
     public static Parties fromAbstractParties(List<AbstractParty> parties) {
         return new Parties(parties);
     }
@@ -48,9 +51,11 @@ public class Parties {
     public Parties(List<AbstractParty> parties) {
         this.parties = parties;
     }
+
     public Parties(ContractState state) {
         this(state.getParticipants());
     }
+
     public Parties(ContractState... states) {
         Set<AbstractParty> set = new HashSet<>();
         if (states != null) {
@@ -86,12 +91,15 @@ public class Parties {
     public List<AbstractParty> getParties() {
         return this.parties;
     }
+
     public List<String> getPartiesX500() {
         return this.getParties().stream().map(Parties::partyToX500).collect(Collectors.toList());
     }
+
     public List<PublicKey> getPublicKeys() {
         return this.getParties().stream().map(AbstractParty::getOwningKey).collect(Collectors.toList());
     }
+
     public ImmutableList<PublicKey> getImmutablePublicKeys() {
         return new ImmutableList.Builder<PublicKey>()
                 .addAll(this.getPublicKeys())
@@ -103,16 +111,19 @@ public class Parties {
         set.addAll(parties.getParties());
         return new Parties(Lists.newArrayList(set));
     }
+
     public Parties addAbstractParties(List<AbstractParty> list) {
         List<AbstractParty> newParties = Lists.newArrayList(this.parties);
         newParties.addAll(list);
         return new Parties(Lists.newArrayList(newParties));
     }
+
     public Parties add(List<Party> list) {
         List<AbstractParty> newParties = Lists.newArrayList(this.parties);
         newParties.addAll(list);
         return new Parties(Lists.newArrayList(newParties));
     }
+
     public Parties add(AbstractParty party) {
         List<AbstractParty> newParties = Lists.newArrayList(this.parties);
         newParties.add(party);

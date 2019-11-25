@@ -27,7 +27,7 @@ public class FlowTestSupporter {
             list.add((Class<? extends FlowLogic>) clazz);
         }
 
-        for(Class<?> c : clazz.getClasses()) {
+        for (Class<?> c : clazz.getClasses()) {
             validateAllMethodsMustHaveSuspendable(c);
             annotation = c.getAnnotation(InitiatedBy.class);
             if (annotation != null) {

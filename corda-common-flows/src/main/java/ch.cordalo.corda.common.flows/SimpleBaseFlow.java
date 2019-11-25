@@ -82,6 +82,7 @@ public abstract class SimpleBaseFlow<S> extends BaseFlow<S> {
             this.creator = creator;
             this.command = command;
         }
+
         @Override
         @Suspendable
         public X update(X state) throws FlowException {

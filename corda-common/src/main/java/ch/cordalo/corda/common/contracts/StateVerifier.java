@@ -29,9 +29,13 @@ import static net.corda.core.contracts.ContractsDSL.requireThat;
 
 interface TransactionDelegate {
     List<CommandWithParties<CommandData>> getCommands();
+
     List<ContractState> inputsOfType(Class stateClass);
+
     List<ContractState> outputsOfType(Class stateClass);
+
     List<ContractState> getOutputStates();
+
     List<ContractState> getInputStates();
 }
 
@@ -50,9 +54,11 @@ public class StateVerifier {
     public static StateVerifier fromTransaction(SignedTransaction tx, ServiceHub serviceHub) {
         return new SignedStateVerifier(tx, serviceHub);
     }
+
     public static <T extends CommandData> StateVerifier fromTransaction(LedgerTransaction tx, Class<T> clazz) {
         return new LedgerStateVerifier(tx, clazz);
     }
+
     public static StateVerifier fromTransaction(LedgerTransaction tx) {
         return new LedgerStateVerifier(tx);
     }
@@ -61,6 +67,7 @@ public class StateVerifier {
     StateVerifier() {
         this.parent = null;
     }
+
     void setTransaction(TransactionDelegate tx) {
         this.tx = tx;
     }
@@ -79,6 +86,7 @@ public class StateVerifier {
         this.commandClazz = parent.commandClazz;
         this.command = parent.command;
     }
+
     StateVerifier(StateVerifier parent, String text) {
         this.tx = parent.tx;
         this.parent = parent;
@@ -89,7 +97,7 @@ public class StateVerifier {
 
     String s(String text) {
         String t = this.text == null ? text : this.text;
-        return this.description == null ? t : t+this.description;
+        return this.description == null ? t : t + this.description;
     }
 
     public CommandData command() {
@@ -127,64 +135,83 @@ public class StateVerifier {
 
 
     public <T extends ContractState> List<T> list() {
-        return (List<T>)this.getParentList();
+        return (List<T>) this.getParentList();
     }
+
     public <T extends ContractState> List<T> objects() {
-        return (List<T>)this.list();
+        return (List<T>) this.list();
     }
+
     public <T extends ContractState> T object() {
         return this.one().object(0);
     }
+
     public <T extends ContractState> T object(int index) {
-        return (T)this.getParentList().get(index);
+        return (T) this.getParentList().get(index);
     }
 
 
     public StateVerifier input() {
         return new InputList(this).verify();
     }
+
     public StateVerifier input(Class<? extends ContractState> stateClass) {
         return new InputList(this, stateClass).verify();
     }
+
     public StateVerifier output() {
         return new OutputList(this).verify();
     }
+
     public StateVerifier output(Class<? extends ContractState> stateClass) {
         return new OutputList(this, stateClass).verify();
     }
+
     public StateVerifier newOutput() {
         return new NewOutputList(this).verify();
     }
+
     public StateVerifier newOutput(Class<? extends ContractState> stateClass) {
         return new NewOutputList(this, stateClass).verify();
     }
+
     public StateVerifier intersection() {
         return new IntersectionList<>(this).verify();
     }
+
     public StateVerifier intersection(Class<? extends ContractState> stateClass) {
         return new IntersectionList(this, stateClass).verify();
     }
-    public <T extends  ContractState> StateVerifier use(T state) {
+
+    public <T extends ContractState> StateVerifier use(T state) {
         return new UseThis<T>(this, state).verify();
     }
-    public <T extends  ContractState> StateVerifier use(List<T> states) {
+
+    public <T extends ContractState> StateVerifier use(List<T> states) {
         return new UseThese<T>(this, states).verify();
     }
+
     public <T extends ContractState> StateVerifier filter(Class<T> stateClass) {
         return new FilterList(this, stateClass).verify();
     }
+
     public <T extends ContractState> StateVerifier filterWhere(Function<T, Boolean> mapper) {
         return new FilterWhere(this, mapper).verify();
     }
+
     public <T extends ContractState> StateVerifier notThis(T state) {
         return new FilterWhere(this, x -> !x.equals(state)).verify();
     }
 
 
-    public StateVerifier one() { return new One(this).verify(); }
+    public StateVerifier one() {
+        return new One(this).verify();
+    }
+
     public StateVerifier one(String text) {
         return new One(this).verify();
     }
+
     public <T extends ContractState> StateVerifier one(Class<T> stateClass) {
         return this.filter(stateClass).one();
     }
@@ -192,9 +219,11 @@ public class StateVerifier {
     public StateVerifier empty() {
         return new Empty(this).verify();
     }
+
     public StateVerifier empty(String text) {
         return new Empty(this, text).verify();
     }
+
     public <T extends ContractState> StateVerifier empty(Class<T> stateClass) {
         return this.filter(stateClass).empty();
     }
@@ -202,15 +231,19 @@ public class StateVerifier {
     public StateVerifier notEmpty() {
         return new NotEmpty(this).verify();
     }
+
     public StateVerifier notEmpty(String text) {
         return new NotEmpty(this, text).verify();
     }
+
     public StateVerifier moreThanZero() {
         return new MoreThanZero(this).verify();
     }
+
     public StateVerifier count(int size) {
         return new Count(this, size).verify();
     }
+
     public <T extends ContractState> StateVerifier count(int size, Class<T> stateClass) {
         return this.filter(stateClass).count(size);
     }
@@ -218,41 +251,60 @@ public class StateVerifier {
     public StateVerifier max(int size) {
         return new Max(this, size).verify();
     }
+
     public StateVerifier min(int size) {
         return new Min(this, size).verify();
     }
+
     public StateVerifier moreThanOne() {
         return new MoreThanN(this, 1).verify();
     }
-    public StateVerifier moreThan(int size){
+
+    public StateVerifier moreThan(int size) {
         return new MoreThanN(this, size).verify();
     }
-    public StateVerifier lessThan(int size){
+
+    public StateVerifier lessThan(int size) {
         return new LessThanN(this, size).verify();
     }
+
     public StateVerifier amountNot0(String name, Function<ContractState, Amount> mapper) {
         return new AmountNot0(this, name, mapper).verify();
     }
+
     public StateVerifier participantsAreSigner() {
-        return new ParticipantsAreSigners(this).verify(); }
+        return new ParticipantsAreSigners(this).verify();
+    }
+
     public StateVerifier participantsAreSigner(String text) {
-        return new ParticipantsAreSigners(this, text).verify(); }
+        return new ParticipantsAreSigners(this, text).verify();
+    }
+
     public StateVerifier signer(String text, Function<ContractState, ? extends AbstractParty> mapper) {
-        return new Signers(this, text, mapper).verify(); }
+        return new Signers(this, text, mapper).verify();
+    }
+
     public StateVerifier differentParty(String name1, Function<ContractState, ? extends AbstractParty> party1Mapper,
                                         String name2, Function<ContractState, ? extends AbstractParty> party2Mapper
-                                      ) { return new DifferentParty(this, name1, party1Mapper, name2, party2Mapper).verify(); }
+    ) {
+        return new DifferentParty(this, name1, party1Mapper, name2, party2Mapper).verify();
+    }
+
     public StateVerifier sameParty(String name1, Function<ContractState, ? extends AbstractParty> party1Mapper,
                                    String name2, Function<ContractState, ? extends AbstractParty> party2Mapper
-    ) { return new SameParty(this, name1, party1Mapper, name2, party2Mapper).verify(); }
+    ) {
+        return new SameParty(this, name1, party1Mapper, name2, party2Mapper).verify();
+    }
 
     public <T extends ContractState> StateVerifier isEmpty(Collection<Function<T, Object>> emptyMappers) {
         return new IsEmpty(this, emptyMappers).verify();
     }
+
     public <T extends ContractState> StateVerifier isEmpty(Function<T, Object> emptyMapper, String text) {
         return new IsEmpty(this, emptyMapper, text).verify();
     }
-    public <T extends ContractState> StateVerifier isEmpty(Function<T, Object> ...emptyMapper) {
+
+    public <T extends ContractState> StateVerifier isEmpty(Function<T, Object>... emptyMapper) {
         return new IsEmpty(this, Arrays.asList(emptyMapper)).verify();
     }
 
@@ -260,10 +312,12 @@ public class StateVerifier {
     public <T extends ContractState> StateVerifier isNotEmpty(Collection<Function<T, Object>> emptyMappers) {
         return new IsNotEmpty(this, emptyMappers).verify();
     }
+
     public <T extends ContractState> StateVerifier isNotEmpty(Function<T, Object> emptyMapper, String text) {
         return new IsNotEmpty(this, emptyMapper, text).verify();
     }
-    public <T extends ContractState> StateVerifier isNotEmpty(Function<T, Object> ...emptyMapper) {
+
+    public <T extends ContractState> StateVerifier isNotEmpty(Function<T, Object>... emptyMapper) {
         return new IsNotEmpty(this, Arrays.asList(emptyMapper)).verify();
     }
 
@@ -271,12 +325,15 @@ public class StateVerifier {
     public <T extends ContractState> StateVerifier isEqual(Function<T, Object> firstMapper, Function<T, Object> secondMapper, String text) {
         return new IsEqual(this, firstMapper, secondMapper, text).verify();
     }
+
     public <T extends ContractState> StateVerifier isEqual(Function<T, Object> firstMapper, Function<T, Object> secondMapper) {
         return new IsEqual(this, firstMapper, secondMapper).verify();
     }
+
     public <T extends ContractState> StateVerifier isNotEqual(Function<T, Object> firstMapper, Function<T, Object> secondMapper, String text) {
         return new IsNotEqual(this, firstMapper, secondMapper, text).verify();
     }
+
     public <T extends ContractState> StateVerifier isNotEqual(Function<T, Object> firstMapper, Function<T, Object> secondMapper) {
         return new IsNotEqual(this, firstMapper, secondMapper).verify();
     }
@@ -289,12 +346,13 @@ public class StateVerifier {
             super(parent, text);
             this.mapper = mapper;
         }
+
         @Override
         protected StateVerifier verify() {
             requireThat(req -> {
                 for (ContractState state : this.getParentList()) {
                     AbstractParty party = this.mapper.apply(state);
-                    req.using(s("party <" + party.nameOrNull()+ "> is not a signer."),
+                    req.using(s("party <" + party.nameOrNull() + "> is not a signer."),
                             this.getSigners().contains(party.getOwningKey()));
                 }
                 return null;
@@ -302,7 +360,6 @@ public class StateVerifier {
             return this;
         }
     }
-
 
 
     class DifferentParty extends StateVerifier {
@@ -313,8 +370,8 @@ public class StateVerifier {
         private Function<ContractState, ? extends AbstractParty> party2Mapper;
 
         protected DifferentParty(StateVerifier parent,
-                              @NotNull String name1, Function<ContractState, ? extends AbstractParty> party1Mapper,
-                              @NotNull String name2, Function<ContractState, ? extends AbstractParty> party2Mapper
+                                 @NotNull String name1, Function<ContractState, ? extends AbstractParty> party1Mapper,
+                                 @NotNull String name2, Function<ContractState, ? extends AbstractParty> party2Mapper
         ) {
             super(parent);
             this.name1 = name1;
@@ -322,13 +379,14 @@ public class StateVerifier {
             this.name2 = name2;
             this.party2Mapper = party2Mapper;
         }
+
         @Override
         protected StateVerifier verify() {
             requireThat(req -> {
                 for (ContractState state : this.getParentList()) {
                     AbstractParty party1 = this.party1Mapper.apply(state);
                     AbstractParty party2 = this.party2Mapper.apply(state);
-                    req.using(s("party <"+this.name1+"> should be different than party <"+this.name2+">."),
+                    req.using(s("party <" + this.name1 + "> should be different than party <" + this.name2 + ">."),
                             !party1.equals(party2));
                 }
                 return null;
@@ -355,13 +413,14 @@ public class StateVerifier {
             this.name2 = name2;
             this.party2Mapper = party2Mapper;
         }
+
         @Override
         protected StateVerifier verify() {
             requireThat(req -> {
                 for (ContractState state : this.getParentList()) {
                     AbstractParty party1 = this.party1Mapper.apply(state);
                     AbstractParty party2 = this.party2Mapper.apply(state);
-                    req.using(s("party <"+this.name1+"> should be the same than party <"+this.name2+">."),
+                    req.using(s("party <" + this.name1 + "> should be the same than party <" + this.name2 + ">."),
                             party1.equals(party2));
                 }
                 return null;
@@ -376,9 +435,11 @@ public class StateVerifier {
         protected ParticipantsAreSigners(StateVerifier parent) {
             super(parent);
         }
+
         protected ParticipantsAreSigners(StateVerifier parent, String text) {
             super(parent, text);
         }
+
         @Override
         protected StateVerifier verify() {
             requireThat(req -> {
@@ -404,20 +465,19 @@ public class StateVerifier {
             this.name = name;
             this.amountMapper = amountMapper;
         }
+
         @Override
         protected StateVerifier verify() {
             requireThat(req -> {
                 for (ContractState state : this.getParentList()) {
-                    req.using(s("Amount <"+this.name+"> should be not 0."),
-                            this.amountMapper.apply(state).getQuantity() > 0 );
+                    req.using(s("Amount <" + this.name + "> should be not 0."),
+                            this.amountMapper.apply(state).getQuantity() > 0);
                 }
                 return null;
             });
             return this;
         }
     }
-
-
 
 
     class Size extends StateVerifier {
@@ -427,10 +487,15 @@ public class StateVerifier {
         protected Size(StateVerifier parent) {
             super(parent);
         }
+
         protected Size(StateVerifier parent, String text) {
             super(parent, text);
         }
-        protected Size(StateVerifier parent, int size) { super(parent); this.size = size; }
+
+        protected Size(StateVerifier parent, int size) {
+            super(parent);
+            this.size = size;
+        }
 
         protected int size() {
             return this.size;
@@ -450,8 +515,14 @@ public class StateVerifier {
     }
 
     class One extends Size {
-        protected One(StateVerifier parent) {  super(parent); }
-        protected One(StateVerifier parent, String text) {  super(parent, text); }
+        protected One(StateVerifier parent) {
+            super(parent);
+        }
+
+        protected One(StateVerifier parent, String text) {
+            super(parent, text);
+        }
+
         @Override
         protected StateVerifier verify() {
             requireThat(req -> {
@@ -461,19 +532,29 @@ public class StateVerifier {
             return this;
         }
     }
+
     abstract class Expression extends One {
-        protected Expression(StateVerifier parent) {  super(parent); }
-        protected Expression(StateVerifier parent, String text) {  super(parent, text); }
+        protected Expression(StateVerifier parent) {
+            super(parent);
+        }
+
+        protected Expression(StateVerifier parent, String text) {
+            super(parent, text);
+        }
+
         @Override
         protected StateVerifier verify() {
             this.evaluate(object());
             return this;
         }
-        public <T extends  ContractState> T object() {
+
+        public <T extends ContractState> T object() {
             return super.object();
         }
-        public abstract <T extends  ContractState> void evaluate(T state);
+
+        public abstract <T extends ContractState> void evaluate(T state);
     }
+
     class IsEmpty<T extends ContractState> extends Expression {
         private final Collection<Function<T, Object>> emptyMappers;
 
@@ -481,21 +562,25 @@ public class StateVerifier {
             super(stateVerifier);
             this.emptyMappers = emptyMappers;
         }
-        public IsEmpty(StateVerifier stateVerifier, Function<T, Object> ...emptyMappers) {
+
+        public IsEmpty(StateVerifier stateVerifier, Function<T, Object>... emptyMappers) {
             super(stateVerifier);
             this.emptyMappers = Arrays.asList(emptyMappers);
         }
+
         public IsEmpty(StateVerifier stateVerifier, Function<T, Object> emptyMapper, String text) {
             super(stateVerifier, text);
             this.emptyMappers = Collections.singletonList(emptyMapper);
         }
+
         public IsEmpty(StateVerifier stateVerifier, Function<T, Object> emptyMapper) {
             super(stateVerifier);
             this.emptyMappers = Collections.singletonList(emptyMapper);
         }
-        public <T extends  ContractState> void evaluate(T state) {
+
+        public <T extends ContractState> void evaluate(T state) {
             requireThat(req -> {
-                for(Function<? extends ContractState, Object> mapper : this.emptyMappers) {
+                for (Function<? extends ContractState, Object> mapper : this.emptyMappers) {
                     Object value = mapper.apply(this.object());
                     if (value instanceof String) {
                         req.using(s("field " + mapper.toString() + " must be null or empty"),
@@ -517,21 +602,25 @@ public class StateVerifier {
             super(stateVerifier);
             this.notEmptyMappers = notEmptyMappers;
         }
-        public IsNotEmpty(StateVerifier stateVerifier, Function<T, Object> ...notEmptyMappers) {
+
+        public IsNotEmpty(StateVerifier stateVerifier, Function<T, Object>... notEmptyMappers) {
             super(stateVerifier);
             this.notEmptyMappers = Arrays.asList(notEmptyMappers);
         }
+
         public IsNotEmpty(StateVerifier stateVerifier, Function<T, Object> notEmptyMapper, String text) {
             super(stateVerifier, text);
             this.notEmptyMappers = Collections.singletonList(notEmptyMapper);
         }
+
         public IsNotEmpty(StateVerifier stateVerifier, Function<T, Object> notEmptyMapper) {
             super(stateVerifier);
             this.notEmptyMappers = Collections.singletonList(notEmptyMapper);
         }
-        public <T extends  ContractState> void evaluate(T state) {
+
+        public <T extends ContractState> void evaluate(T state) {
             requireThat(req -> {
-                for(Function<? extends ContractState, Object> mapper : this.notEmptyMappers) {
+                for (Function<? extends ContractState, Object> mapper : this.notEmptyMappers) {
                     Object value = mapper.apply(this.object());
                     req.using(s("field " + mapper.toString() + " cannot be null"),
                             value != null);
@@ -555,12 +644,14 @@ public class StateVerifier {
             this.firstMapping = firstMapping;
             this.secondMapping = secondMapping;
         }
+
         public IsEqual(StateVerifier stateVerifier, Function<T, Object> firstMapping, Function<T, Object> secondMapping, String text) {
             super(stateVerifier, text);
             this.firstMapping = firstMapping;
             this.secondMapping = secondMapping;
         }
-        public <T extends  ContractState> void evaluate(T state) {
+
+        public <T extends ContractState> void evaluate(T state) {
             requireThat(req -> {
                 Object inputVal = firstMapping.apply(this.object());
                 Object outputVal = secondMapping.apply(this.object());
@@ -586,12 +677,14 @@ public class StateVerifier {
             this.firstMapping = firstMapping;
             this.secondMapping = secondMapping;
         }
+
         public IsNotEqual(StateVerifier stateVerifier, Function<T, Object> firstMapping, Function<T, Object> secondMapping, String text) {
             super(stateVerifier, text);
             this.firstMapping = firstMapping;
             this.secondMapping = secondMapping;
         }
-        public <T extends  ContractState> void evaluate(T state) {
+
+        public <T extends ContractState> void evaluate(T state) {
             requireThat(req -> {
                 Object inputVal = firstMapping.apply(this.object());
                 Object outputVal = secondMapping.apply(this.object());
@@ -608,7 +701,9 @@ public class StateVerifier {
     }
 
     class OneClass<T> extends StateList<T> {
-        protected OneClass(StateVerifier parent, Class<T> stateClass) {  super(parent, stateClass); }
+        protected OneClass(StateVerifier parent, Class<T> stateClass) {
+            super(parent, stateClass);
+        }
 
         @Override
         public List<ContractState> getList() {
@@ -627,9 +722,16 @@ public class StateVerifier {
             return this;
         }
     }
+
     class Empty extends Size {
-        protected Empty(StateVerifier parent) {  super(parent); }
-        protected Empty(StateVerifier parent, String text) {  super(parent, text); }
+        protected Empty(StateVerifier parent) {
+            super(parent);
+        }
+
+        protected Empty(StateVerifier parent, String text) {
+            super(parent, text);
+        }
+
         @Override
         protected StateVerifier verify() {
             requireThat(req -> {
@@ -639,9 +741,16 @@ public class StateVerifier {
             return this;
         }
     }
+
     class NotEmpty extends Size {
-        protected NotEmpty(StateVerifier parent) {  super(parent); }
-        protected NotEmpty(StateVerifier parent, String text) {  super(parent, text); }
+        protected NotEmpty(StateVerifier parent) {
+            super(parent);
+        }
+
+        protected NotEmpty(StateVerifier parent, String text) {
+            super(parent, text);
+        }
+
         @Override
         protected StateVerifier verify() {
             requireThat(req -> {
@@ -651,8 +760,12 @@ public class StateVerifier {
             return this;
         }
     }
+
     class MoreThanZero extends Size {
-        protected MoreThanZero(StateVerifier parent) {  super(parent); }
+        protected MoreThanZero(StateVerifier parent) {
+            super(parent);
+        }
+
         @Override
         protected StateVerifier verify() {
             requireThat(req -> {
@@ -662,9 +775,16 @@ public class StateVerifier {
             return this;
         }
     }
+
     class MoreThanN extends Size {
-        protected MoreThanN(StateVerifier parent) {  this(parent, 1); }
-        protected MoreThanN(StateVerifier parent, int size) {  super(parent, size); }
+        protected MoreThanN(StateVerifier parent) {
+            this(parent, 1);
+        }
+
+        protected MoreThanN(StateVerifier parent, int size) {
+            super(parent, size);
+        }
+
         @Override
         protected StateVerifier verify() {
             requireThat(req -> {
@@ -674,9 +794,16 @@ public class StateVerifier {
             return this;
         }
     }
+
     class LessThanN extends Size {
-        protected LessThanN(StateVerifier parent) {  this(parent, 1); }
-        protected LessThanN(StateVerifier parent, int size) {  super(parent, size); }
+        protected LessThanN(StateVerifier parent) {
+            this(parent, 1);
+        }
+
+        protected LessThanN(StateVerifier parent, int size) {
+            super(parent, size);
+        }
+
         @Override
         protected StateVerifier verify() {
             requireThat(req -> {
@@ -686,31 +813,43 @@ public class StateVerifier {
             return this;
         }
     }
+
     class Count extends Size {
-        protected Count(StateVerifier parent, int size) {  super(parent, size); }
+        protected Count(StateVerifier parent, int size) {
+            super(parent, size);
+        }
+
         @Override
         protected StateVerifier verify() {
             super.verify();
             return this;
         }
     }
+
     class Max extends Size {
-        protected Max(StateVerifier parent, int size) {  super(parent, size); }
+        protected Max(StateVerifier parent, int size) {
+            super(parent, size);
+        }
+
         @Override
         protected StateVerifier verify() {
             requireThat(req -> {
-                req.using(s("List must contain max "+this.size()+"."), this.getParentList().size() <= this.size());
+                req.using(s("List must contain max " + this.size() + "."), this.getParentList().size() <= this.size());
                 return null;
             });
             return this;
         }
     }
+
     class Min extends Size {
-        protected Min(StateVerifier parent, int size) {  super(parent, size); }
+        protected Min(StateVerifier parent, int size) {
+            super(parent, size);
+        }
+
         @Override
         protected StateVerifier verify() {
             requireThat(req -> {
-                req.using(s("List must contain max "+this.size()+"."), this.getParentList().size() >= this.size());
+                req.using(s("List must contain max " + this.size() + "."), this.getParentList().size() >= this.size());
                 return null;
             });
             return this;
@@ -745,8 +884,14 @@ public class StateVerifier {
 
 
     class OutputList<T> extends StateList {
-        OutputList(StateVerifier parent) {  super(parent); }
-        OutputList(StateVerifier parent, Class<T> stateClass) {  super(parent, stateClass); }
+        OutputList(StateVerifier parent) {
+            super(parent);
+        }
+
+        OutputList(StateVerifier parent, Class<T> stateClass) {
+            super(parent, stateClass);
+        }
+
         @Override
         public List<ContractState> getList() {
             if (this.stateClass != null) {
@@ -759,8 +904,14 @@ public class StateVerifier {
 
     // all output that are not in input based on EQUAL
     class NewOutputList<T> extends StateList {
-        NewOutputList(StateVerifier parent) {  super(parent); }
-        NewOutputList(StateVerifier parent, Class<T> stateClass) {  super(parent, stateClass); }
+        NewOutputList(StateVerifier parent) {
+            super(parent);
+        }
+
+        NewOutputList(StateVerifier parent, Class<T> stateClass) {
+            super(parent, stateClass);
+        }
+
         @Override
         public List<ContractState> getList() {
             List<ContractState> allOutput = null;
@@ -781,8 +932,14 @@ public class StateVerifier {
 
     // and input that are also in output
     class IntersectionList<T> extends StateList {
-        IntersectionList(StateVerifier parent) {  super(parent); }
-        IntersectionList(StateVerifier parent, Class<T> stateClass) {  super(parent, stateClass); }
+        IntersectionList(StateVerifier parent) {
+            super(parent);
+        }
+
+        IntersectionList(StateVerifier parent, Class<T> stateClass) {
+            super(parent, stateClass);
+        }
+
         @Override
         public List<ContractState> getList() {
             List<ContractState> allOutput = null;
@@ -804,18 +961,30 @@ public class StateVerifier {
     }
 
 
-    class NoList<T> extends  StateList {
-        NoList(StateVerifier parent) {  super(parent); }
-        NoList(StateVerifier parent, Class<T> stateClass) {  super(parent, stateClass); }
+    class NoList<T> extends StateList {
+        NoList(StateVerifier parent) {
+            super(parent);
+        }
+
+        NoList(StateVerifier parent, Class<T> stateClass) {
+            super(parent, stateClass);
+        }
+
         @Override
         public List<ContractState> getList() {
             throw new IllegalArgumentException("Failed requirement: no list loaded");
         }
     }
 
-    class InputList<T> extends  StateList {
-        InputList(StateVerifier parent) {  super(parent); }
-        InputList(StateVerifier parent, Class<T> stateClass) {  super(parent, stateClass); }
+    class InputList<T> extends StateList {
+        InputList(StateVerifier parent) {
+            super(parent);
+        }
+
+        InputList(StateVerifier parent, Class<T> stateClass) {
+            super(parent, stateClass);
+        }
+
         @Override
         public List<ContractState> getList() {
             if (this.stateClass != null) {
@@ -826,8 +995,11 @@ public class StateVerifier {
         }
     }
 
-    class FilterList<T> extends  StateList {
-        FilterList(StateVerifier parent, Class<T> stateClass) {  super(parent, stateClass); }
+    class FilterList<T> extends StateList {
+        FilterList(StateVerifier parent, Class<T> stateClass) {
+            super(parent, stateClass);
+        }
+
         @Override
         public List<ContractState> getList() {
             List<ContractState> list = this.parent.getParentList();
@@ -838,11 +1010,14 @@ public class StateVerifier {
     }
 
 
-    class UseThis<T extends ContractState> extends  StateList {
+    class UseThis<T extends ContractState> extends StateList {
 
         private final T state;
 
-        UseThis(StateVerifier parent, T state) {  super(parent); this.state = state; }
+        UseThis(StateVerifier parent, T state) {
+            super(parent);
+            this.state = state;
+        }
 
         @Override
         public List<ContractState> getList() {
@@ -851,26 +1026,33 @@ public class StateVerifier {
     }
 
 
-    class UseThese<T extends ContractState> extends  StateList {
+    class UseThese<T extends ContractState> extends StateList {
 
         private final List<T> states;
 
-        UseThese(StateVerifier parent, List<T> state) {  super(parent); this.states = state; }
+        UseThese(StateVerifier parent, List<T> state) {
+            super(parent);
+            this.states = state;
+        }
 
         @Override
         public List<ContractState> getList() {
-            return (List<ContractState>)this.states;
+            return (List<ContractState>) this.states;
         }
     }
 
 
-    class FilterWhere<T extends  ContractState> extends  StateList {
+    class FilterWhere<T extends ContractState> extends StateList {
         private final Function<T, Boolean> mapper;
 
-        FilterWhere(StateVerifier parent, Function<T, Boolean> mapper) {  super(parent); this.mapper = mapper; }
+        FilterWhere(StateVerifier parent, Function<T, Boolean> mapper) {
+            super(parent);
+            this.mapper = mapper;
+        }
+
         @Override
         public List<ContractState> getList() {
-            List<T> list = (List<T>)this.parent.getParentList();
+            List<T> list = (List<T>) this.parent.getParentList();
             return list.stream()
                     .filter(x -> this.mapper.apply(x))
                     .collect(Collectors.toList());
@@ -943,8 +1125,9 @@ public class StateVerifier {
             this.ltx = ltx;
             this.setTransaction(this);
             this.commandClazz = clazz;
-            this.command = requireSingleCommand(this.ltx.getCommands(), (Class<? extends CommandData>)this.commandClazz);
+            this.command = requireSingleCommand(this.ltx.getCommands(), (Class<? extends CommandData>) this.commandClazz);
         }
+
         protected LedgerStateVerifier(LedgerTransaction ltx) {
             super();
             this.ltx = ltx;

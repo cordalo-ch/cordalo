@@ -21,7 +21,7 @@ import net.corda.core.flows.*;
 import net.corda.core.identity.Party;
 import net.corda.core.transactions.SignedTransaction;
 
-public class TestBaseFlow  {
+public class TestBaseFlow {
 
     @InitiatingFlow(version = 2)
     @StartableByRPC
@@ -35,6 +35,7 @@ public class TestBaseFlow  {
             this.value = value;
             this.intValue = intValue;
         }
+
         @Override
         @Suspendable
         public TestState create() {
@@ -48,11 +49,11 @@ public class TestBaseFlow  {
 
         @Suspendable
         @Override
-        public SignedTransaction call () throws FlowException {
+        public SignedTransaction call() throws FlowException {
             return this.simpleFlow_Create(
                     this,
-                new TestContract.Commands.CreateSingleOperators());
-       }
+                    new TestContract.Commands.CreateSingleOperators());
+        }
 
     }
 
@@ -76,7 +77,7 @@ public class TestBaseFlow  {
 
         @Suspendable
         @Override
-        public SignedTransaction call () throws FlowException {
+        public SignedTransaction call() throws FlowException {
             return this.simpleFlow_Update(
                     TestState.class,
                     this.id,
@@ -92,12 +93,14 @@ public class TestBaseFlow  {
     @StartableByRPC
     public static class Delete extends SimpleBaseFlow<SignedTransaction> implements SimpleFlow.Delete<TestState> {
         private final UniqueIdentifier id;
+
         public Delete(UniqueIdentifier id) {
             this.id = id;
         }
+
         @Suspendable
         @Override
-        public SignedTransaction call () throws FlowException {
+        public SignedTransaction call() throws FlowException {
             return this.simpleFlow_Delete(
                     TestState.class,
                     this.id,
@@ -118,6 +121,7 @@ public class TestBaseFlow  {
         public CreateResponder(FlowSession otherFlow) {
             super(otherFlow);
         }
+
         @Suspendable
         @Override
         public Unit call() throws FlowException {
@@ -153,7 +157,6 @@ public class TestBaseFlow  {
             return this.receiveIdentitiesCounterpartiesNoTxChecking();
         }
     }
-
 
 
 }

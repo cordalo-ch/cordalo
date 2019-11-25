@@ -31,12 +31,15 @@ public class CordaRpcProxy extends CordaProxy {
             this.notary = null;
         }
     }
+
     public Party getMe() {
         return me;
     }
-    public Party getNotary () {
+
+    public Party getNotary() {
         return this.notary;
     }
+
     public CordaRPCOps getProxy() {
         return this.rpc.getProxy();
     }

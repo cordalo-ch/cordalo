@@ -17,13 +17,14 @@ import net.corda.core.crypto.SecureHash;
 import net.corda.core.flows.*;
 import net.corda.core.utilities.ProgressTracker;
 
-abstract public class ResponderBaseFlow<T extends ContractState>  extends FlowLogic<Unit> {
+abstract public class ResponderBaseFlow<T extends ContractState> extends FlowLogic<Unit> {
     protected final FlowSession otherFlow;
     protected final CordaloProgressTracker progress = new CordaloProgressTracker();
 
     public ResponderBaseFlow(FlowSession otherFlow) {
         this.otherFlow = otherFlow;
     }
+
     @Suspendable
     protected Unit receiveIdentitiesCounterpartiesNoTxChecking() throws FlowException {
         if (otherFlow.getCounterparty() != null) {

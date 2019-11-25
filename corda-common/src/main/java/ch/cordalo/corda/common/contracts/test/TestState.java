@@ -24,7 +24,7 @@ import java.util.Currency;
 import java.util.Objects;
 
 
-@BelongsToContract (TestContract.class)
+@BelongsToContract(TestContract.class)
 public class TestState extends CordaloLinearState {
 
     @NotNull
@@ -53,6 +53,7 @@ public class TestState extends CordaloLinearState {
         this.intValue = intValue;
         this.amount = amount;
     }
+
     public TestState(@NotNull UniqueIdentifier linearId, @NotNull Party owner, @NotNull Party provider, @NotNull Party cloneProvider, @NotNull String stringValue, @NotNull Integer intValue) {
         super(linearId);
         this.owner = owner;
@@ -62,6 +63,7 @@ public class TestState extends CordaloLinearState {
         this.intValue = intValue;
         this.amount = CHF(intValue);
     }
+
     public TestState(@NotNull UniqueIdentifier linearId, @NotNull Party owner, @NotNull Party provider, @NotNull String stringValue, @NotNull Integer intValue) {
         super(linearId);
         this.owner = owner;
@@ -75,16 +77,23 @@ public class TestState extends CordaloLinearState {
     public Party getOwner() {
         return owner;
     }
+
     public Party getProvider() {
         return provider;
     }
-    public Party getCloneProvider() { return cloneProvider; }
+
+    public Party getCloneProvider() {
+        return cloneProvider;
+    }
+
     public String getStringValue() {
         return stringValue;
     }
+
     public Integer getIntValue() {
         return intValue;
     }
+
     public Amount<Currency> getAmount() {
         return amount;
     }
@@ -92,6 +101,7 @@ public class TestState extends CordaloLinearState {
     public TestState withValues(String stringValue, Integer intValue) {
         return new TestState(this.linearId, this.owner, this.provider, this.provider, stringValue, intValue, CHF(intValue));
     }
+
     public TestState withProvider(Party newParty) {
         return new TestState(this.linearId, this.owner, newParty, newParty, this.stringValue, this.intValue, CHF(this.intValue));
     }

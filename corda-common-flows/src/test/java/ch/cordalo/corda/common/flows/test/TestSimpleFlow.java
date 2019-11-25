@@ -74,7 +74,7 @@ public class TestSimpleFlow {
         @Suspendable
         public SignedTransaction call() throws FlowException {
             return this.simpleFlow_Update(TestSimpleState.class, this.id, this,
-                    new TestSimpleContract.Commands.Update() );
+                    new TestSimpleContract.Commands.Update());
         }
 
         @Override
@@ -101,7 +101,7 @@ public class TestSimpleFlow {
         @Suspendable
         public SignedTransaction call() throws FlowException {
             return this.simpleFlow_Update(TestSimpleState.class, this.id, this,
-                    new TestSimpleContract.Commands.Share() );
+                    new TestSimpleContract.Commands.Share());
         }
 
         @Override
@@ -245,7 +245,6 @@ public class TestSimpleFlow {
     }
 
 
-
     /* running in counter party node */
     @InitiatedBy(Search.class)
     public static class SearchResponder extends ResponderBaseFlow<TestSimpleState> {
@@ -255,7 +254,11 @@ public class TestSimpleFlow {
         }
 
         @Suspendable
-        private static UniqueIdentifier unwrapper(UniqueIdentifier data) { return data; };
+        private static UniqueIdentifier unwrapper(UniqueIdentifier data) {
+            return data;
+        }
+
+        ;
 
         @Suspendable
         @Override

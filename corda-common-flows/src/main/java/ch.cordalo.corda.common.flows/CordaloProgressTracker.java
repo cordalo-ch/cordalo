@@ -26,26 +26,35 @@ public class CordaloProgressTracker {
         public SyncStep(@NotNull String label) {
             super(label);
         }
+
         @Override
         public ProgressTracker childProgressTracker() {
             return IdentitySyncFlow.Send.Companion.tracker();
         }
     }
+
     @CordaSerializable
     public static class CollectingStep extends Step {
         public CollectingStep(@NotNull String label) {
             super(label);
         }
+
         @Override
         public ProgressTracker childProgressTracker() {
             return CollectSignaturesFlow.Companion.tracker();
         }
     }
+
     @CordaSerializable
     public static class FinalisingStep extends Step {
-        public FinalisingStep(@NotNull String label) { super(label); }
+        public FinalisingStep(@NotNull String label) {
+            super(label);
+        }
+
         @Override
-        public ProgressTracker childProgressTracker() { return FinalityFlow.Companion.tracker(); }
+        public ProgressTracker childProgressTracker() {
+            return FinalityFlow.Companion.tracker();
+        }
     }
 
     public CordaloProgressTracker() {

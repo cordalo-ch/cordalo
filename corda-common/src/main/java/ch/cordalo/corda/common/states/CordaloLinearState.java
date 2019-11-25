@@ -20,13 +20,16 @@ import java.util.Objects;
 @CordaSerializable
 public abstract class CordaloLinearState extends CordaloState implements LinearState {
     protected final UniqueIdentifier linearId;
+
     @ConstructorForDeserialization
     public CordaloLinearState(UniqueIdentifier linearId) {
         this.linearId = linearId;
     }
+
     public CordaloLinearState(String externalId) {
         this.linearId = new UniqueIdentifier(externalId);
     }
+
     public CordaloLinearState() {
         this.linearId = new UniqueIdentifier();
     }

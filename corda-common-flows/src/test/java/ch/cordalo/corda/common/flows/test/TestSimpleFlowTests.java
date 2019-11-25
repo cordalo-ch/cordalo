@@ -28,11 +28,14 @@ public class TestSimpleFlowTests extends CordaloTestEnvironment {
     @Before
     public void setup() {
         this.setup(
-            true,
-            TestSimpleFlow.class);
+                true,
+                TestSimpleFlow.class);
     }
+
     @After
-    public void tearDown() { super.tearDown(); }
+    public void tearDown() {
+        super.tearDown();
+    }
 
     private TestSimpleState newSimple(CordaNodeEnvironment env, String key, String value) throws FlowException {
         return this.startFlowAndResult(
@@ -47,17 +50,20 @@ public class TestSimpleFlowTests extends CordaloTestEnvironment {
                 new TestSimpleFlow.Update(state.getLinearId(), key, value),
                 TestSimpleState.class);
     }
+
     private TestSimpleState newShare(CordaNodeEnvironment env, TestSimpleState state, CordaNodeEnvironment partner) throws FlowException {
         return this.startFlowAndResult(
                 env,
                 new TestSimpleFlow.Share(state.getLinearId(), partner.party),
                 TestSimpleState.class);
     }
+
     private StateVerifier newDelete(CordaNodeEnvironment env, TestSimpleState state) throws FlowException {
         return this.startFlow(
                 env,
                 new TestSimpleFlow.Delete(state.getLinearId()));
     }
+
     private TestSimpleState newSearch(CordaNodeEnvironment env, UniqueIdentifier linearId, CordaNodeEnvironment partner) throws FlowException {
         return this.startFlowAndState(
                 env,
@@ -65,7 +71,7 @@ public class TestSimpleFlowTests extends CordaloTestEnvironment {
     }
 
     @Test
-    public void testCreate()  {
+    public void testCreate() {
         try {
             TestSimpleState test = newSimple(this.testNode1, "Test1", "Value");
             Assert.assertNotNull("test object found", test);
@@ -77,7 +83,7 @@ public class TestSimpleFlowTests extends CordaloTestEnvironment {
     }
 
     @Test
-    public void testUpdate()  {
+    public void testUpdate() {
         try {
             TestSimpleState test = newSimple(this.testNode1, "Test1", "Value1");
             TestSimpleState update = newUpdate(this.testNode1, test, "Test2", "Value2");
@@ -88,7 +94,7 @@ public class TestSimpleFlowTests extends CordaloTestEnvironment {
     }
 
     @Test
-    public void testShare()  {
+    public void testShare() {
         try {
             TestSimpleState test = newSimple(this.testNode1, "Test1", "Value");
             TestSimpleState shared = newShare(this.testNode1, test, this.testNode2);
@@ -99,10 +105,10 @@ public class TestSimpleFlowTests extends CordaloTestEnvironment {
     }
 
     @Test
-    public void testSearch()  {
+    public void testSearch() {
         try {
             /* save state in Node 1 */
-            String randomKey = "RandomKey-"+new Random().nextInt();
+            String randomKey = "RandomKey-" + new Random().nextInt();
             TestSimpleState test = newSimple(this.testNode1, randomKey, "Value");
 
             /* search state from Node 2 via Node 1 using linear id */
@@ -116,7 +122,7 @@ public class TestSimpleFlowTests extends CordaloTestEnvironment {
     }
 
     @Test
-    public void testDelete()  {
+    public void testDelete() {
         try {
             TestSimpleState test = newSimple(this.testNode1, "Test1", "Value");
             StateVerifier stateVerifier = newDelete(this.testNode1, test);
@@ -128,7 +134,7 @@ public class TestSimpleFlowTests extends CordaloTestEnvironment {
     }
 
     @Test
-    public void testDelete_aftershare()  {
+    public void testDelete_aftershare() {
         try {
             TestSimpleState test = newSimple(this.testNode1, "Test1", "Value");
             TestSimpleState shared = newShare(this.testNode1, test, this.testNode2);
