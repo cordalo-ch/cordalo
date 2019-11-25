@@ -1,4 +1,4 @@
-/*
+/*******************************************************************************
  * Copyright (c) 2019 by cordalo.ch - MIT License
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -6,7 +6,7 @@
  * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- */
+ ******************************************************************************/
 package ch.cordalo.corda.common.contracts;
 
 import com.google.common.collect.ImmutableList;
@@ -188,12 +188,17 @@ public class StateVerifier {
     public <T extends ContractState> StateVerifier one(Class<T> stateClass) {
         return this.filter(stateClass).one();
     }
+
     public StateVerifier empty() {
         return new Empty(this).verify();
     }
     public StateVerifier empty(String text) {
         return new Empty(this, text).verify();
     }
+    public <T extends ContractState> StateVerifier empty(Class<T> stateClass) {
+        return this.filter(stateClass).empty();
+    }
+
     public StateVerifier notEmpty() {
         return new NotEmpty(this).verify();
     }
@@ -206,6 +211,10 @@ public class StateVerifier {
     public StateVerifier count(int size) {
         return new Count(this, size).verify();
     }
+    public <T extends ContractState> StateVerifier count(int size, Class<T> stateClass) {
+        return this.filter(stateClass).count(size);
+    }
+
     public StateVerifier max(int size) {
         return new Max(this, size).verify();
     }
@@ -748,7 +757,7 @@ public class StateVerifier {
         }
     }
 
-    // output that are not in input based on EQUAL
+    // all output that are not in input based on EQUAL
     class NewOutputList<T> extends StateList {
         NewOutputList(StateVerifier parent) {  super(parent); }
         NewOutputList(StateVerifier parent, Class<T> stateClass) {  super(parent, stateClass); }
@@ -770,7 +779,7 @@ public class StateVerifier {
         }
     }
 
-    // output that are not in input based on EQUAL
+    // and input that are also in output
     class IntersectionList<T> extends StateList {
         IntersectionList(StateVerifier parent) {  super(parent); }
         IntersectionList(StateVerifier parent, Class<T> stateClass) {  super(parent, stateClass); }

@@ -1,4 +1,4 @@
-/*
+/*******************************************************************************
  * Copyright (c) 2019 by cordalo.ch - MIT License
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -6,7 +6,7 @@
  * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- */
+ ******************************************************************************/
 package ch.cordalo.corda.common.contracts.test;
 
 import ch.cordalo.corda.common.contracts.CommandVerifier;
@@ -80,17 +80,21 @@ public class TestContract implements Contract {
             @Override
             public void verify(LedgerTransaction tx, StateVerifier verifier) throws IllegalArgumentException {
                 TestState create = new CommandVerifier(verifier).verify_create1(TestState.class);
-                verifier.input().empty();
+                verifier.input()
+                        .empty()
+                        .empty(TestState.class);
                 TestState test = verifier
                         .output()
                         .notEmpty()
                         .notEmpty("should not be empty")
                         .moreThanZero()
                         .count(1)
+                        .count(1, TestState.class)
                         .min(1)
                         .max(2)
                         .moreThan(0)
                         .one()
+                        .one(TestState.class)
                         .isNotEmpty(TestState::getLinearId, TestState::getProvider)
                         .isEqual(TestState::getOwner, TestState::getOwner)
                         .isNotEqual(TestState::getOwner, TestState::getProvider)
@@ -121,6 +125,7 @@ public class TestContract implements Contract {
                             .count(1)
                             .one()
                             .one("must be one")
+                            .filter(TestState.class)
                             .one(TestState.class)
                             .amountNot0("amount", x -> ((TestState)x).getAmount())
                             .object();
