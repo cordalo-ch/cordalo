@@ -16,6 +16,7 @@ import net.corda.testing.node.MockNetwork;
 import net.corda.testing.node.MockNetworkParameters;
 import net.corda.testing.node.TestCordapp;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,32 +25,26 @@ import java.util.stream.Collectors;
 public class CordaTestNetwork {
 
     private final List<Class<? extends FlowLogic>> responderClasses;
-    private MockNetwork network;
-    private final List<TestCordapp> testCordapps;
+    private final MockNetwork network;
+    private final List<TestCordapp> testCorDApps;
     private final List<String> testPackageNames;
     private final boolean withNodes;
     private final Map<String, CordaNodeEnvironment> nodes = new HashMap();
 
     public CordaTestNetwork(boolean withNodes, List<String> testPackageNames, List<Class<? extends FlowLogic>> responderClasses) {
         this.testPackageNames = testPackageNames;
-        this.testCordapps = testPackageNames.stream().map(x -> TestCordapp.findCordapp(x)).collect(Collectors.toList());
+        this.testCorDApps = testPackageNames.stream().map(x -> TestCordapp.findCordapp(x)).collect(Collectors.toList());
         this.withNodes = withNodes;
         this.responderClasses = responderClasses;
-        this.createNetwork();
+        if (this.withNodes) {
+            network = new MockNetwork(new MockNetworkParameters(testCorDApps));
+        } else {
+            network = null;
+        }
     }
 
     public CordaTestNetwork(boolean withNodes, List<String> testPackageNames, Class responderMainClass) {
-        this.testPackageNames = testPackageNames;
-        this.testCordapps = testPackageNames.stream().map(x -> TestCordapp.findCordapp(x)).collect(Collectors.toList());
-        this.withNodes = withNodes;
-        this.responderClasses = FlowTestSupporter.findResponderClasses(responderMainClass);
-        this.createNetwork();
-    }
-
-    private void createNetwork() {
-        if (this.withNodes) {
-            network = new MockNetwork(new MockNetworkParameters(testCordapps));
-        }
+        this(withNodes, testPackageNames, Arrays.asList(responderMainClass));
     }
 
     private CordaNodeEnvironment startNode(CordaNodeEnvironment env) {
@@ -58,12 +53,12 @@ public class CordaTestNetwork {
         return env;
     }
 
-    public List<String> getCordappPackageNames() {
+    public List<String> getCorDAppPackageNames() {
         return this.testPackageNames;
     }
 
-    public List<TestCordapp> getCordapps() {
-        return this.testCordapps;
+    public List<TestCordapp> getCorDApps() {
+        return this.testCorDApps;
     }
 
     public MockNetwork getNetwork() {

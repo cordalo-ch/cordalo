@@ -14,16 +14,21 @@ import net.corda.core.flows.FlowLogic;
 import net.corda.core.flows.InitiatedBy;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
+import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Check that all Flow
+ */
 public class FlowTestSupporter {
     public static List<Class<? extends FlowLogic>> findResponderClasses(Class clazz) {
         List<Class<? extends FlowLogic>> list = new ArrayList<>();
 
         Annotation annotation = clazz.getAnnotation(InitiatedBy.class);
         if (annotation != null) {
+            // TODO validateAllMethodsMustHaveSuspendable(clazz) missing?
             list.add((Class<? extends FlowLogic>) clazz);
         }
 
@@ -38,13 +43,12 @@ public class FlowTestSupporter {
     }
 
     public static void validateAllMethodsMustHaveSuspendable(Class clazz) {
-        for (Method m : clazz.getMethods()) {
-            if (m.getDeclaringClass().equals(clazz)) {
-                Suspendable annotation = m.getAnnotation(Suspendable.class);
-                if (annotation == null) {
-                    throw new RuntimeException("Clazz " + clazz.getName() + "::" + m.getName() + " does not have @Suspendable Annotation");
-                }
+        Arrays.stream(clazz.getMethods()).filter(m -> m.getDeclaringClass().equals(clazz)).forEach(m -> {
+            Suspendable annotation = m.getAnnotation(Suspendable.class);
+            if (annotation == null) {
+                throw new RuntimeException(MessageFormat.format(
+                        "Clazz {0}::{1} does not have @Suspendable Annotation", clazz.getName(), m.getName()));
             }
-        }
+        });
     }
 }
