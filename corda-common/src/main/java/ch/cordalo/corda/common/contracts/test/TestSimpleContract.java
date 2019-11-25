@@ -137,6 +137,22 @@ public class TestSimpleContract implements Contract {
             }
         }
 
+        class Search implements TestSimpleContract.Commands {
+            @Override
+            public void verify(LedgerTransaction tx, StateVerifier verifier) throws IllegalArgumentException {
+                requireThat(req -> {
+
+                    verifier.input()
+                            .one()
+                            .one(TestSimpleState.class)
+                            .object();
+
+                    return null;
+                });
+
+            }
+        }
+
     }
 
 }

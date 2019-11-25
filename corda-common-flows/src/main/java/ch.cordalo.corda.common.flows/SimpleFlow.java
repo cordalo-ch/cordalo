@@ -20,24 +20,28 @@ public class SimpleFlow {
 
     public static interface Create<T extends ContractState> {
         @Suspendable
-        public T create() throws FlowException;
+        T create() throws FlowException;
     }
 
     public static interface Update<T extends ContractState> {
         @Suspendable
-        public T update(T state) throws FlowException;
+        T update(T state) throws FlowException;
+    }
+
+    public static interface Search<T extends ContractState> {
+        @Suspendable
+        T search(T state) throws FlowException;
     }
 
     public static interface UpdateBuilder<T extends ContractState> extends Update<T> {
         @Suspendable
-        public CommandData getCommand(StateAndRef<T> stateRef, T state, T newState) throws FlowException;
+        CommandData getCommand(StateAndRef<T> stateRef, T state, T newState) throws FlowException;
 
-        public void updateBuilder(TransactionBuilder transactionBuilder, StateAndRef<T> stateRef, T state, T newState) throws FlowException;
-
+        void updateBuilder(TransactionBuilder transactionBuilder, StateAndRef<T> stateRef, T state, T newState) throws FlowException;
     }
 
     public static interface Delete<T extends ContractState> {
         @Suspendable
-        public void validateToDelete(T state) throws FlowException;
+        void validateToDelete(T state) throws FlowException;
     }
 }

@@ -22,7 +22,6 @@ import net.corda.core.identity.Party;
 import net.corda.core.transactions.SignedTransaction;
 import org.jetbrains.annotations.NotNull;
 
-import java.text.MessageFormat;
 import java.util.List;
 
 @CordaloFlowVerifier
@@ -142,7 +141,7 @@ public class TestSimpleFlow {
 
     @InitiatingFlow(version = 2)
     @StartableByRPC
-    public static class Search extends SimpleBaseFlow<TestSimpleState> {
+    public static class Search extends SimpleBaseFlow<TestSimpleState> implements SimpleFlow.Search<TestSimpleState> {
 
         @NotNull
         private final UniqueIdentifier id;
@@ -157,35 +156,14 @@ public class TestSimpleFlow {
         @Suspendable
         @Override
         public TestSimpleState call() throws FlowException {
-
-            FlowHelper<TestSimpleState> flowHelper = new FlowHelper<>(this.getServiceHub());
-
-            /* search on local vault if already shared */
-            StateAndRef<TestSimpleState> localStateByLinearId =
-                    flowHelper.getLastStateByLinearId(TestSimpleState.class, this.id);
-            if (localStateByLinearId != null) {
-                return localStateByLinearId.getState().getData();
-            }
-
-            /* initiate flow at counterparty to get LinearId from vault after successful sharing within responder */
-            FlowSession flowSession = this.initiateFlow(this.owner);
-            UniqueIdentifier receivedLinearId = flowSession.sendAndReceive(UniqueIdentifier.class, this.id).unwrap(id -> {
-                return id;
-            });
-
-            /* linear id not found at counter party */
-            if (receivedLinearId == null) {
-                return null;
-            }
-            /* state found and synched with linear Id */
-            StateAndRef<TestSimpleState> receivedStateByLinearId = flowHelper
-                    .getLastStateByLinearId(TestSimpleState.class, receivedLinearId);
-            if (receivedStateByLinearId == null) {
-                throw new FlowException(MessageFormat.format("state not found in vault after search & share id={0}", receivedLinearId));
-            }
-            return receivedStateByLinearId.getState().getData();
+            return this.simpleFlow_Search(TestSimpleState.class, this.id, this.owner);
         }
 
+        @Override
+        @Suspendable
+        public TestSimpleState search(TestSimpleState state) throws FlowException {
+            return null;
+        }
     }
 
     @InitiatedBy(Create.class)
@@ -257,8 +235,6 @@ public class TestSimpleFlow {
         private static UniqueIdentifier unwrapper(UniqueIdentifier data) {
             return data;
         }
-
-        ;
 
         @Suspendable
         @Override
