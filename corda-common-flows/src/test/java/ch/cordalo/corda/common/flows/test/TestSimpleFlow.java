@@ -253,6 +253,8 @@ public class TestSimpleFlow {
             super(otherFlow);
         }
 
+        @Suspendable
+        private static UniqueIdentifier unwrapper(UniqueIdentifier data) { return data; };
 
         @Suspendable
         @Override
@@ -260,9 +262,7 @@ public class TestSimpleFlow {
             FlowHelper<TestSimpleState> flowHelper = new FlowHelper<>(this.getServiceHub());
 
             /* receive the requested StammNr from sender */
-            UniqueIdentifier searchLinearId = this.otherFlow.receive(UniqueIdentifier.class).unwrap(data -> {
-                return data;
-            });
+            UniqueIdentifier searchLinearId = this.otherFlow.receive(UniqueIdentifier.class).unwrap(SearchResponder::unwrapper);
 
             /* search unconsumed state by linear id */
             StateAndRef<TestSimpleState> localStateByLinearId =

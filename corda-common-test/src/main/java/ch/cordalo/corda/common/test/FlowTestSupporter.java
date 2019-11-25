@@ -13,17 +13,23 @@ import co.paralleluniverse.fibers.Suspendable;
 import net.corda.core.flows.FlowLogic;
 import net.corda.core.flows.InitiatedBy;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FindResponderClasses {
-    public static List<Class<? extends FlowLogic>> find(Class clazz) {
-
+public class FlowTestSupporter {
+    public static List<Class<? extends FlowLogic>> findResponderClasses(Class clazz) {
         List<Class<? extends FlowLogic>> list = new ArrayList<>();
+
+        Annotation annotation = clazz.getAnnotation(InitiatedBy.class);
+        if (annotation != null) {
+            list.add((Class<? extends FlowLogic>) clazz);
+        }
+
         for(Class<?> c : clazz.getClasses()) {
             validateAllMethodsMustHaveSuspendable(c);
-            InitiatedBy annotation = c.getAnnotation(InitiatedBy.class);
+            annotation = c.getAnnotation(InitiatedBy.class);
             if (annotation != null) {
                 list.add((Class<? extends FlowLogic>) c);
             }
@@ -31,11 +37,13 @@ public class FindResponderClasses {
         return list;
     }
 
-    private static void validateAllMethodsMustHaveSuspendable(Class clazz) {
-        for (Method m : clazz.getDeclaredMethods()) {
-            Suspendable annotation = m.getAnnotation(Suspendable.class);
-            if (annotation == null) {
-                throw new RuntimeException("Clazz " + clazz.getName() + "::" + m.getName() + " does not have @Suspendable Annotation");
+    public static void validateAllMethodsMustHaveSuspendable(Class clazz) {
+        for (Method m : clazz.getMethods()) {
+            if (m.getDeclaringClass().equals(clazz)) {
+                Suspendable annotation = m.getAnnotation(Suspendable.class);
+                if (annotation == null) {
+                    throw new RuntimeException("Clazz " + clazz.getName() + "::" + m.getName() + " does not have @Suspendable Annotation");
+                }
             }
         }
     }

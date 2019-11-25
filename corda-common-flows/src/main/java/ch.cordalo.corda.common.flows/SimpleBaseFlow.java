@@ -83,16 +83,19 @@ public abstract class SimpleBaseFlow<S> extends BaseFlow<S> {
             this.command = command;
         }
         @Override
+        @Suspendable
         public X update(X state) throws FlowException {
             return this.creator.update(state);
         }
 
         @Override
+        @Suspendable
         public CommandData getCommand(StateAndRef<X> stateRef, X state, X newState) throws FlowException {
             return this.command;
         }
 
         @Override
+        @Suspendable
         public void updateBuilder(TransactionBuilder transactionBuilder, StateAndRef<X> stateRef, X state, X newState) throws FlowException {
             transactionBuilder.addInputState(stateRef);
             transactionBuilder.addOutputState(newState);

@@ -11,7 +11,11 @@ package ch.cordalo.corda.common.flows.test;
 
 import ch.cordalo.corda.common.contracts.CordaloTestEnvironment;
 import ch.cordalo.corda.common.contracts.test.TestState;
+import ch.cordalo.corda.common.flows.BaseFlow;
 import ch.cordalo.corda.common.flows.FlowHelper;
+import ch.cordalo.corda.common.flows.ResponderBaseFlow;
+import ch.cordalo.corda.common.flows.SimpleBaseFlow;
+import ch.cordalo.corda.common.test.FlowTestSupporter;
 import net.corda.core.contracts.StateAndRef;
 import net.corda.core.node.services.Vault;
 import net.corda.core.node.services.vault.QueryCriteria;
@@ -88,5 +92,18 @@ public class FlowHelperTests extends CordaloTestEnvironment {
         Assert.assertEquals("last element has 48", new Integer(48), lastStatesByCriteria.get(2).getState().getData().getIntValue());
     }
 
+
+    @Test
+    public void validateToHaveAllMethods_Suspendable() {
+        Class[] flowClasses = {
+                BaseFlow.class,
+                FlowHelper.class,
+                SimpleBaseFlow.class,
+                ResponderBaseFlow.class
+        };
+        for (Class clazz: flowClasses) {
+            FlowTestSupporter.validateAllMethodsMustHaveSuspendable(clazz);
+        }
+    }
 
 }
