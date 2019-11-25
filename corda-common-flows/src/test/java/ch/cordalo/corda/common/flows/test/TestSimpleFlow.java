@@ -22,6 +22,7 @@ import net.corda.core.identity.Party;
 import net.corda.core.transactions.SignedTransaction;
 import org.jetbrains.annotations.NotNull;
 
+import java.text.MessageFormat;
 import java.util.List;
 
 @CordaloFlowVerifier
@@ -166,7 +167,7 @@ public class TestSimpleFlow {
                 return localStateByLinearId.getState().getData();
             }
 
-            /* initiate flow at counterparty to get LinearId from vaul after successful sharing within responder */
+            /* initiate flow at counterparty to get LinearId from vault after successful sharing within responder */
             FlowSession flowSession = this.initiateFlow(this.owner);
             UniqueIdentifier receivedLinearId = flowSession.sendAndReceive(UniqueIdentifier.class, this.id).unwrap(id -> {
                 return id;
@@ -180,7 +181,7 @@ public class TestSimpleFlow {
             StateAndRef<TestSimpleState> receivedStateByLinearId = flowHelper
                     .getLastStateByLinearId(TestSimpleState.class, receivedLinearId);
             if (receivedStateByLinearId == null) {
-                throw new FlowException("state not found in vault after search & share id="+receivedLinearId);
+                throw new FlowException(MessageFormat.format("state not found in vault after search & share id={0}", receivedLinearId));
             }
             return receivedStateByLinearId.getState().getData();
         }
