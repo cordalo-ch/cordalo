@@ -12,32 +12,45 @@ package ch.cordalo.corda.common.flows;
 import co.paralleluniverse.fibers.Suspendable;
 import net.corda.core.contracts.CommandData;
 import net.corda.core.contracts.ContractState;
+import net.corda.core.contracts.LinearState;
 import net.corda.core.contracts.StateAndRef;
 import net.corda.core.flows.FlowException;
+import net.corda.core.flows.FlowLogic;
+import net.corda.core.identity.Party;
 import net.corda.core.transactions.TransactionBuilder;
 
 public class SimpleFlow {
 
     public static interface Create<T extends ContractState> {
         @Suspendable
-        public T create() throws FlowException;
+        T create() throws FlowException;
     }
 
     public static interface Update<T extends ContractState> {
         @Suspendable
-        public T update(T state) throws FlowException;
+        T update(T state) throws FlowException;
+    }
+
+    public static interface Search<T extends LinearState, V extends  Object> {
+        @Suspendable
+        T search(FlowHelper<T> flowHelper, V valueToSearch) throws FlowException;
+        V getValueToSearch();
+    }
+    public static interface SearchResponder<T extends LinearState, V extends  Object, X> {
+        @Suspendable
+        T search(FlowHelper<T> flowHelper, V valueToSearch) throws FlowException;
+        FlowLogic<X> createShareStateFlow(T state, Party counterparty);
     }
 
     public static interface UpdateBuilder<T extends ContractState> extends Update<T> {
         @Suspendable
-        public CommandData getCommand(StateAndRef<T> stateRef, T state, T newState) throws FlowException;
+        CommandData getCommand(StateAndRef<T> stateRef, T state, T newState) throws FlowException;
 
-        public void updateBuilder(TransactionBuilder transactionBuilder, StateAndRef<T> stateRef, T state, T newState) throws FlowException;
-
+        void updateBuilder(TransactionBuilder transactionBuilder, StateAndRef<T> stateRef, T state, T newState) throws FlowException;
     }
 
     public static interface Delete<T extends ContractState> {
         @Suspendable
-        public void validateToDelete(T state) throws FlowException;
+        void validateToDelete(T state) throws FlowException;
     }
 }
