@@ -2,9 +2,16 @@ package ch.cordalo.corda.common.states;
 
 import net.corda.core.contracts.UniqueIdentifier;
 import net.corda.core.crypto.NullKeys;
+import net.corda.core.identity.AbstractParty;
 import net.corda.core.identity.AnonymousParty;
+import net.corda.core.identity.CordaX500Name;
+import net.corda.core.identity.Party;
+import net.corda.testing.core.TestIdentity;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
+
+import java.security.PublicKey;
+import java.util.List;
 
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.notNullValue;
@@ -14,7 +21,7 @@ public class CordaloLinearStateTest {
 
     private class UnderTest extends CordaloLinearState {
 
-        private AnonymousParty owner = new AnonymousParty(NullKeys.NullPublicKey.INSTANCE);
+        private Party owner = newTestParty();
 
         public UnderTest(UniqueIdentifier linearId) {
             super(linearId);
@@ -33,7 +40,7 @@ public class CordaloLinearStateTest {
             return Parties.fromParties(this.owner);
         }
 
-        public AnonymousParty getOwner() {
+        public Party getOwner() {
             return owner;
         }
 
@@ -123,6 +130,62 @@ public class CordaloLinearStateTest {
 
         // Assert
         assertThat(parties, is(notNullValue()));
+    }
+
+    @Test
+    public void newCordaloLinearState_getParticipants() {
+        // Arrange
+        UnderTest cordaloLinearState = new UnderTest();
+
+        //Act
+        List<AbstractParty> participants = cordaloLinearState.getParticipants();
+
+        // Assert
+        assertThat(participants.size(), is(1));
+        assertThat(participants.get(0), is(cordaloLinearState.getOwner()));
+    }
+
+
+    @Test
+    public void newCordaloLinearState_getParticipantKeys() {
+        // Arrange
+        UnderTest cordaloLinearState = new UnderTest();
+
+        //Act
+        List<PublicKey> participantKeys = cordaloLinearState.getParticipantKeys();
+
+        // Assert
+        assertThat(participantKeys.size(), is(1));
+        assertThat(participantKeys.get(0), is(cordaloLinearState.getOwner().getOwningKey()));
+    }
+
+
+    @Test
+    public void newCordaloLinearState_getParticipantsX500() {
+        // Arrange
+        UnderTest cordaloLinearState = new UnderTest();
+
+        //Act
+        List<String> partyStrings = cordaloLinearState.getParticipantsX500();
+
+        // Assert
+        assertThat(partyStrings.size(), is(1));
+        assertThat(partyStrings.get(0), is(partyNameToCompare()));
+    }
+
+
+    private String partyNameToCompare() {
+        return newTestParty().nameOrNull().getX500Principal().getName();
+    }
+
+    private Party newTestParty() {
+        return newParty("TestName","TestOE");
+    }
+    @NotNull
+    private Party newParty(String commonName, String organizationUnit) {
+        CordaX500Name cordaX500Name = new CordaX500Name(commonName, organizationUnit,
+                "organisation", "locality", "state", "CH");
+        return new TestIdentity(cordaX500Name).getParty();
     }
 
 }
