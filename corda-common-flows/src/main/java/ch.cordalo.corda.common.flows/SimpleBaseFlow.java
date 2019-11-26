@@ -11,10 +11,7 @@ package ch.cordalo.corda.common.flows;
 
 import ch.cordalo.corda.common.states.Parties;
 import co.paralleluniverse.fibers.Suspendable;
-import net.corda.core.contracts.CommandData;
-import net.corda.core.contracts.ContractState;
-import net.corda.core.contracts.StateAndRef;
-import net.corda.core.contracts.UniqueIdentifier;
+import net.corda.core.contracts.*;
 import net.corda.core.flows.FlowException;
 import net.corda.core.flows.FlowSession;
 import net.corda.core.identity.Party;
@@ -84,21 +81,21 @@ public abstract class SimpleBaseFlow<S> extends BaseFlow<S> {
     }
 
     @Suspendable
-    protected <T extends ContractState> T simpleFlow_Search(Class<T> stateClass,
-                                                            UniqueIdentifier id,
-                                                            Party counterParty) throws FlowException {
+    protected <T extends LinearState, V extends Object> T simpleFlow_Search(Class<T> stateClass,
+                                                                            SimpleFlow.Search<T, V> searcher,
+                                                                            Party counterParty) throws FlowException {
         FlowHelper<T> flowHelper = new FlowHelper<>(this.getServiceHub());
 
+        V valueToSearch = searcher.getValueToSearch();
         /* search on local vault if already shared */
-        StateAndRef<T> localStateByLinearId =
-                flowHelper.getLastStateByLinearId(stateClass, id);
-        if (localStateByLinearId != null) {
-            return localStateByLinearId.getState().getData();
+        T localState = searcher.search(flowHelper, searcher.getValueToSearch());
+        if (localState != null) {
+            return localState;
         }
 
         /* initiate flow at counter-party to get LinearId from vault after successful sharing within responder */
         FlowSession flowSession = this.initiateFlow(counterParty);
-        UniqueIdentifier receivedLinearId = flowSession.sendAndReceive(UniqueIdentifier.class, id).unwrap(itsId -> {
+        UniqueIdentifier receivedLinearId = flowSession.sendAndReceive(UniqueIdentifier.class, valueToSearch).unwrap(itsId -> {
             return itsId;
         });
 
@@ -115,6 +112,21 @@ public abstract class SimpleBaseFlow<S> extends BaseFlow<S> {
         }
         return receivedStateByLinearId.getState().getData();
     }
+
+
+
+    @Suspendable
+    protected <T extends LinearState, V extends Object> T simpleFlow_SearchById(Class<T> stateClass,
+                                                                              UniqueIdentifier id,
+                                                                              Party counterParty) throws FlowException {
+        return this.simpleFlow_Search(stateClass,
+                new SimpleFlow_SearchByUniqueIdentifier<>(stateClass, id),
+                counterParty);
+    }
+
+
+
+
 
     private static class SimpleFlow_UpdateBuilder<X extends ContractState> implements SimpleFlow.UpdateBuilder<X> {
         private final SimpleFlow.Update<X> creator;
@@ -145,6 +157,29 @@ public abstract class SimpleBaseFlow<S> extends BaseFlow<S> {
                                   X newState) throws FlowException {
             transactionBuilder.addInputState(stateRef);
             transactionBuilder.addOutputState(newState);
+        }
+    }
+
+    private static class SimpleFlow_SearchByUniqueIdentifier<T extends LinearState, V extends UniqueIdentifier> implements SimpleFlow.Search<T, UniqueIdentifier> {
+
+        private final Class<T> stateClass;
+        private final UniqueIdentifier id;
+
+        public SimpleFlow_SearchByUniqueIdentifier(Class<T> stateClass, UniqueIdentifier id) {
+            this.stateClass = stateClass;
+            this.id = id;
+        }
+
+        @Override
+        public T search(FlowHelper<T> flowHelper, UniqueIdentifier valueToSearch) throws FlowException {
+            StateAndRef<T> lastStateByLinearId = flowHelper.getLastStateByLinearId(this.stateClass, valueToSearch);
+            return (lastStateByLinearId == null) ? null : lastStateByLinearId.getState().getData();
+        }
+
+        @Override
+        @Suspendable
+        public UniqueIdentifier getValueToSearch() {
+            return this.id;
         }
     }
 

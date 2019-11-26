@@ -70,6 +70,12 @@ public class TestSimpleFlowTests extends CordaloTestEnvironment {
                 new TestSimpleFlow.Search(linearId, partner.party));
     }
 
+    private TestSimpleState newSearchByKey(CordaNodeEnvironment env, String key, CordaNodeEnvironment partner) throws FlowException {
+        return this.startFlowAndState(
+                env,
+                new TestSimpleFlow.SearchByKey(key, partner.party));
+    }
+
     @Test
     public void testCreate() {
         try {
@@ -105,7 +111,7 @@ public class TestSimpleFlowTests extends CordaloTestEnvironment {
     }
 
     @Test
-    public void testSearch() {
+    public void testSearch_byId() {
         try {
             /* save state in Node 1 */
             String randomKey = "RandomKey-" + new Random().nextInt();
@@ -113,6 +119,24 @@ public class TestSimpleFlowTests extends CordaloTestEnvironment {
 
             /* search state from Node 2 via Node 1 using linear id */
             TestSimpleState receivedState = newSearch(this.testNode2, test.getLinearId(), this.testNode1);
+            Assert.assertEquals("received key is = to random key from other node", randomKey, receivedState.getKey());
+
+        } catch (FlowException e) {
+            e.printStackTrace();
+            Assert.fail(e.getMessage());
+        }
+    }
+
+
+    @Test
+    public void testSearch_byKey() {
+        try {
+            /* save state in Node 1 */
+            String randomKey = "RandomKey-" + new Random().nextInt();
+            TestSimpleState test = newSimple(this.testNode1, randomKey, "Value");
+
+            /* search state from Node 2 via Node 1 using linear id */
+            TestSimpleState receivedState = newSearchByKey(this.testNode2, test.getKey(), this.testNode1);
             Assert.assertEquals("received key is = to random key from other node", randomKey, receivedState.getKey());
 
         } catch (FlowException e) {

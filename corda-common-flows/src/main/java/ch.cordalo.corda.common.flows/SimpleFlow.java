@@ -12,8 +12,11 @@ package ch.cordalo.corda.common.flows;
 import co.paralleluniverse.fibers.Suspendable;
 import net.corda.core.contracts.CommandData;
 import net.corda.core.contracts.ContractState;
+import net.corda.core.contracts.LinearState;
 import net.corda.core.contracts.StateAndRef;
 import net.corda.core.flows.FlowException;
+import net.corda.core.flows.FlowLogic;
+import net.corda.core.identity.Party;
 import net.corda.core.transactions.TransactionBuilder;
 
 public class SimpleFlow {
@@ -28,9 +31,15 @@ public class SimpleFlow {
         T update(T state) throws FlowException;
     }
 
-    public static interface Search<T extends ContractState> {
+    public static interface Search<T extends LinearState, V extends  Object> {
         @Suspendable
-        T search(T state) throws FlowException;
+        T search(FlowHelper<T> flowHelper, V valueToSearch) throws FlowException;
+        V getValueToSearch();
+    }
+    public static interface SearchResponder<T extends LinearState, V extends  Object, X> {
+        @Suspendable
+        T search(FlowHelper<T> flowHelper, V valueToSearch) throws FlowException;
+        FlowLogic<X> createShareStateFlow(T state, Party counterparty);
     }
 
     public static interface UpdateBuilder<T extends ContractState> extends Update<T> {

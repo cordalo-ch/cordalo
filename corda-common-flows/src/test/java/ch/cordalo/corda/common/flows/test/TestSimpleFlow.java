@@ -10,6 +10,7 @@
 package ch.cordalo.corda.common.flows.test;
 
 import ch.cordalo.corda.common.contracts.test.TestSimpleContract;
+import ch.cordalo.corda.common.contracts.test.TestSimpleSchemaV1;
 import ch.cordalo.corda.common.contracts.test.TestSimpleState;
 import ch.cordalo.corda.common.contracts.test.TestState;
 import ch.cordalo.corda.common.flows.*;
@@ -19,13 +20,45 @@ import net.corda.core.contracts.StateAndRef;
 import net.corda.core.contracts.UniqueIdentifier;
 import net.corda.core.flows.*;
 import net.corda.core.identity.Party;
+import net.corda.core.node.services.Vault;
+import net.corda.core.node.services.vault.Builder;
+import net.corda.core.node.services.vault.CriteriaExpression;
+import net.corda.core.node.services.vault.FieldInfo;
+import net.corda.core.node.services.vault.QueryCriteria;
 import net.corda.core.transactions.SignedTransaction;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+import static net.corda.core.node.services.vault.QueryCriteriaUtils.getField;
+
 @CordaloFlowVerifier
 public class TestSimpleFlow {
+
+
+    @NotNull
+    @Suspendable
+    protected static QueryCriteria getKeyCriteria(String key) throws FlowException {
+        QueryCriteria generalCriteria = new QueryCriteria.VaultQueryCriteria(Vault.StateStatus.UNCONSUMED);
+        FieldInfo keyField = null;
+        try {
+            keyField = getField("key", TestSimpleSchemaV1.PersistentTestSimple.class);
+        } catch (NoSuchFieldException e) {
+            throw new FlowException("error while getting key fields", e);
+        }
+        CriteriaExpression keyCriteriaExpression = Builder.equal(keyField, key);
+        QueryCriteria keyCriteria = new QueryCriteria.VaultCustomQueryCriteria(keyCriteriaExpression);
+
+        return generalCriteria.and(keyCriteria);
+    }
+
+    @NotNull
+    @Suspendable
+    protected static StateAndRef<TestSimpleState> getSimpleByKey(FlowHelper<TestSimpleState> flowHelper, String key) throws FlowException {
+        QueryCriteria query = getKeyCriteria(key);
+        return flowHelper.getLastStateByCriteria(TestSimpleState.class, query);
+    }
+
 
     @InitiatingFlow(version = 2)
     @StartableByRPC
@@ -41,7 +74,6 @@ public class TestSimpleFlow {
             this.partners = partners;
         }
 
-        @Override
         @Suspendable
         public TestSimpleState create() throws FlowException {
             return new TestSimpleState(new UniqueIdentifier(), this.getOurIdentity(), this.key, this.value, this.partners);
@@ -141,7 +173,7 @@ public class TestSimpleFlow {
 
     @InitiatingFlow(version = 2)
     @StartableByRPC
-    public static class Search extends SimpleBaseFlow<TestSimpleState> implements SimpleFlow.Search<TestSimpleState> {
+    public static class Search extends SimpleBaseFlow<TestSimpleState> {
 
         @NotNull
         private final UniqueIdentifier id;
@@ -156,13 +188,45 @@ public class TestSimpleFlow {
         @Suspendable
         @Override
         public TestSimpleState call() throws FlowException {
-            return this.simpleFlow_Search(TestSimpleState.class, this.id, this.owner);
+            return this.simpleFlow_SearchById(
+                    TestSimpleState.class, this.id, this.owner);
+        }
+    }
+
+
+
+    @InitiatingFlow(version = 2)
+    @StartableByRPC
+    public static class SearchByKey extends SimpleBaseFlow<TestSimpleState> implements SimpleFlow.Search<TestSimpleState, String> {
+
+        @NotNull
+        private final String key;
+        @NotNull
+        private final Party owner;
+
+        public SearchByKey(@NotNull String key, @NotNull Party owner) {
+            this.key = key;
+            this.owner = owner;
+        }
+
+        @Suspendable
+        @Override
+        public TestSimpleState call() throws FlowException {
+            return this.simpleFlow_Search(
+                    TestSimpleState.class, this, this.owner);
         }
 
         @Override
         @Suspendable
-        public TestSimpleState search(TestSimpleState state) throws FlowException {
-            return null;
+        public TestSimpleState search(FlowHelper<TestSimpleState> flowHelper, String valueToSearch) throws FlowException{
+            StateAndRef<TestSimpleState> simpleByKey = getSimpleByKey(flowHelper, this.key);
+            return (simpleByKey == null) ? null : simpleByKey.getState().getData();
+        }
+
+        @Override
+        @Suspendable
+        public String getValueToSearch() {
+            return this.key;
         }
     }
 
@@ -225,44 +289,61 @@ public class TestSimpleFlow {
 
     /* running in counter party node */
     @InitiatedBy(Search.class)
-    public static class SearchResponder extends ResponderBaseFlow<TestSimpleState> {
+    public static class SearchResponder extends SearchResponderBaseFlow implements SimpleFlow.SearchResponder<TestSimpleState, UniqueIdentifier, SignedTransaction> {
 
         public SearchResponder(FlowSession otherFlow) {
             super(otherFlow);
         }
 
         @Suspendable
-        private static UniqueIdentifier unwrapper(UniqueIdentifier data) {
-            return data;
+        @Override
+        public Unit call() throws FlowException {
+            return this.responderFlow_receiveAndSend(UniqueIdentifier.class, this);
+        }
+
+
+        @Override
+        @Suspendable
+        public TestSimpleState search(FlowHelper<TestSimpleState> flowHelper, UniqueIdentifier valueToSearch) throws FlowException {
+            StateAndRef<TestSimpleState> stateByLinearId = flowHelper.getLastStateByLinearId(TestSimpleState.class, valueToSearch);
+            return (stateByLinearId == null) ? null : stateByLinearId.getState().getData();
+        }
+
+        @Override
+        @Suspendable
+        public FlowLogic<SignedTransaction> createShareStateFlow(TestSimpleState state, Party counterparty) {
+            return new Share(state.getLinearId(), counterparty);
+        }
+    }
+
+
+    /* running in counter party node */
+    @InitiatedBy(SearchByKey.class)
+    public static class SearchByKeyResponder extends SearchResponderBaseFlow implements SimpleFlow.SearchResponder<TestSimpleState, String, SignedTransaction> {
+
+        public SearchByKeyResponder(FlowSession otherFlow) {
+            super(otherFlow);
         }
 
         @Suspendable
         @Override
         public Unit call() throws FlowException {
-            FlowHelper<TestSimpleState> flowHelper = new FlowHelper<>(this.getServiceHub());
+            return this.responderFlow_receiveAndSend(String.class, this);
+        }
 
-            /* receive the requested StammNr from sender */
-            UniqueIdentifier searchLinearId = this.otherFlow.receive(UniqueIdentifier.class).unwrap(SearchResponder::unwrapper);
 
-            /* search unconsumed state by linear id */
-            StateAndRef<TestSimpleState> localStateByLinearId =
-                    flowHelper.getLastStateByLinearId(TestSimpleState.class, searchLinearId);
-            if (localStateByLinearId == null) {
-                /* send no result back to sender */
-                this.otherFlow.send(null);
-                return null;
-            }
 
-            TestSimpleState state = localStateByLinearId.getState().getData();
+        @Override
+        @Suspendable
+        public TestSimpleState search(FlowHelper<TestSimpleState> flowHelper, String valueToSearch) throws FlowException {
+            StateAndRef<TestSimpleState> simpleByKey = getSimpleByKey(flowHelper, valueToSearch);
+            return simpleByKey == null ? null : simpleByKey.getState().getData();
+        }
 
-            /* try to share officially with corda the state and send back. Using this principle.
-            Updates will be shared in the future --> sigle point of truth and not copy */
-            Share shareFlow = new Share(state.getLinearId(), this.otherFlow.getCounterparty());
-            subFlow(shareFlow);
-
-            /* send back state linear id to counter party */
-            this.otherFlow.send(state.getLinearId());
-            return null;
+        @Override
+        @Suspendable
+        public FlowLogic<SignedTransaction> createShareStateFlow(TestSimpleState state, Party counterparty) {
+            return new Share(state.getLinearId(), this.otherFlow.getCounterparty());
         }
     }
 
