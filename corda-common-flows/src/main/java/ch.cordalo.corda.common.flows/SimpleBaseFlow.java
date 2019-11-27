@@ -19,8 +19,13 @@ import net.corda.core.transactions.SignedTransaction;
 import net.corda.core.transactions.TransactionBuilder;
 
 import java.text.MessageFormat;
+import java.util.UUID;
 
 public abstract class SimpleBaseFlow<S> extends BaseFlow<S> {
+
+    private static final String SEARCH_RESPONDER_NO_STATE_FOUND = "$$-Search-Responder-No-State-Found$$";
+    public static final UniqueIdentifier EMPTY_SEARCH_RESULT_LINEAR_ID = new UniqueIdentifier(
+            SEARCH_RESPONDER_NO_STATE_FOUND, UUID.fromString("8f247ffb-54f0-49a9-adcd-cb46ceba7fec"));
 
     @Suspendable
     public <T extends ContractState> SignedTransaction simpleFlow_Create(SimpleFlow.Create<T> creator,
@@ -80,6 +85,10 @@ public abstract class SimpleBaseFlow<S> extends BaseFlow<S> {
         return signSyncCollectAndFinalize(state.getParticipants(), transactionBuilder);
     }
 
+    private boolean isNullPayload(UniqueIdentifier id) {
+        return EMPTY_SEARCH_RESULT_LINEAR_ID.equals(id) && (SEARCH_RESPONDER_NO_STATE_FOUND.equals(id.getExternalId()));
+    }
+
     @Suspendable
     protected <T extends LinearState, V extends Object> T simpleFlow_Search(Class<T> stateClass,
                                                                             SimpleFlow.Search<T, V> searcher,
@@ -100,7 +109,7 @@ public abstract class SimpleBaseFlow<S> extends BaseFlow<S> {
         });
 
         /* linear id not found at counter party */
-        if (receivedLinearId == null) {
+        if (receivedLinearId == null || isNullPayload(receivedLinearId)) {
             return null;
         }
 
