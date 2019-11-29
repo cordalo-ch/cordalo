@@ -47,7 +47,7 @@ public class CordaNodeEnvironment {
             this.startNoNetwork();
         }
         ledgerServices = new MockServices(
-                testNetwork.getCordappPackageNames(),
+                testNetwork.getCorDAppPackageNames(),
                 this.party.getName()
         );
 
@@ -67,7 +67,7 @@ public class CordaNodeEnvironment {
 
     private CordaNodeEnvironment startLedger(CordaTestNetwork testNetwork) {
         this.ledgerServices = new MockServices(
-                testNetwork.getCordappPackageNames(),
+                testNetwork.getCorDAppPackageNames(),
                 this.party.getName()
         );
         return this;

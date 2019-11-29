@@ -52,6 +52,4 @@ public class CordaloTestEnvironment extends CordaloBaseTests {
         if (network != null) network.stopNodes();
     }
 
-    ;
-
 }

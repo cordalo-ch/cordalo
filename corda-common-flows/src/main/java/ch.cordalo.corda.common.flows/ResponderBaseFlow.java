@@ -28,15 +28,10 @@ abstract public class ResponderBaseFlow<T extends ContractState> extends FlowLog
     @Suspendable
     protected Unit receiveIdentitiesCounterpartiesNoTxChecking() throws FlowException {
         if (otherFlow.getCounterparty() != null) {
+            // TODO handle value none
             Unit none = subFlow(new IdentitySyncFlow.Receive(otherFlow));
         }
-        if (otherFlow.getCounterpartyFlowInfo().getFlowVersion() >= 2) {
-            SecureHash id = subFlow(new BaseFlow.SignTxFlowNoChecking(otherFlow, SignTransactionFlow.Companion.tracker())).getId();
-            subFlow(new ReceiveFinalityFlow(otherFlow, id));
-        } else {
-            subFlow(new BaseFlow.SignTxFlowNoChecking(otherFlow, SignTransactionFlow.Companion.tracker()));
-        }
-        return Unit.INSTANCE;
+        return receiveCounterpartiesNoTxChecking();
     }
 
     @Override

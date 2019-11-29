@@ -25,7 +25,7 @@ public class ReferenceContract<T extends ContractState> implements Contract {
     public interface Commands extends CommandData {
 
         @CordaSerializable
-        public class Reference<T extends ContractState> implements Commands {
+        class Reference<T extends ContractState> implements Commands {
             final private T myState;
 
             public Reference(T myState) {

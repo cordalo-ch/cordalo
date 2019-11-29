@@ -46,7 +46,6 @@ public class StateMachineTests {
         Assert.assertEquals("created is NOT follower of SHARED", false, sharedState.hasLaterState(createdState));
     }
 
-
     @Test
     public void testSharedAfterBeforeShared() {
         State sharedState = ExampleStateMachine.State("SHARED");
@@ -61,7 +60,6 @@ public class StateMachineTests {
         Assert.assertEquals("shared is NOT before CREATED", false, createdState.hasEarlierState(sharedState));
         Assert.assertEquals("created is before of SHARED", true, sharedState.hasEarlierState(createdState));
     }
-
 
     @Test
     public void testAcceptAfterShared() {
@@ -79,6 +77,5 @@ public class StateMachineTests {
         Assert.assertEquals("shared is not later than not-shared", false, shared.hasLaterState(notShared));
         Assert.assertEquals("shared is not earlier than not-shared", false, shared.hasEarlierState(notShared));
     }
-
 
 }

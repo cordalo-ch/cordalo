@@ -95,7 +95,6 @@ public class FlowHelperTests extends CordaloTestEnvironment {
         Assert.assertEquals("last element has 48", new Integer(48), lastStatesByCriteria.get(2).getState().getData().getIntValue());
     }
 
-
     @Test
     public void validateToHaveAllMethods_Suspendable() {
         Class[] flowClasses = {

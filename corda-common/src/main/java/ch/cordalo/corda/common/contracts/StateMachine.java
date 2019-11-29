@@ -142,7 +142,7 @@ public abstract class StateMachine {
         INITIAL,
         CONDITIONAL,
         SHARE_STATE,
-        FINAL;
+        FINAL
     }
 
     @CordaSerializable
@@ -241,7 +241,6 @@ public abstract class StateMachine {
             if (o instanceof String) {
                 return this.getValue().equals(o);
             }
-            ;
             if (!(o instanceof State)) return false;
             State state = (State) o;
             return getValue().equals(state.getValue());
