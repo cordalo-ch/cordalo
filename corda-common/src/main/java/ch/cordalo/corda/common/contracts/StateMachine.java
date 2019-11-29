@@ -195,7 +195,7 @@ public abstract class StateMachine {
 
         public List<String> getNextActions() {
             if (this.isFinalState()) return Collections.EMPTY_LIST;
-            return this.getTransitions().stream().map(x -> x.toString()).collect(Collectors.toList());
+            return this.getTransitions().stream().map(x -> x.getValue()).collect(Collectors.toList());
         }
 
         public boolean isValidAction(String action) {
