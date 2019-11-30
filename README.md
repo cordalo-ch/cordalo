@@ -48,10 +48,19 @@ sudo gem install travis
 cd git/cordalo/
 ```
 
+- get your key from gpg 
 - export your GPG secret keys that had been used for OSS
 
 ```
-gpg --armor --export-secret-keys 5FDC21A9E64C767A38965D1EECDF662160A7D786 | awk 'NR == 1 { print "signingKey=" } 1' > secret-ring.gpg
+$ gpg --list-secret-keys
+/Users/Lolo/.gnupg/pubring.kbx
+------------------------------
+sec   rsa4096 2019-08-30 [SC] [expires: 2023-08-30]
+      5FDC.......
+uid           [ultimate] Lorenz Hanggi <build@cordalo.ch>
+
+
+gpg --armor --export-secret-keys 5FDC... | awk 'NR == 1 { print "signingKey=" } 1' > secret-ring.gpg
 ```
 
 travis encrypt-file secret-ring.gpg —add
