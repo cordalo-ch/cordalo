@@ -12,9 +12,9 @@ language: java
 jdk: openjdk8
 script:
   - echo "signign password is ->$signingPassword"
-  - "./gradlew --stacktrace --debug jar -x signArchives"
-  - "./gradlew --stacktrace --debug check test"
-  - "./gradlew --stacktrace --debug assemble -x signArchives"
-  - "./gradlew --stacktrace --debug uploadArchives"
+  - "./gradlew jar -x signArchives --stacktrace --debug "
+  - "./gradlew check test --stacktrace --debug "
+  - "./gradlew assemble -x signArchives --stacktrace --debug "
+  - "./gradlew uploadArchives --stacktrace --debug "
 after_success:
   - ./deploy.sh
