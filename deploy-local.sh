@@ -12,7 +12,7 @@ rm -R `find . -name logs | grep -v git`
 #./gradlew --info check test
 ./gradlew check test
 ./gradlew assemble -x signArchives
-./gradlew uploadArchives
+./gradlew ploadArchives
 
 #make a 3x sound
 echo -en "\007"
