@@ -16,7 +16,7 @@ install:
 - "./gradlew jar -x signArchives"
 script:
 - "./gradlew check test"
-- "./gradlew assemble -x signArchives -Psigning.keyId=${GPG_KEY_ID} -Psigning.password=${GPG_KEY_PASSPHRASE}
+- "./gradlew assemble -Psigning.keyId=${GPG_KEY_ID} -Psigning.password=${GPG_KEY_PASSPHRASE}
   -Psigning.secretKeyRingFile=`pwd`/secret-ring.gpg"
 after_success:
 - "./deploy.sh"
