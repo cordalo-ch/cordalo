@@ -72,7 +72,7 @@ allprojects {
     }
 
     signing {
-        def key = project.findProperty("signingKeyId") ?: System.getenv("signingKeyId");
+        def key = project.findProperty("signingKey") ?: System.getenv("signingKey");
         def pwd = project.findProperty("signingPassword") ?: System.getenv("signingPassword");
 
         // Using in-memory ascii-armored keys
