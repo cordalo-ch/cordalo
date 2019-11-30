@@ -69,6 +69,10 @@ public class CordaTestNetwork {
         return this.nodes.values().stream().map(x -> x.party).collect(Collectors.toList());
     }
 
+    public boolean needsStart() {
+        return this.network != null;
+    }
+
     public List<NodeInfo> networkMapSnapshot() {
         return this.nodes.values().stream().map(x -> x.getNodeInfo()).collect(Collectors.toList());
     }
@@ -100,14 +104,14 @@ public class CordaTestNetwork {
     }
 
     public void startNodes() {
-        if (this.network != null) this.network.startNodes();
+        if (this.needsStart()) this.network.startNodes();
     }
 
     public void runNetwork() {
-        if (this.network != null) this.network.runNetwork();
+        if (this.needsStart()) this.network.runNetwork();
     }
 
     public void stopNodes() {
-        if (this.network != null) this.network.stopNodes();
+        if (this.needsStart()) this.network.stopNodes();
     }
 }
