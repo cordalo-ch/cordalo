@@ -10,11 +10,12 @@ os: linux
 dist: xenial
 language: java
 jdk: openjdk8
+install:
+  - openssl aes-256-cbc -K $encrypted_fca62744a4cd_key -iv $encrypted_fca62744a4cd_iv -in secret-ring.enc -out secret-ring.gpg -d
+  - ./gradlew jar -x signArchives
 script:
-  - echo "signign password is ->$signingPassword"
-  - "./gradlew jar -x signArchives --stacktrace --debug "
-  - "./gradlew check test --stacktrace --debug "
-  - "./gradlew assemble -x signArchives --stacktrace --debug "
-  - "./gradlew uploadArchives --stacktrace --debug "
+  - ./gradlew --info check test
+  - ./gradlew assemble -x signArchives
+  - ./gradlew uploadArchives
 after_success:
   - ./deploy.sh
