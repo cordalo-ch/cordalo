@@ -12,7 +12,7 @@ language: java
 jdk: openjdk8
 script:
   - echo "signign password is ->$signingPassword"
-  - "./gradlew jar -x signArchives"
+  - "./gradlew --debug jar -x signArchives"
   - "./gradlew --info check test"
   - "./gradlew assemble -x signArchives"
   - "./gradlew uploadArchives"
