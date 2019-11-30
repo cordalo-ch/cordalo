@@ -22,8 +22,8 @@ script:
 ## test cases will run a long time due to flow tests
 ##- "./gradlew check test"
 
-## pass signing key, pwd and file to assemble
-- "./gradlew assemble -Psigning.keyId=${GPG_KEY_ID} -Psigning.password=${GPG_KEY_PASSPHRASE} -Psigning.secretKeyRingFile=`pwd`/secret-ring.gpg"
+## pass signing key, pwd and file to assemble - important do not sign archives
+- "./gradlew assemble -x signArchives -Psigning.keyId=${GPG_KEY_ID} -Psigning.password=${GPG_KEY_PASSPHRASE} -Psigning.secretKeyRingFile=`pwd`/secret-ring.gpg"
 ##- "./gradlew uploadArchives"
 after_success:
 - "./deploy.sh"
