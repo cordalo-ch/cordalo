@@ -32,3 +32,29 @@ ServiceState service = verifier
 Install in that order:
 * Java JDK 1.8
 
+
+# Build environment travis
+we are using travis to build and deploy our solution to OSS nexus
+here are some tips for other that want to do this.
+
+
+- install travis-cli local
+```
+sudo gem install travis
+```
+
+- go to your git rep
+```
+cd git/cordalo/
+```
+
+- export your GPG secret keys that had been used for OSS
+
+```
+gpg --armor --export-secret-keys 5FDC21A9E64C767A38965D1EECDF662160A7D786 | awk 'NR == 1 { print "signingKey=" } 1' > secret-ring.gpg
+```
+
+travis encrypt-file secret-ring.gpg —add
+rm secret-ring.gpg
+
+```
