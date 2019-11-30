@@ -58,12 +58,14 @@ $ gpg --list-secret-keys
 sec   rsa4096 2019-08-30 [SC] [expires: 2023-08-30]
       5FDC.......
 uid           [ultimate] Lorenz Hanggi <build@cordalo.ch>
-
-
-gpg --armor --export-secret-keys 5FDC... | awk 'NR == 1 { print "signingKey=" } 1' > secret-ring.gpg
 ```
 
+replace value for LONG_ID with your ID from gpg
+add the key and iv values directly in your travis online configuration
+and add the code to your .travis.yml
+```
+LONG_ID=5FDC....
+gpg --armor --export-secret-keys $LONG_ID > secret-ring.gpg
 travis encrypt-file secret-ring.gpg —add
 rm secret-ring.gpg
-
 ```
