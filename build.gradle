@@ -68,7 +68,7 @@ allprojects {
     }
     artifacts {
         // dont add javadocjars and source to it because travis is not able to build
-        // archives javadocJar, sourcesJar
+        archives javadocJar, sourcesJar
     }
 
     signing {
