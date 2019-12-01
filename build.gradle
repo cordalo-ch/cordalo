@@ -26,7 +26,7 @@ buildscript {
         classpath "$corda_release_group_plugins:cordformation:$corda_gradle_plugins_version"
         classpath "$corda_release_group_plugins:quasar-utils:$corda_gradle_plugins_version"
         classpath "org.springframework.boot:spring-boot-gradle-plugin:$spring_boot_gradle_plugin_version"
-        classpath "net.saliman:gradle-cobertura-plugin:2.5.4"
+        classpath "net.saliman:gradle-cobertura-plugin:2.3.1"
         classpath "com.github.kt3k.coveralls:com.github.kt3k.coveralls.gradle.plugin:2.8.4"
     }
 }
@@ -69,6 +69,9 @@ allprojects {
     artifacts {
         // dont add javadocjars and source to it because travis is not able to build
         archives javadocJar, sourcesJar
+    }
+    tasks.coveralls {
+        dependsOn 'check'
     }
 
     signing {
