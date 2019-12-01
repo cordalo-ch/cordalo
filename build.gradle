@@ -70,9 +70,10 @@ allprojects {
         // dont add javadocjars and source to it because travis is not able to build
         archives javadocJar, sourcesJar
     }
-    tasks.coveralls {
-        dependsOn 'check'
-    }
+    // error: Could not find method coveralls()
+    // tasks.coveralls {
+    //    dependsOn 'check'
+    //}
 
     signing {
         def key = project.findProperty("signingKey") ?: System.getenv("signingKey");
