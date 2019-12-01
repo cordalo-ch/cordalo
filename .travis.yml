@@ -20,4 +20,3 @@ script:
   -Psigning.secretKeyRingFile=`pwd`/secret-ring.gpg"
 after_success:
 - "./deploy.sh"
-- "./gradlew cobertura coveralls"
