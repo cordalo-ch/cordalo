@@ -68,7 +68,7 @@ public abstract class StateMachine {
     }
 
     public List<State> getInitialStates() {
-        return this.stateMap.values().stream().filter(x -> x.isInitialState()).collect(Collectors.toList());
+        return this.stateMap.values().stream().filter(State::isInitialState).collect(Collectors.toList());
     }
 
     public StateTransition getInitialTransition() {
@@ -110,7 +110,7 @@ public abstract class StateMachine {
             StateTransition stateTransition = new StateTransition(
                     this.getName(),
                     action, next,
-                    Arrays.stream(previous).map(x -> this.state(x)).toArray(value -> prevStates));
+                    Arrays.stream(previous).map(this::state).toArray(value -> prevStates));
             this.transitionMap.put(action, stateTransition);
             for (State state : prevStates) {
                 this.addTransitionToState(stateTransition, state);
@@ -220,7 +220,7 @@ public abstract class StateMachine {
 
         public List<String> getNextActions() {
             if (this.isFinalState()) return Collections.EMPTY_LIST;
-            return this.getTransitions().stream().map(x -> x.getValue()).collect(Collectors.toList());
+            return this.getTransitions().stream().map(StateTransition::getValue).collect(Collectors.toList());
         }
 
         private String getPermissionNameFromAction(String action) {
@@ -228,7 +228,7 @@ public abstract class StateMachine {
         }
 
         public List<String> getNextActionsFor(Party party) {
-            List<String> stateMachinePermissions = this.getNextActions().stream().map(x -> this.getPermissionNameFromAction(x)).collect(Collectors.toList());
+            List<String> stateMachinePermissions = this.getNextActions().stream().map(this::getPermissionNameFromAction).collect(Collectors.toList());
             if (!stateMachinePermissions.isEmpty()) {
                 return Collections.EMPTY_LIST;
             }
