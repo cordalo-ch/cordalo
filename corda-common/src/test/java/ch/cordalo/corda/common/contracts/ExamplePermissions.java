@@ -45,7 +45,7 @@ public class ExamplePermissions extends Permissions {
      */
     @Override
     protected void initPermissions() {
-        this.addStateActionsForRole("admin", "example",
+        this.addStateActionsForRole("admin",
                 "CREATE",
                 "REGISTER",
                 "INFORM",
@@ -59,9 +59,9 @@ public class ExamplePermissions extends Permissions {
                 "DECLINE",
                 "ACCEPT"
         );
-        this.addPermissionsForRole("searcher", "service:command:search");
-        this.addStateActionsForRole("creator", "example", "CREATE", "REGISTER");
-        this.addStateActionsForRole("decider", "example", "DECLINE", "ACCEPT");
+        this.addCommandActionaForRole("searcher", "search");
+        this.addStateActionsForRole("creator", "CREATE", "REGISTER");
+        this.addStateActionsForRole("decider", "DECLINE", "ACCEPT");
     }
 
     @Override
@@ -71,5 +71,11 @@ public class ExamplePermissions extends Permissions {
         this.addPartyAndRoles("CN=Company-B, OU=IT, O=organisation, L=locality, ST=state, C=CH", "searcher", "creator");
         this.addPartyAndRoles("CN=Company-B, OU=Business, O=organisation, L=locality, ST=state, C=CH", "decider");
         this.addPartyAndRoles("CN=Company-C, OU=IT, O=organisation, L=locality, ST=state, C=CH", "none");
+    }
+
+    @Override
+    protected void initPartiesAndAttributes() {
+        this.addPartyAndAttribute("CN=Company-A, OU=IT, O=organisation, L=locality, ST=state, C=CH", "logo", "companyA.png");
+        this.addPartyAndAttribute("CN=Company-A, OU=IT, O=organisation, L=locality, ST=state, C=CH", "products", "motor,household");
     }
 }

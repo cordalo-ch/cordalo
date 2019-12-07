@@ -21,6 +21,27 @@ import java.util.stream.Stream;
 public abstract class Permissions {
     public static final Map<String, Permissions> permissionMap = Collections.synchronizedMap(new LinkedHashMap<>());
 
+    public static Permissions get(String name) {
+        return permissionMap.get(name);
+    }
+
+    public static Map<String, Object> getAllPermissions(Party party) {
+        Map<String, Set<String>> permissions = new LinkedHashMap<>();
+        permissions.put("roles", new LinkedHashSet<>());
+        permissions.put("actions", new LinkedHashSet<>());
+        Map<String, Map<String, String>> attributes = new LinkedHashMap<>();
+        attributes.put("attributes", new LinkedHashMap<>());
+        for (Permissions permission : permissionMap.values()) {
+            permissions = permission.getAllPermissionsFor(party, permissions);
+            attributes = permission.getAllAttributesFor(party, attributes);
+        }
+        Map<String, Object> finalMap = new LinkedHashMap<>();
+        finalMap.putAll(permissions);
+        finalMap.putAll(attributes);
+        return finalMap;
+    }
+
+
     private final String name;
     private final Map<String, PartyAndRoles> partyRoleMapping = new LinkedHashMap<>();
     private final Map<String, Role> rolesMapping = new LinkedHashMap<>();
@@ -30,21 +51,23 @@ public abstract class Permissions {
         permissionMap.put(name, this);
         this.initPartiesAndRoles();
         this.initPermissions();
+        this.initPartiesAndAttributes();
     }
 
-    public static Permissions get(String name) {
-        return permissionMap.get(name);
+    public String getName() {
+        return name;
     }
 
     protected abstract void initPermissions();
 
     protected abstract void initPartiesAndRoles();
 
+    protected abstract void initPartiesAndAttributes();
+
     protected void addPartyAndRoles(String partyName, String... roles) {
-        if (roles == null) return;
+        if (roles == null || roles.length == 0) throw new IllegalArgumentException("at least 1 role must be provided");
         List<Role> allRoles = Stream.of(roles).map(x -> getRoleIfAbsendPut(x)).collect(Collectors.toList());
-        this.partyRoleMapping.put(partyName,
-                new PartyAndRoles(partyName, allRoles));
+        this.getPartyIfAbsendPut(partyName).addRoles(allRoles);
     }
 
     private Role getRoleIfAbsendPut(String role) {
@@ -56,75 +79,184 @@ public abstract class Permissions {
         return roleObject;
     }
 
-    protected void addPermissionsForRole(String role, String... permissions) {
-        if (permissions == null) return;
+    private PartyAndRoles getPartyIfAbsendPut(String party) {
+        PartyAndRoles partyAndRoles = this.partyRoleMapping.get(party);
+        if (partyAndRoles == null) {
+            partyAndRoles = new PartyAndRoles(party);
+            this.partyRoleMapping.put(party, partyAndRoles);
+        }
+        return partyAndRoles;
+    }
+
+    private String getPermissionNameFromAction(String action) {
+        return this.getName() + ":action:" + action;
+    }
+
+    private String getPermissionNameFromStateAction(String action) {
+        return this.getName() + ":state:" + action;
+    }
+
+    protected void addCommandActionaForRole(String role, String... actions) {
+        if (actions == null || actions.length == 0)
+            throw new IllegalArgumentException("at least 1 action must be provided");
+        this.getRoleIfAbsendPut(role).addPermissions(actions);
+    }
+
+    protected void addStateActionsForRole(String role, String... actions) {
+        if (actions == null || actions.length == 0)
+            throw new IllegalArgumentException("at least 1 action must be provided");
+        List<String> permissions = Arrays.stream(actions).map(this::getPermissionNameFromStateAction).collect(Collectors.toList());
         this.getRoleIfAbsendPut(role).addPermissions(permissions);
     }
 
-    protected void addStateActionsForRole(String role, String stateMachine, String... actions) {
-        if (actions == null) return;
-        List<String> permissions = Arrays.stream(actions).map(x -> stateMachine + ":state:" + x).collect(Collectors.toList());
-        this.getRoleIfAbsendPut(role).addPermissions(permissions);
+    protected void addPartyAndAttribute(String party, String attribute, String value) {
+        this.getPartyIfAbsendPut(party).addAttribute(attribute, value);
     }
 
-    public boolean isPermitted(Party me, String action) {
-        if (me == null) return false;
-        PartyAndRoles partyAndRoles = this.partyRoleMapping.get(me.toString());
+    public boolean isPermitted(Party party, String action) {
+        if (party == null) throw new IllegalArgumentException("party must be provided");
+        if (action == null || action.isEmpty()) throw new IllegalArgumentException("action must be provided");
+        ;
+        PartyAndRoles partyAndRoles = this.partyRoleMapping.get(party.toString());
         return partyAndRoles != null && partyAndRoles.isPermitted(action);
     }
 
-    public List<String> isPermitted(Party me, List<String> actions) {
-        if (me == null) return Collections.EMPTY_LIST;
-        PartyAndRoles partyAndRoles = this.partyRoleMapping.get(me.toString());
+    public boolean hasAttribute(Party party, String attribute, String value) {
+        if (party == null) throw new IllegalArgumentException("party must be provided");
+        if (attribute == null || attribute.isEmpty()) throw new IllegalArgumentException("attribute must be provided");
+        ;
+        PartyAndRoles partyAndRoles = this.partyRoleMapping.get(party.toString());
+        return partyAndRoles != null && partyAndRoles.hasAttribute(attribute, value);
+    }
+
+    public String getAttribute(Party party, String attribute) {
+        if (party == null) throw new IllegalArgumentException("party must be provided");
+        if (attribute == null || attribute.isEmpty()) throw new IllegalArgumentException("attribute must be provided");
+        ;
+        PartyAndRoles partyAndRoles = this.partyRoleMapping.get(party.toString());
+        if (partyAndRoles != null) {
+            return partyAndRoles.getAttribute(attribute);
+        } else {
+            return null;
+        }
+    }
+
+    public List<String> isPermitted(Party party, List<String> actions) {
+        if (party == null) throw new IllegalArgumentException("party must be provided");
+        if (actions == null || actions.isEmpty())
+            throw new IllegalArgumentException("at least 1 action must be provided");
+        ;
+        PartyAndRoles partyAndRoles = this.partyRoleMapping.get(party.toString());
         if (partyAndRoles == null) {
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         } else {
             return partyAndRoles.isPermitted(actions);
         }
     }
 
-    public Set<String> getActions(Party me) {
-        if (me == null) return Collections.EMPTY_SET;
-        PartyAndRoles partyAndRoles = this.partyRoleMapping.get(me.toString());
-        return partyAndRoles == null ? Collections.EMPTY_SET : partyAndRoles.getValidActions();
+    public Set<String> getActions(Party party) {
+        if (party == null) throw new IllegalArgumentException("party must be provided");
+        PartyAndRoles partyAndRoles = this.partyRoleMapping.get(party.toString());
+        return partyAndRoles == null ? Collections.emptySet() : partyAndRoles.getValidActions();
+    }
+
+    public Set<String> getRoles(Party party) {
+        if (party == null) throw new IllegalArgumentException("party must be provided");
+        PartyAndRoles partyAndRoles = this.partyRoleMapping.get(party.toString());
+        return partyAndRoles == null ? Collections.emptySet() : partyAndRoles.getRoles().stream().map(Role::getRole).collect(Collectors.toSet());
+    }
+
+    public Map<String, String> getAttributes(Party party) {
+        if (party == null) throw new IllegalArgumentException("party must be provided");
+        PartyAndRoles partyAndRoles = this.partyRoleMapping.get(party.toString());
+        return partyAndRoles == null ? Collections.emptyMap() : partyAndRoles.getAttributes();
+    }
+
+    private Map<String, Set<String>> getAllPermissionsFor(Party party, Map<String, Set<String>> map) {
+        map.get("actions").addAll(this.getActions(party));
+        map.get("roles").addAll(this.getRoles(party));
+        return map;
+    }
+
+    private Map<String, Map<String, String>> getAllAttributesFor(Party party, Map<String, Map<String, String>> map) {
+        map.get("attributes").putAll(this.getAttributes(party));
+        return map;
+    }
+
+    public Map<String, Object> getAllPermissionsFor(Party party) {
+        Map<String, Object> finalMap = new LinkedHashMap<>();
+        finalMap.putAll(this.getAllPermissionsFor(party, new LinkedHashMap<>()));
+        finalMap.putAll(this.getAllAttributesFor(party, new LinkedHashMap<>()));
+        return finalMap;
     }
 
     private static class PartyAndRoles {
         String party;
         Set<Role> roles;
+        Map<String, String> attributes;
 
-        public PartyAndRoles(String party, Role... roles) {
+        private PartyAndRoles(String party, Role... roles) {
             this.party = party;
-            this.roles = Sets.newHashSet(roles);
+            this.roles = roles == null ? Sets.newHashSet() : Sets.newHashSet(roles);
+            this.attributes = new LinkedHashMap<>();
         }
 
-        public PartyAndRoles(String party, List<Role> roles) {
-            this.party = party;
-            this.roles = Sets.newHashSet(roles);
+        private void addRoles(List<Role> roles) {
+            this.roles.addAll(roles);
         }
 
-        public String getParty() {
+        private void addAttribute(String attribute, String value) {
+            this.getAttributes().put(attribute, value);
+        }
+
+        private String getParty() {
             return party;
         }
 
-        public Set<Role> getRoles() {
+        private Set<Role> getRoles() {
             return roles;
         }
 
-        public boolean isPermitted(String action) {
+        private Map<String, String> getAttributes() {
+            return attributes;
+        }
+
+        private boolean isPermitted(String action) {
             return this.getRoles().stream().anyMatch(x -> x.isPermitted(action));
         }
 
-        public List<String> isPermitted(List<String> actions) {
-            return actions.stream().filter(x -> this.isPermitted(x)).collect(Collectors.toList());
+        private List<String> isPermitted(List<String> actions) {
+            return actions.stream().filter(this::isPermitted).collect(Collectors.toList());
         }
 
-        public Set<String> getValidActions() {
+        private String getAttribute(String attribute) {
+            return this.getAttributes().get(attribute);
+        }
+
+        private boolean hasAttribute(String attribute, String value) {
+            return Objects.equals(this.getAttribute(attribute), value);
+        }
+
+        private Set<String> getValidActions() {
             Set<String> set = new HashSet<>();
             for (Role role : this.getRoles()) {
                 role.addValidActions(set);
             }
             return set;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof PartyAndRoles)) return false;
+            if (o instanceof String) return o != null && o.equals(this.getParty());
+            PartyAndRoles that = (PartyAndRoles) o;
+            return getParty().equals(that.getParty());
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(getParty());
         }
     }
 
@@ -132,32 +264,31 @@ public abstract class Permissions {
         String role;
         Set<String> permissions;
 
-        public Role(String role) {
+        private Role(String role) {
             this.role = role;
             this.permissions = new HashSet<>();
         }
 
-        public String getRole() {
+        private String getRole() {
             return role;
         }
 
-        public Set<String> getPermissions() {
+        private Set<String> getPermissions() {
             return permissions;
         }
 
-        public boolean hasRole(String role) {
+        private boolean hasRole(String role) {
             return this.role.equals(role);
         }
 
-        public boolean isPermitted(String action) {
+        private boolean isPermitted(String action) {
             return this.getPermissions().contains(action);
         }
-
 
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
-            if (o instanceof String) return this.role.equals(o);
+            if (o instanceof String) return o != null && o.equals(this.role);
             if (!(o instanceof Role)) return false;
             Role role1 = (Role) o;
             return Objects.equals(role, role1.role);
@@ -168,20 +299,23 @@ public abstract class Permissions {
             return Objects.hash(role);
         }
 
-        public void addPermissions(String[] permissions) {
+        private void addPermissions(String[] permissions) {
             this.permissions.addAll(Lists.newArrayList(permissions));
         }
 
-        public void addPermissions(List<String> permissions) {
+        private void addPermissions(List<String> permissions) {
             this.permissions.addAll(permissions);
         }
 
-        public void addPermissions(String permission) {
+        private void addPermissions(String permission) {
             this.permissions.add(permission);
         }
 
-        public void addValidActions(Set<String> set) {
+        private void addValidActions(Set<String> set) {
             set.addAll(this.getPermissions());
         }
+
     }
+
+
 }

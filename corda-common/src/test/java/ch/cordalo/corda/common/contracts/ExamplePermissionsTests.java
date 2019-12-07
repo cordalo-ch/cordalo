@@ -19,6 +19,11 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Map;
+
+import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+
 public class ExamplePermissionsTests {
 
 
@@ -96,4 +101,47 @@ public class ExamplePermissionsTests {
     public void withNotExistingAction_isValidAction_expectException() {
         assertValidAction("PAYMENT_SENT", "NEIN!!!!", companyB_IT, false, false);
     }
+
+    @Test
+    public void withExistingAttribute_getAttribute_expectString() {
+        // arrange
+        ExamplePermissions.getInstance();
+        // act
+        String logo = ExamplePermissions.getInstance().getAttribute(companyA_IT, "logo");
+        // asssert
+        assertThat(logo, is("companyA.png"));
+    }
+
+    @Test
+    public void withNonExistingAttribute_getAttribute_expectNull() {
+        // arrange
+        ExamplePermissions.getInstance();
+        // act
+        String logo = ExamplePermissions.getInstance().getAttribute(companyA_IT, "logo-X");
+        // asssert
+        assertThat(logo, is(nullValue()));
+    }
+
+    @Test
+    public void withNonExistingAttributeForParty_getAttribute_expectNull() {
+        // arrange
+        ExamplePermissions.getInstance();
+        // act
+        String logo = ExamplePermissions.getInstance().getAttribute(companyA_Marketing, "logo");
+        // asssert
+        assertThat(logo, is(nullValue()));
+    }
+
+    @Test
+    public void withExamplePermissions_getAllPermissions_expectMap() {
+        // arrange
+        ExamplePermissions.getInstance();
+
+        // act
+        Map<String, Object> allPermissions = Permissions.getAllPermissions(companyA_IT);
+
+        // asssert
+        assertThat(allPermissions, is(notNullValue()));
+    }
+
 }
