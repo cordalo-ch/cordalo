@@ -13,6 +13,7 @@ package ch.cordalo.corda.common.contracts;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import net.corda.core.identity.Party;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -117,7 +118,7 @@ public abstract class Permissions {
         if (party == null) throw new IllegalArgumentException("party must be provided");
         if (action == null || action.isEmpty()) throw new IllegalArgumentException("action must be provided");
         ;
-        PartyAndRoles partyAndRoles = this.partyRoleMapping.get(party.toString());
+        PartyAndRoles partyAndRoles = this.partyRoleMapping.get(getPartyName(party));
         return partyAndRoles != null && partyAndRoles.isPermitted(action);
     }
 
@@ -125,7 +126,7 @@ public abstract class Permissions {
         if (party == null) throw new IllegalArgumentException("party must be provided");
         if (attribute == null || attribute.isEmpty()) throw new IllegalArgumentException("attribute must be provided");
         ;
-        PartyAndRoles partyAndRoles = this.partyRoleMapping.get(party.toString());
+        PartyAndRoles partyAndRoles = this.partyRoleMapping.get(getPartyName(party));
         return partyAndRoles != null && partyAndRoles.hasAttribute(attribute, value);
     }
 
@@ -133,7 +134,7 @@ public abstract class Permissions {
         if (party == null) throw new IllegalArgumentException("party must be provided");
         if (attribute == null || attribute.isEmpty()) throw new IllegalArgumentException("attribute must be provided");
         ;
-        PartyAndRoles partyAndRoles = this.partyRoleMapping.get(party.toString());
+        PartyAndRoles partyAndRoles = this.partyRoleMapping.get(getPartyName(party));
         if (partyAndRoles != null) {
             return partyAndRoles.getAttribute(attribute);
         } else {
@@ -146,7 +147,7 @@ public abstract class Permissions {
         if (actions == null || actions.isEmpty())
             throw new IllegalArgumentException("at least 1 action must be provided");
         ;
-        PartyAndRoles partyAndRoles = this.partyRoleMapping.get(party.toString());
+        PartyAndRoles partyAndRoles = this.partyRoleMapping.get(getPartyName(party));
         if (partyAndRoles == null) {
             return Collections.emptyList();
         } else {
@@ -156,20 +157,25 @@ public abstract class Permissions {
 
     public Set<String> getActions(Party party) {
         if (party == null) throw new IllegalArgumentException("party must be provided");
-        PartyAndRoles partyAndRoles = this.partyRoleMapping.get(party.toString());
+        PartyAndRoles partyAndRoles = this.partyRoleMapping.get(getPartyName(party));
         return partyAndRoles == null ? Collections.emptySet() : partyAndRoles.getValidActions();
     }
 
     public Set<String> getRoles(Party party) {
         if (party == null) throw new IllegalArgumentException("party must be provided");
-        PartyAndRoles partyAndRoles = this.partyRoleMapping.get(party.toString());
+        PartyAndRoles partyAndRoles = this.partyRoleMapping.get(getPartyName(party));
         return partyAndRoles == null ? Collections.emptySet() : partyAndRoles.getRoles().stream().map(Role::getRole).collect(Collectors.toSet());
     }
 
     public Map<String, String> getAttributes(Party party) {
         if (party == null) throw new IllegalArgumentException("party must be provided");
-        PartyAndRoles partyAndRoles = this.partyRoleMapping.get(party.toString());
+        PartyAndRoles partyAndRoles = this.partyRoleMapping.get(getPartyName(party));
         return partyAndRoles == null ? Collections.emptyMap() : partyAndRoles.getAttributes();
+    }
+
+    @NotNull
+    private String getPartyName(Party party) {
+        return party.getName().getX500Principal().getName();
     }
 
     private Map<String, Set<String>> getAllPermissionsFor(Party party, Map<String, Set<String>> map) {
