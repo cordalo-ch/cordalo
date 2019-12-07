@@ -66,16 +66,16 @@ public class ExamplePermissions extends Permissions {
 
     @Override
     protected void initPartiesAndRoles() {
-        this.addPartyAndRoles("CN=Company-A, OU=IT, O=organisation, L=locality, ST=state, C=CH", "admin", "decider");
-        this.addPartyAndRoles("CN=Company-A, OU=Marketing, O=organisation, L=locality, ST=state, C=CH", "searcher");
-        this.addPartyAndRoles("CN=Company-B, OU=IT, O=organisation, L=locality, ST=state, C=CH", "searcher", "creator");
-        this.addPartyAndRoles("CN=Company-B, OU=Business, O=organisation, L=locality, ST=state, C=CH", "decider");
-        this.addPartyAndRoles("CN=Company-C, OU=IT, O=organisation, L=locality, ST=state, C=CH", "none");
+        this.addPartyAndRoles("CN=Company-A,OU=IT,O=organisation,L=locality,ST=state,C=CH", "admin", "decider");
+        this.addPartyAndRoles("CN=Company-A,OU=Marketing,O=organisation,L=locality,ST=state,C=CH", "searcher");
+        this.addPartyAndRoles("CN=Company-B,OU=IT,O=organisation,L=locality,ST=state,C=CH", "searcher", "creator");
+        this.addPartyAndRoles("CN=Company-B,OU=Business,O=organisation,L=locality,ST=state,C=CH", "decider");
+        this.addPartyAndRoles("CN=Company-C,OU=IT,O=organisation,L=locality,ST=state,C=CH", "none");
     }
 
     @Override
     protected void initPartiesAndAttributes() {
-        this.addPartyAndAttribute("CN=Company-A, OU=IT, O=organisation, L=locality, ST=state, C=CH", "logo", "companyA.png");
-        this.addPartyAndAttribute("CN=Company-A, OU=IT, O=organisation, L=locality, ST=state, C=CH", "products", "motor,household");
+        this.addPartyAndAttribute("CN=Company-A,OU=IT,O=organisation,L=locality,ST=state,C=CH", "logo", "companyA.png");
+        this.addPartyAndAttribute("CN=Company-A,OU=IT,O=organisation,L=locality,ST=state,C=CH", "products", "motor,household");
     }
 }
