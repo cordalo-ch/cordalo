@@ -59,7 +59,7 @@ public class ExamplePermissions extends Permissions {
                 "DECLINE",
                 "ACCEPT"
         );
-        this.addCommandActionaForRole("searcher", "search");
+        this.addCommandActionsForRole("searcher", "search");
         this.addStateActionsForRole("creator", "CREATE", "REGISTER");
         this.addStateActionsForRole("decider", "DECLINE", "ACCEPT");
     }

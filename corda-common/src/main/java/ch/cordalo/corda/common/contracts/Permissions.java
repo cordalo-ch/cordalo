@@ -97,7 +97,7 @@ public abstract class Permissions {
         return this.getName() + ":state:" + action;
     }
 
-    protected void addCommandActionaForRole(String role, String... actions) {
+    protected void addCommandActionsForRole(String role, String... actions) {
         if (actions == null || actions.length == 0)
             throw new IllegalArgumentException("at least 1 action must be provided");
         this.getRoleIfAbsendPut(role).addPermissions(actions);
@@ -120,6 +120,14 @@ public abstract class Permissions {
         ;
         PartyAndRoles partyAndRoles = this.partyRoleMapping.get(getPartyName(party));
         return partyAndRoles != null && partyAndRoles.isPermitted(action);
+    }
+
+    public boolean isStateActionPermitted(Party party, String action) {
+        return isPermitted(party, getPermissionNameFromStateAction(action));
+    }
+
+    public boolean isActionPermitted(Party party, String action) {
+        return isPermitted(party, getPermissionNameFromAction(action));
     }
 
     public boolean hasAttribute(Party party, String attribute, String value) {

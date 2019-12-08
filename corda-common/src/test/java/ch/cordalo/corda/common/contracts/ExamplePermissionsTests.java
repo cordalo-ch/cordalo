@@ -93,6 +93,24 @@ public class ExamplePermissionsTests {
     }
 
     @Test
+    public void withExistingStateAction_isStateActionPermitted_expectTrue() {
+        //Arrange
+        //Act
+        boolean accept = ExamplePermissions.getInstance().isStateActionPermitted(companyB_Business, "ACCEPT");
+        //Assert
+        assertThat(accept, is(true));
+    }
+
+    @Test
+    public void withExistingAction_isActionPermitted_expectTrue() {
+        //Arrange
+        //Act
+        boolean accept = ExamplePermissions.getInstance().isActionPermitted(companyA_Marketing, "search");
+        //Assert
+        assertThat(accept, is(true));
+    }
+
+    @Test
     public void withExistingAction_isValidAction_expectFalse() {
         assertValidAction("PAYMENT_SENT", "ACCEPT", companyB_IT, true, false);
     }
