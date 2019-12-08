@@ -45,7 +45,8 @@ public class CordaTestNetwork {
         this.responderClasses = responderClasses;
         if (this.withNodes) {
             network = new MockNetwork(
-                    new MockNetworkParameters(testCorDApps).withNetworkParameters(getTestNetworkParameters()));
+                    new MockNetworkParameters(testCorDApps)
+                            .withNetworkParameters(getTestNetworkParameters()));
         } else {
             network = null;
         }
