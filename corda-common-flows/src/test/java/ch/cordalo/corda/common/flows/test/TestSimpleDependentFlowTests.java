@@ -29,9 +29,11 @@ public class TestSimpleDependentFlowTests extends CordaloTestEnvironment {
 
     @Before
     public void setup() {
-        this.setup(
+        this.setupWithFlows(
                 true,
-                TestSimpleDependentFlow.class);
+                TestSimpleFlow.class,
+                TestSimpleDependentFlow.class
+        );
     }
 
     @After

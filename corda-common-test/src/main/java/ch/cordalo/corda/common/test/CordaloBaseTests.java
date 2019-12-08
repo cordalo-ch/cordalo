@@ -18,6 +18,7 @@ import net.corda.core.flows.FlowException;
 import net.corda.core.flows.FlowLogic;
 import net.corda.core.transactions.SignedTransaction;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -29,6 +30,14 @@ abstract public class CordaloBaseTests {
 
     public CordaTestNetwork setup(boolean withNodes, Class responderMainClasses) {
         return setup(withNodes, FlowTestSupporter.findResponderClasses(responderMainClasses));
+    }
+
+    public CordaTestNetwork setupWithFlows(boolean withNodes, Class... responderMainClasses) {
+        List<Class<? extends FlowLogic>> allResponderFlows = new ArrayList<>();
+        for (Class responderMainClass : responderMainClasses) {
+            allResponderFlows.addAll(FlowTestSupporter.findResponderClasses(responderMainClass));
+        }
+        return setup(withNodes, allResponderFlows);
     }
 
     public CordaTestNetwork setup(boolean withNodes, Class<? extends FlowLogic>... responderClasses) {
