@@ -46,7 +46,6 @@ public class CordaNodeEnvironment {
         } else {
             this.startNoNetwork();
         }
-        this.startLedger(testNetwork);
     }
 
     public boolean isNotary() {
@@ -61,11 +60,12 @@ public class CordaNodeEnvironment {
         }
     }
 
-    private CordaNodeEnvironment startLedger(CordaTestNetwork testNetwork) {
+    public CordaNodeEnvironment startLedger(CordaTestNetwork testNetwork) {
         this.ledgerServices = new MockServices(
                 testNetwork.getCorDAppPackageNames(),
-                this.party.getName()
-        );
+                new TestIdentity(this.party.getName()),
+                CordaTestNetwork.getTestNetworkParameters(),
+                testNetwork.getIdentitiesWithoutMe(this));
         return this;
     }
 

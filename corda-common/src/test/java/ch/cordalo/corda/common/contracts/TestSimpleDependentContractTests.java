@@ -1,0 +1,117 @@
+/*******************************************************************************
+ * Copyright (c) 2019 by cordalo.ch - MIT License
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ ******************************************************************************/
+package ch.cordalo.corda.common.contracts;
+
+import ch.cordalo.corda.common.contracts.test.TestSimpleContract;
+import ch.cordalo.corda.common.contracts.test.TestSimpleDependentContract;
+import ch.cordalo.corda.common.contracts.test.TestSimpleDependentState;
+import ch.cordalo.corda.common.contracts.test.TestSimpleState;
+import ch.cordalo.corda.common.test.CordaNodeEnvironment;
+import net.corda.core.contracts.UniqueIdentifier;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.util.ArrayList;
+
+import static net.corda.testing.node.NodeTestUtils.transaction;
+
+public class TestSimpleDependentContractTests extends CordaloTestEnvironment {
+
+    @Before
+    public void setup() {
+        this.setup(false);
+    }
+
+    @After
+    public void after() {
+        this.tearDown();
+    }
+
+    private TestSimpleState newSimpleTest(CordaNodeEnvironment env, String key, String value) {
+        return new TestSimpleState(new UniqueIdentifier(), env.party, key, value, new ArrayList<>());
+    }
+
+    private TestSimpleDependentState newSimpleDependentTest(TestSimpleState simple, String newKey) {
+        return new TestSimpleDependentState(
+                new UniqueIdentifier(), simple.getLinearId(), simple.getOwner(), newKey);
+    }
+
+    @Test
+    public void withSimpleTest_verifyCommandCreate_expectsOK() {
+        // arrange
+        TestSimpleState test1 = newSimpleTest(this.testNode1, "key", "value");
+
+        transaction(testNode1.ledgerServices, tx -> {
+            tx.output(TestSimpleContract.ID, test1);
+            tx.command(test1.getParticipantKeys(), new TestSimpleContract.Commands.Create());
+            tx.verifies();
+            return null;
+        });
+    }
+
+    @Test
+    public void withDependentObjects_verifyCommandCreate_expectsOK() {
+        transaction(testNode1.ledgerServices, tx -> {
+            // arrange
+            TestSimpleState test = newSimpleTest(this.testNode1, "key", "value");
+            // fill same key - key is validated to be equal in Contract
+            TestSimpleDependentState testDependent = newSimpleDependentTest(test, test.getKey());
+
+            // arrange: add to tx, add command
+            tx.reference(TestSimpleContract.ID, test);
+            tx.output(TestSimpleDependentContract.ID, testDependent);
+            tx.command(testDependent.getParticipantKeys(), new TestSimpleDependentContract.Commands.Create());
+
+            //act: tx.verifies(), tx.fails(), tx.failsWith("...")
+            tx.verifies();
+            return null;
+        });
+    }
+
+
+    @Test
+    public void withDependentObjects_verifyCommandCreate_expectsFailure() {
+        transaction(testNode1.ledgerServices, tx -> {
+            // arrange
+            TestSimpleState test = newSimpleTest(this.testNode1, "key", "value");
+            // fill other key - key is validated to be equal in Contract and should fail
+            TestSimpleDependentState testDependent = newSimpleDependentTest(test, "This is a wrong key, but is verified in Contract");
+
+            // arrange: add to tx, add command
+            tx.reference(TestSimpleContract.ID, test);
+            tx.output(TestSimpleDependentContract.ID, testDependent);
+            tx.command(testDependent.getParticipantKeys(), new TestSimpleDependentContract.Commands.Create());
+
+            //act: tx.verifies(), tx.fails(), tx.failsWith("...")
+            tx.failsWith("Simple state and dependent must have same key");
+            return null;
+        });
+    }
+
+
+    @Test
+    public void withDependentObjectsWithoutReference_verifyCommandCreate_expectsFailure() {
+        transaction(testNode1.ledgerServices, tx -> {
+            // arrange
+            TestSimpleState test = newSimpleTest(this.testNode1, "key", "value");
+            TestSimpleDependentState testDependent = newSimpleDependentTest(test, test.getKey());
+
+            // arrange: add to tx, add command
+            // dont add test as reference - tx.reference(TestSimpleContract.ID, test);
+            tx.output(TestSimpleDependentContract.ID, testDependent);
+            tx.command(testDependent.getParticipantKeys(), new TestSimpleDependentContract.Commands.Create());
+
+            //act: tx.verifies(), tx.fails(), tx.failsWith("...")
+            tx.failsWith("must have at least 1 reference state");
+            return null;
+        });
+    }
+}

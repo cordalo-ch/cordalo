@@ -18,6 +18,7 @@ import net.corda.core.identity.AbstractParty;
 import net.corda.core.node.ServiceHub;
 import net.corda.core.transactions.LedgerTransaction;
 import net.corda.core.transactions.SignedTransaction;
+import org.apache.commons.lang.NotImplementedException;
 import org.jetbrains.annotations.NotNull;
 
 import java.security.PublicKey;
@@ -35,9 +36,13 @@ interface TransactionDelegate {
 
     List<ContractState> outputsOfType(Class stateClass);
 
+    List<ContractState> referenceInputsOfType(Class stateClass);
+
     List<ContractState> getOutputStates();
 
     List<ContractState> getInputStates();
+
+    List<ContractState> getReferenceStates();
 }
 
 /* class StateVerifier must be part of states and not external package due to miss loading same cordapp package
@@ -167,6 +172,16 @@ public class StateVerifier {
     }
 
     @Suspendable
+    public StateVerifier references() {
+        return new ReferencesList(this).verify();
+    }
+
+    @Suspendable
+    public StateVerifier references(Class<? extends ContractState> stateClass) {
+        return new ReferencesList(this, stateClass).verify();
+    }
+
+    @Suspendable
     public StateVerifier output() {
         return new OutputList(this).verify();
     }
@@ -229,7 +244,7 @@ public class StateVerifier {
 
     @Suspendable
     public StateVerifier one(String text) {
-        return new One(this).verify();
+        return new One(this, text).verify();
     }
 
     @Suspendable
@@ -1045,6 +1060,26 @@ public class StateVerifier {
         }
     }
 
+
+    class ReferencesList<T> extends StateList {
+        ReferencesList(StateVerifier parent) {
+            super(parent);
+        }
+
+        ReferencesList(StateVerifier parent, Class<T> stateClass) {
+            super(parent, stateClass);
+        }
+
+        @Override
+        public List<ContractState> getList() {
+            if (this.stateClass != null) {
+                return tx.referenceInputsOfType(this.stateClass);
+            } else {
+                return tx.getReferenceStates();
+            }
+        }
+    }
+
     class FilterList<T> extends StateList {
         FilterList(StateVerifier parent, Class<T> stateClass) {
             super(parent, stateClass);
@@ -1150,6 +1185,16 @@ public class StateVerifier {
         }
 
         @Override
+        public List<ContractState> referenceInputsOfType(Class stateClass) {
+            throw new NotImplementedException("reference states are not supported in SignTransaction verifiers");
+        }
+
+        @Override
+        public List<ContractState> getReferenceStates() {
+            throw new NotImplementedException("reference states are not supported in SignTransaction verifiers");
+        }
+
+        @Override
         public List<ContractState> getInputStates() {
             ArrayList<ContractState> inputStates = new ArrayList<>();
             for (StateRef stateRef : this.stx.getInputs()) {
@@ -1203,6 +1248,11 @@ public class StateVerifier {
         }
 
         @Override
+        public List<ContractState> referenceInputsOfType(Class stateClass) {
+            return ltx.referenceInputsOfType(stateClass);
+        }
+
+        @Override
         public List<ContractState> getOutputStates() {
             return ltx.getOutputStates();
         }
@@ -1210,6 +1260,11 @@ public class StateVerifier {
         @Override
         public List<ContractState> getInputStates() {
             return ltx.getInputStates();
+        }
+
+        @Override
+        public List<ContractState> getReferenceStates() {
+            return ltx.getReferenceStates();
         }
 
     }
