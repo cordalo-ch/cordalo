@@ -100,7 +100,8 @@ public abstract class Permissions {
     protected void addCommandActionsForRole(String role, String... actions) {
         if (actions == null || actions.length == 0)
             throw new IllegalArgumentException("at least 1 action must be provided");
-        this.getRoleIfAbsendPut(role).addPermissions(actions);
+        List<String> permissions = Arrays.stream(actions).map(this::getPermissionNameFromAction).collect(Collectors.toList());
+        this.getRoleIfAbsendPut(role).addPermissions(permissions);
     }
 
     protected void addStateActionsForRole(String role, String... actions) {
