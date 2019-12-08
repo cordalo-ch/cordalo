@@ -94,7 +94,8 @@ public class CordaTestNodeEnvironmentTests {
         CordaTestNetwork cordaTestNetwork = new CordaTestNetwork(false, this.getCordappPackageNames(), CordaTestNetwork.class);
         cordaTestNetwork.startEnv("A","O=Test1,L=Bern,ST=BE,C=CH");
         cordaTestNetwork.startEnv("B","O=Test2,L=Bern,ST=BE,C=CH");
-        cordaTestNetwork.startNotaryEnv("N","O=Notary,L=Bern,ST=BE,C=CH");
+        cordaTestNetwork.startNotaryEnv("N", "O=Notary,L=Bern,ST=BE,C=CH");
+        cordaTestNetwork.startNodes();
         Assert.assertEquals("nof network map entries", 3, cordaTestNetwork.networkMapSnapshot().size());
         cordaTestNetwork.stopNodes();
     }
@@ -105,7 +106,8 @@ public class CordaTestNodeEnvironmentTests {
         CordaTestNetwork cordaTestNetwork = new CordaTestNetwork(false, this.getCordappPackageNames(), CordaTestNetwork.class);
         cordaTestNetwork.startEnv("A","O=Test1,L=Bern,ST=BE,C=CH");
         cordaTestNetwork.startEnv("B","O=Test2,L=Bern,ST=BE,C=CH");
-        cordaTestNetwork.startNotaryEnv("N","O=Notary,L=Bern,ST=BE,C=CH");
+        cordaTestNetwork.startNotaryEnv("N", "O=Notary,L=Bern,ST=BE,C=CH");
+        cordaTestNetwork.startNodes();
         Assert.assertNotNull("network map cache not null", cordaTestNetwork.getNetworkMapCache());
         cordaTestNetwork.stopNodes();
     }
