@@ -721,10 +721,10 @@ public class StateVerifier {
                 Object inputVal = firstMapping.apply(this.object());
                 Object outputVal = secondMapping.apply(this.object());
                 if (inputVal != null) {
-                    req.using("fields must be the same",
+                    req.using(this.s("fields must be the same"),
                             inputVal.equals(outputVal));
                 } else {
-                    req.using("fields must be empty for both",
+                    req.using(this.s("fields must be empty for both"),
                             outputVal == null);
                 }
                 return null;
