@@ -26,8 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static java.util.Collections.emptyList;
-import static java.util.Collections.emptyMap;
+import static java.util.Collections.*;
 
 public class CordaTestNetwork {
 
@@ -54,6 +53,10 @@ public class CordaTestNetwork {
 
     public CordaTestNetwork(boolean withNodes, List<String> testPackageNames, Class responderMainClass) {
         this(withNodes, testPackageNames, Arrays.asList(responderMainClass));
+    }
+
+    public CordaTestNetwork(boolean withNodes, List<String> testPackageNames) {
+        this(withNodes, testPackageNames, EMPTY_LIST);
     }
 
     private CordaNodeEnvironment startNode(CordaNodeEnvironment env) {
@@ -139,7 +142,10 @@ public class CordaTestNetwork {
     }
 
     public void stopNodes() {
-        if (this.needsStart()) this.network.stopNodes();
+        if (this.needsStart()) {
+            this.network.stopNodes();
+            this.network.waitQuiescent();
+        }
     }
 
 

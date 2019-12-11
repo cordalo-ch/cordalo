@@ -11,11 +11,16 @@
 package ch.cordalo.corda.common.test;
 
 import com.google.common.collect.ImmutableList;
+import net.corda.core.node.ServiceHub;
 import net.corda.finance.flows.CashExitResponderFlow;
+import net.corda.testing.node.MockServices;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.List;
+
+import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class CordaTestNodeEnvironmentTests {
 
@@ -125,12 +130,45 @@ public class CordaTestNodeEnvironmentTests {
     @Test
     public void test_instance_getEnv_notary() throws InterruptedException {
         CordaTestNetwork cordaTestNetwork = new CordaTestNetwork(false, this.getCordappPackageNames(), CordaTestNetwork.class);
-        cordaTestNetwork.startEnv("A","O=Test1,L=Bern,ST=BE,C=CH");
-        cordaTestNetwork.startNotaryEnv("N","O=Notary,L=Bern,ST=BE,C=CH");
-        Assert.assertEquals("has N peer","Notary", cordaTestNetwork.getEnv("N").party.getName().getOrganisation());
-        Assert.assertEquals("has N peer is notary",true, cordaTestNetwork.getEnv("N").isNotary());
+        cordaTestNetwork.startEnv("A", "O=Test1,L=Bern,ST=BE,C=CH");
+        cordaTestNetwork.startNotaryEnv("N", "O=Notary,L=Bern,ST=BE,C=CH");
+        Assert.assertEquals("has N peer", "Notary", cordaTestNetwork.getEnv("N").party.getName().getOrganisation());
+        Assert.assertEquals("has N peer is notary", true, cordaTestNetwork.getEnv("N").isNotary());
         cordaTestNetwork.stopNodes();
     }
 
+    @Test
+    public void withNodeEnvNotStarted_getServiceHub_expectUsingMock() {
+        // arrange
+        CordaTestNetwork cordaTestNetwork = new CordaTestNetwork(false, this.getCordappPackageNames(), CordaTestNetwork.class);
+        cordaTestNetwork.startEnv("A", "O=Test1,L=Bern,ST=BE,C=CH");
+        cordaTestNetwork.startNotaryEnv("N", "O=Notary,L=Bern,ST=BE,C=CH");
+        cordaTestNetwork.startNodes();
+
+        // act
+        ServiceHub hub = cordaTestNetwork.getEnv("A").getServiceHub();
+
+        // asssert
+        assertThat(hub, is(notNullValue()));
+        assertThat(hub, is(instanceOf(MockServices.class)));
+    }
+
+
+    @Test
+    public void withNodeEnvStarted_getServiceHub_expectUsingRealServiceHub() {
+        // arrange
+        CordaTestNetwork cordaTestNetwork = new CordaTestNetwork(true, this.getCordappPackageNames());
+        cordaTestNetwork.startEnv("A", "O=Test1,L=Bern,ST=BE,C=CH");
+        cordaTestNetwork.startNotaryEnv("N", "O=Notary,L=Bern,ST=BE,C=CH");
+        cordaTestNetwork.startNodes();
+
+        // act
+        ServiceHub hub = cordaTestNetwork.getEnv("A").getServiceHub();
+
+        // asssert
+        assertThat(hub, is(notNullValue()));
+        assertThat(hub, is(not(instanceOf(MockServices.class))));
+        cordaTestNetwork.stopNodes();
+    }
 
 }

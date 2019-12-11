@@ -14,6 +14,7 @@ import net.corda.core.flows.FlowLogic;
 import net.corda.core.identity.CordaX500Name;
 import net.corda.core.identity.Party;
 import net.corda.core.node.NodeInfo;
+import net.corda.core.node.ServiceHub;
 import net.corda.core.transactions.SignedTransaction;
 import net.corda.testing.core.TestIdentity;
 import net.corda.testing.node.MockServices;
@@ -82,5 +83,9 @@ public class CordaNodeEnvironment {
 
     public NodeInfo getNodeInfo() {
         return this.ledgerServices.getMyInfo();
+    }
+
+    public ServiceHub getServiceHub() {
+        return this.network.needsStart() ? this.node.getServices() : this.ledgerServices;
     }
 }
