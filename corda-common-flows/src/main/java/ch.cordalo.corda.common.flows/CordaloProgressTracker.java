@@ -60,13 +60,13 @@ public class CordaloProgressTracker {
     public CordaloProgressTracker() {
     }
 
-    public final Step PREPARATION = new Step("Obtaining data from vault.");
-    public final Step BUILDING = new Step("Building transaction.");
-    public final Step VERIFYING = new Step("Verifying transaction.");
-    public final Step SIGNING = new Step("Signing transaction.");
-    public final Step SYNCING = new SyncStep("Syncing identities.");
-    public final Step COLLECTING = new CollectingStep("Collecting counterparty signature.");
-    public final Step FINALISING = new FinalisingStep("Finalising transaction.");
+    public static final Step PREPARATION = new Step("Obtaining data from vault.");
+    public static final Step BUILDING = new Step("Building transaction.");
+    public static final Step VERIFYING = new Step("Verifying transaction.");
+    public static final Step SIGNING = new Step("Signing transaction.");
+    public static final Step SYNCING = new SyncStep("Syncing identities.");
+    public static final Step COLLECTING = new CollectingStep("Collecting counterparty signature.");
+    public static final Step FINALISING = new FinalisingStep("Finalising transaction.");
 
     public final ProgressTracker PROGRESSTRACKER_SYNC = new ProgressTracker(
             PREPARATION,    // none
