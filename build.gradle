@@ -38,7 +38,7 @@ allprojects {
     apply plugin: 'net.saliman.cobertura'
 
     group 'ch.cordalo'
-    version '0.11-SNAPSHOT'
+    version '0.12-SNAPSHOT'
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
 
@@ -69,8 +69,12 @@ allprojects {
     }
     artifacts {
         // dont add javadocjars and source to it because travis is not able to build
-        // archives javadocJar, sourcesJar
+        archives javadocJar, sourcesJar
     }
+    // error: Could not find method coveralls()
+    // tasks.coveralls {
+    //    dependsOn 'check'
+    //}
 
     signing {
         def key = project.findProperty("signingKey") ?: System.getenv("signingKey");

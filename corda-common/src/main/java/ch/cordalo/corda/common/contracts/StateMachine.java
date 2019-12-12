@@ -1,4 +1,4 @@
-/*
+/*******************************************************************************
  * Copyright (c) 2019 by cordalo.ch - MIT License
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -6,14 +6,16 @@
  * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- */
+ ******************************************************************************/
 package ch.cordalo.corda.common.contracts;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Lists;
+import net.corda.core.identity.Party;
 import net.corda.core.serialization.ConstructorForDeserialization;
 import net.corda.core.serialization.CordaSerializable;
 
+import java.text.MessageFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -58,6 +60,29 @@ public abstract class StateMachine {
         }
     }
 
+    public State getInitialState() {
+        List<State> initialStates = this.getInitialStates();
+        if (initialStates.isEmpty()) return null;
+        if (initialStates.size() == 1) return initialStates.get(0);
+        throw new RuntimeException("more than one initial state. Use getInitialStates to choose from");
+    }
+
+    public List<State> getInitialStates() {
+        return this.stateMap.values().stream().filter(State::isInitialState).collect(Collectors.toList());
+    }
+
+    public StateTransition getInitialTransition() {
+        List<StateTransition> initialTransitions = this.getInitialTransitions();
+        if (initialTransitions.isEmpty()) return null;
+        if (initialTransitions.size() == 1) return initialTransitions.get(0);
+        throw new RuntimeException("more than one transition for initial state. Use getInitialTransitions to choose from");
+    }
+
+    public List<StateTransition> getInitialTransitions() {
+        return this.transitionMap.values().stream().filter(
+                x -> x.getNextState() != null && x.getNextState().isInitialState()).collect(Collectors.toList());
+    }
+
     public StateMachine.StateTransition transition(String name) {
         StateTransition stateTransition = this.transitionMap.get(name);
         if (stateTransition == null)
@@ -80,12 +105,12 @@ public abstract class StateMachine {
     }
 
     public StateMachine.StateTransition newTransition(String action, State next, String... previous) {
-        if (previous != null) {
+        if (previous != null && previous.length > 0) {
             StateMachine.State[] prevStates = new State[previous.length];
             StateTransition stateTransition = new StateTransition(
                     this.getName(),
                     action, next,
-                    Arrays.stream(previous).map(x -> this.state(x)).toArray(value -> prevStates));
+                    Arrays.stream(previous).map(this::state).toArray(value -> prevStates));
             this.transitionMap.put(action, stateTransition);
             for (State state : prevStates) {
                 this.addTransitionToState(stateTransition, state);
@@ -142,7 +167,7 @@ public abstract class StateMachine {
         INITIAL,
         CONDITIONAL,
         SHARE_STATE,
-        FINAL;
+        FINAL
     }
 
     @CordaSerializable
@@ -195,12 +220,46 @@ public abstract class StateMachine {
 
         public List<String> getNextActions() {
             if (this.isFinalState()) return Collections.EMPTY_LIST;
-            return this.getTransitions().stream().map(x -> x.getValue()).collect(Collectors.toList());
+            return this.getTransitions().stream().map(StateTransition::getValue).collect(Collectors.toList());
+        }
+
+        private String getPermissionNameFromAction(String action) {
+            return this.getStateMachine() + ":state:" + action;
+        }
+
+        public List<String> getNextActionsFor(Party party) {
+            List<String> stateMachinePermissions = this.getNextActions().stream().map(this::getPermissionNameFromAction).collect(Collectors.toList());
+            if (!stateMachinePermissions.isEmpty()) {
+                return Collections.EMPTY_LIST;
+            }
+            Permissions permissions = Permissions.get(this.getStateMachine());
+            if (permissions == null) {
+                return Collections.EMPTY_LIST;
+            } else {
+                return permissions.isPermitted(party, stateMachinePermissions);
+            }
         }
 
         public boolean isValidAction(String action) {
             if (this.isFinalState()) return false;
+            this.isValidActionInStateMachine(action);
             return this.getTransitions().stream().anyMatch(x -> x.getValue().equals(action));
+        }
+
+        private void isValidActionInStateMachine(String action) {
+            if (!StateMachine.get(this.getStateMachine()).isValidTransition(action)) {
+                throw new IllegalArgumentException(MessageFormat.format("action {0}does not exist in state machine {1}", action, this.getStateMachine()));
+            }
+        }
+
+        public boolean isValidActionFor(Party party, String action) {
+            if (!this.isValidAction(action)) return false;
+            Permissions permissions = Permissions.get(this.getStateMachine());
+            if (permissions == null) {
+                return false;
+            } else {
+                return permissions.isPermitted(party, this.getPermissionNameFromAction(action));
+            }
         }
 
         public boolean isLaterState(State state) {
@@ -241,7 +300,6 @@ public abstract class StateMachine {
             if (o instanceof String) {
                 return this.getValue().equals(o);
             }
-            ;
             if (!(o instanceof State)) return false;
             State state = (State) o;
             return getValue().equals(state.getValue());
@@ -251,6 +309,10 @@ public abstract class StateMachine {
         public int hashCode() {
             return Objects.hash(getValue());
         }
+    }
+
+    public boolean isValidTransition(String action) {
+        return this.transitionMap.containsKey(action);
     }
 
     @CordaSerializable
@@ -319,6 +381,24 @@ public abstract class StateMachine {
                 return this.nextState;
             }
             throw new IllegalStateException("transition has preconditions and is not an initial state");
+        }
+
+        private String getPermissionNameFromAction(String action) {
+            return this.getStateMachine() + ":state:" + action;
+        }
+
+        public boolean isValidAction(String action) {
+            return this.getValue().equals(action);
+        }
+
+        public boolean isValidActionFor(Party party, String action) {
+            if (!this.isValidAction(action)) return false;
+            Permissions permissions = Permissions.get(this.getStateMachine());
+            if (permissions == null) {
+                return false;
+            } else {
+                return permissions.isPermitted(party, this.getPermissionNameFromAction(action));
+            }
         }
     }
 

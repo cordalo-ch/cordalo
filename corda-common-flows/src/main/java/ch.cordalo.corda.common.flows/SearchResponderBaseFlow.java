@@ -39,7 +39,7 @@ public abstract class SearchResponderBaseFlow<T extends LinearState, V extends O
         T localState = searcher.search(flowHelper, searchValue);
         if (localState == null) {
             /* send no result back to sender */
-            this.otherFlow.send(null);
+            this.otherFlow.send(SimpleBaseFlow.EMPTY_SEARCH_RESULT_LINEAR_ID);
             return null;
         }
 

@@ -3,6 +3,18 @@
 # configure your global radle.properties
 # read https://github.com/cedricwalter/cicd-gradle-oss-nexus
 
+# precondition to run deploy locally is a gradle.properties with the following entries
+# place the gradle.properties into $HOME/.gradle/gradle.properties
+# and NEVER on a github repo
+#   ossrhUsername=cordalo.ch
+#   ossrhPassword=...
+#   signingKeyId=5FDC...
+#   signingPassword=...
+
+
+# generate the signingKey into the gradle properties while running gpg --export-secret-keys
+# \n must be replaced
+# gpg --armor --export-secret-keys 5FDC... | awk 'NR == 1 { print "signingKey=" } 1' ORS='\\n' >> gradle.properties
 
 ./gradlew clean
 rm -R `find . -name out`

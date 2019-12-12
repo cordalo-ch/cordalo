@@ -35,7 +35,7 @@ public class TestContract implements Contract {
     }
 
     public interface Commands extends CommandData {
-        public void verify(LedgerTransaction tx, StateVerifier verifier) throws IllegalArgumentException;
+        void verify(LedgerTransaction tx, StateVerifier verifier) throws IllegalArgumentException;
 
         class CreateCommandVerifier implements TestContract.Commands {
             @Override
@@ -171,15 +171,15 @@ public class TestContract implements Contract {
             @Override
             public void verify(LedgerTransaction tx, StateVerifier verifier) throws IllegalArgumentException {
                 requireThat(req -> {
-                    TestState in = verifier
+                    verifier
                             .input(TestState.class)
                             .count(1)
                             .object();
-                    List<TestState> out2 = verifier
+                    verifier
                             .output(TestState.class)
                             .count(2)
                             .objects();
-                    TestState diff = verifier
+                    verifier
                             .intersection(TestState.class)
                             .count(1)
                             .object();

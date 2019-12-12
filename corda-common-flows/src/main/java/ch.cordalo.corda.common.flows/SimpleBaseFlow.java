@@ -15,12 +15,82 @@ import net.corda.core.contracts.*;
 import net.corda.core.flows.FlowException;
 import net.corda.core.flows.FlowSession;
 import net.corda.core.identity.Party;
+import net.corda.core.serialization.CordaSerializable;
 import net.corda.core.transactions.SignedTransaction;
 import net.corda.core.transactions.TransactionBuilder;
 
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 public abstract class SimpleBaseFlow<S> extends BaseFlow<S> {
+
+    private static final String SEARCH_RESPONDER_NO_STATE_FOUND = "$$-Search-Responder-No-State-Found$$";
+    public static final UniqueIdentifier EMPTY_SEARCH_RESULT_LINEAR_ID = new UniqueIdentifier(
+            SEARCH_RESPONDER_NO_STATE_FOUND, UUID.fromString("8f247ffb-54f0-49a9-adcd-cb46ceba7fec"));
+
+    @CordaSerializable
+    public static class Context {
+        private final List<ReferencedStateAndRef> referenceStates = new ArrayList<>();
+        private final List<StateAndRef> inputStates = new ArrayList<>();
+        private final List<ContractState> outputStates = new ArrayList<>();
+
+        @Suspendable
+        public <T extends ContractState> T addReferenceState(ReferencedStateAndRef<T> reference) throws FlowException {
+            if (reference == null) throw new FlowException("reference must be provided");
+            referenceStates.add(reference);
+            return reference.getStateAndRef().getState().getData();
+        }
+
+        @Suspendable
+        public <T extends ContractState> T addReferenceState(StateAndRef<T> reference) throws FlowException {
+            if (reference == null) throw new FlowException("reference must be provided");
+            referenceStates.add(reference.referenced());
+            return reference.getState().getData();
+        }
+
+        @Suspendable
+        public <T extends ContractState> T addInputState(StateAndRef<T> input) throws FlowException {
+            if (input == null) throw new FlowException("input must be provided");
+            inputStates.add(input);
+            return input.getState().getData();
+        }
+
+        @Suspendable
+        public <T extends ContractState> T addOutputState(String contractId, T output) throws FlowException {
+            if (output == null) throw new FlowException("output must be provided");
+            outputStates.add(output);
+            return output;
+        }
+
+        @Suspendable
+        public boolean hasAnyContext() {
+            return !referenceStates.isEmpty() || !inputStates.isEmpty() || !outputStates.isEmpty();
+        }
+
+        @Suspendable
+        private void addToTransactionBuilder(TransactionBuilder transactionBuilder) {
+            if (this.hasAnyContext()) {
+                for (ReferencedStateAndRef ref : referenceStates) {
+                    transactionBuilder.addReferenceState(ref);
+                }
+                for (StateAndRef ref : inputStates) {
+                    transactionBuilder.addInputState(ref);
+                }
+                for (ContractState state : outputStates) {
+                    transactionBuilder.addOutputState(state);
+                }
+            }
+        }
+    }
+
+    private final Context context = new Context();
+
+    @Suspendable
+    public Context getContext() {
+        return this.context;
+    }
 
     @Suspendable
     public <T extends ContractState> SignedTransaction simpleFlow_Create(SimpleFlow.Create<T> creator,
@@ -32,6 +102,7 @@ public abstract class SimpleBaseFlow<S> extends BaseFlow<S> {
             TransactionBuilder transactionBuilder = this.getTransactionBuilderSignedByParticipants(
                     state,
                     command);
+            this.getContext().addToTransactionBuilder(transactionBuilder);
             transactionBuilder.addOutputState(state);
             return signSyncCollectAndFinalize(state.getParticipants(), transactionBuilder);
         } catch (FlowException e) {
@@ -59,6 +130,7 @@ public abstract class SimpleBaseFlow<S> extends BaseFlow<S> {
 
         CommandData command = creator.getCommand(stateRef, state, newState);
         TransactionBuilder transactionBuilder = getTransactionBuilderSignedByParticipants(parties, command);
+        this.getContext().addToTransactionBuilder(transactionBuilder);
         creator.updateBuilder(transactionBuilder, stateRef, state, newState);
 
         return signSyncCollectAndFinalize(parties.getParties(), transactionBuilder);
@@ -75,9 +147,14 @@ public abstract class SimpleBaseFlow<S> extends BaseFlow<S> {
         deleter.validateToDelete(state);
         getProgressTracker().setCurrentStep(progress.BUILDING);
         TransactionBuilder transactionBuilder = this.getTransactionBuilderSignedByParticipants(state, command);
+        this.getContext().addToTransactionBuilder(transactionBuilder);
         transactionBuilder.addInputState(stateRef);
         // no output state - means consume it
         return signSyncCollectAndFinalize(state.getParticipants(), transactionBuilder);
+    }
+
+    private boolean isNullPayload(UniqueIdentifier id) {
+        return EMPTY_SEARCH_RESULT_LINEAR_ID.equals(id) && (SEARCH_RESPONDER_NO_STATE_FOUND.equals(id.getExternalId()));
     }
 
     @Suspendable
@@ -100,7 +177,7 @@ public abstract class SimpleBaseFlow<S> extends BaseFlow<S> {
         });
 
         /* linear id not found at counter party */
-        if (receivedLinearId == null) {
+        if (receivedLinearId == null || isNullPayload(receivedLinearId)) {
             return null;
         }
 

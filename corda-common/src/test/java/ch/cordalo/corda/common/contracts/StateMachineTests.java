@@ -1,4 +1,4 @@
-/*
+/*******************************************************************************
  * Copyright (c) 2019 by cordalo.ch - MIT License
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -6,7 +6,7 @@
  * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- */
+ ******************************************************************************/
 package ch.cordalo.corda.common.contracts;
 
 import ch.cordalo.corda.common.contracts.StateMachine.State;
@@ -14,8 +14,12 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.List;
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.not;
 
 public class StateMachineTests {
 
@@ -24,26 +28,79 @@ public class StateMachineTests {
     }
 
     @Test
-    public void testInitial() {
+    public void withStateCreated_new_expect() {
+        // arrange
         State state = ExampleStateMachine.State("CREATED");
-        Assert.assertEquals("created is a valid state", ExampleStateMachine.State("CREATED"), state);
-        Assert.assertEquals("created is initial", true, state.isInitialState());
-        Assert.assertEquals("created is not final", false, state.isFinalState());
+        // act
+        String stateString = state.getValue();
+        // asssert
+        assertThat(stateString, is("CREATED"));
     }
 
     @Test
-    public void testActions() {
+    public void withStateCreated_isInitialState_expectTrue() {
+        // arrange
         State state = ExampleStateMachine.State("CREATED");
-        Assert.assertTrue("no valid next actions", state.getNextActions().size() > 0);
-        assertThat(state.getNextActions().get(0), is("REGISTER"));
+        // act
+        boolean initialState = state.isInitialState();
+        // assert
+        assertThat(initialState, is(true));
     }
 
     @Test
-    public void testSharedAfterCreate() {
+    public void withStateCreated_isInitialState_expectFalse() {
+        // arrange
+        State state = ExampleStateMachine.State("SHARED");
+        // act
+        boolean initialState = state.isInitialState();
+        // assert
+        assertThat(initialState, is(false));
+    }
+
+    @Test
+    public void withStateCreated_isFinalState_expectFalse() {
+        // arrange
+        State state = ExampleStateMachine.State("CREATED");
+        // act
+        boolean isFinalState = state.isFinalState();
+        // assert
+        Assert.assertEquals("created is not final", false, isFinalState);
+    }
+
+    @Test
+    public void withStateCreated_getNextActions_expectLarger0() {
+        // arrange
+        State state = ExampleStateMachine.State("CREATED");
+        // act
+        List<String> nextActions = state.getNextActions();
+        // asssert
+        assertThat(nextActions, hasSize(not(0)));
+    }
+
+    @Test
+    public void withStateCreatedAndShared_hasLaterState_expectTrue() {
+        // arrange
         State createdState = ExampleStateMachine.State("CREATED");
         State sharedState = ExampleStateMachine.State("SHARED");
-        Assert.assertEquals("shared is follower of CREATED", true, createdState.hasLaterState(sharedState));
-        Assert.assertEquals("created is NOT follower of SHARED", false, sharedState.hasLaterState(createdState));
+
+        // act
+        boolean hasLaterState = createdState.hasLaterState(sharedState);
+
+        // asssert
+        assertThat(hasLaterState, is(true));
+    }
+
+    @Test
+    public void withStateCreatedAndShared_hasLaterState_expectFalse() {
+        // arrange
+        State createdState = ExampleStateMachine.State("CREATED");
+        State sharedState = ExampleStateMachine.State("SHARED");
+
+        // act
+        boolean hasLaterState = sharedState.hasLaterState(createdState);
+
+        // asssert
+        assertThat(hasLaterState, is(false));
     }
 
 
@@ -62,7 +119,6 @@ public class StateMachineTests {
         Assert.assertEquals("created is before of SHARED", true, sharedState.hasEarlierState(createdState));
     }
 
-
     @Test
     public void testAcceptAfterShared() {
         State sharedState = ExampleStateMachine.State("SHARED");
@@ -80,5 +136,18 @@ public class StateMachineTests {
         Assert.assertEquals("shared is not earlier than not-shared", false, shared.hasEarlierState(notShared));
     }
 
+    @Test
+    public void test_initial_state() {
+        State initialState = ExampleStateMachine.get().getInitialState();
+        Assert.assertNotNull("initialState shall be valid", initialState);
+        Assert.assertEquals("initialState is CREATED", "CREATED", initialState.getValue());
+    }
 
+
+    @Test
+    public void test_initial_statetransitions() {
+        StateMachine.StateTransition initialStateTransition = ExampleStateMachine.get().getInitialTransition();
+        Assert.assertNotNull("initial transition shall be valid", initialStateTransition);
+        Assert.assertEquals("initial transition is CREATE", "CREATE", initialStateTransition.getValue());
+    }
 }

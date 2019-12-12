@@ -19,14 +19,17 @@ import net.corda.core.flows.FlowLogic;
 import net.corda.core.identity.Party;
 import net.corda.core.transactions.TransactionBuilder;
 
+/**
+ * this flow implement CRUD operations on any <code>ContractState</code>
+ */
 public class SimpleFlow {
 
-    public static interface Create<T extends ContractState> {
+    public interface Create<T extends ContractState> {
         @Suspendable
         T create() throws FlowException;
     }
 
-    public static interface Update<T extends ContractState> {
+    public interface Update<T extends ContractState> {
         @Suspendable
         T update(T state) throws FlowException;
     }
@@ -45,11 +48,10 @@ public class SimpleFlow {
     public static interface UpdateBuilder<T extends ContractState> extends Update<T> {
         @Suspendable
         CommandData getCommand(StateAndRef<T> stateRef, T state, T newState) throws FlowException;
-
         void updateBuilder(TransactionBuilder transactionBuilder, StateAndRef<T> stateRef, T state, T newState) throws FlowException;
     }
 
-    public static interface Delete<T extends ContractState> {
+    public interface Delete<T extends ContractState> {
         @Suspendable
         void validateToDelete(T state) throws FlowException;
     }

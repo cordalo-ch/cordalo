@@ -11,45 +11,52 @@ package ch.cordalo.corda.common.test;
 
 import net.corda.core.flows.FlowLogic;
 import net.corda.core.identity.Party;
+import net.corda.core.node.NetworkParameters;
 import net.corda.core.node.NodeInfo;
+import net.corda.testing.core.TestIdentity;
 import net.corda.testing.node.MockNetwork;
 import net.corda.testing.node.MockNetworkParameters;
 import net.corda.testing.node.TestCordapp;
+import org.jetbrains.annotations.NotNull;
 
+import java.time.Instant;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static java.util.Collections.*;
+
 public class CordaTestNetwork {
 
     private final List<Class<? extends FlowLogic>> responderClasses;
-    private MockNetwork network;
-    private final List<TestCordapp> testCordapps;
+    private final MockNetwork network;
+    private final List<TestCordapp> testCorDApps;
     private final List<String> testPackageNames;
     private final boolean withNodes;
     private final Map<String, CordaNodeEnvironment> nodes = new HashMap();
 
     public CordaTestNetwork(boolean withNodes, List<String> testPackageNames, List<Class<? extends FlowLogic>> responderClasses) {
         this.testPackageNames = testPackageNames;
-        this.testCordapps = testPackageNames.stream().map(x -> TestCordapp.findCordapp(x)).collect(Collectors.toList());
+        this.testCorDApps = testPackageNames.stream().map(x -> TestCordapp.findCordapp(x)).collect(Collectors.toList());
         this.withNodes = withNodes;
         this.responderClasses = responderClasses;
-        this.createNetwork();
+        if (this.withNodes) {
+            network = new MockNetwork(
+                    new MockNetworkParameters(testCorDApps)
+                            .withNetworkParameters(getTestNetworkParameters()));
+        } else {
+            network = null;
+        }
     }
 
     public CordaTestNetwork(boolean withNodes, List<String> testPackageNames, Class responderMainClass) {
-        this.testPackageNames = testPackageNames;
-        this.testCordapps = testPackageNames.stream().map(x -> TestCordapp.findCordapp(x)).collect(Collectors.toList());
-        this.withNodes = withNodes;
-        this.responderClasses = FlowTestSupporter.findResponderClasses(responderMainClass);
-        this.createNetwork();
+        this(withNodes, testPackageNames, Arrays.asList(responderMainClass));
     }
 
-    private void createNetwork() {
-        if (this.withNodes) {
-            network = new MockNetwork(new MockNetworkParameters(testCordapps));
-        }
+    public CordaTestNetwork(boolean withNodes, List<String> testPackageNames) {
+        this(withNodes, testPackageNames, EMPTY_LIST);
     }
 
     private CordaNodeEnvironment startNode(CordaNodeEnvironment env) {
@@ -58,12 +65,12 @@ public class CordaTestNetwork {
         return env;
     }
 
-    public List<String> getCordappPackageNames() {
+    public List<String> getCorDAppPackageNames() {
         return this.testPackageNames;
     }
 
-    public List<TestCordapp> getCordapps() {
-        return this.testCordapps;
+    public List<TestCordapp> getCorDApps() {
+        return this.testCorDApps;
     }
 
     public MockNetwork getNetwork() {
@@ -72,6 +79,10 @@ public class CordaTestNetwork {
 
     public List<Party> peers() {
         return this.nodes.values().stream().map(x -> x.party).collect(Collectors.toList());
+    }
+
+    public boolean needsStart() {
+        return this.network != null;
     }
 
     public List<NodeInfo> networkMapSnapshot() {
@@ -100,19 +111,54 @@ public class CordaTestNetwork {
                 new CordaNotaryNodeEnvironment(this, name, x500));
     }
 
+    public TestIdentity[] getIdentitiesWithoutMe(CordaNodeEnvironment me) {
+        List<TestIdentity> testIdentities = this.nodes.values()
+                .stream()
+                .filter(x -> !x.equals(me))
+                .map(x -> new TestIdentity(x.x500))
+                .collect(Collectors.toList());
+        TestIdentity[] testIdentityArray = new TestIdentity[testIdentities.size()];
+        testIdentities.toArray(testIdentityArray);
+        return testIdentityArray;
+    }
+
     public CordaNodeEnvironment getEnv(String name) {
         return this.nodes.get(name);
     }
 
     public void startNodes() {
-        if (this.network != null) this.network.startNodes();
+        this.startLedgers();
+        if (this.needsStart()) this.network.startNodes();
+    }
+
+    private void startLedgers() {
+        for (CordaNodeEnvironment node : this.nodes.values()) {
+            node.startLedger(this);
+        }
     }
 
     public void runNetwork() {
-        if (this.network != null) this.network.runNetwork();
+        if (this.needsStart()) this.network.runNetwork();
     }
 
     public void stopNodes() {
-        if (this.network != null) this.network.stopNodes();
+        if (this.needsStart()) {
+            this.network.stopNodes();
+            this.network.waitQuiescent();
+        }
+    }
+
+
+    @NotNull
+    public static NetworkParameters getTestNetworkParameters() {
+        // check out net.corda.testing.common.internal.ParametersUtilitiesKt for parameters
+        return new NetworkParameters(
+                4,
+                emptyList(),
+                10485760,
+                10485760 * 50,
+                Instant.MIN,
+                1,
+                emptyMap());
     }
 }

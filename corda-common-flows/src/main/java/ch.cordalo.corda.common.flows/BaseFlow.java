@@ -146,7 +146,7 @@ public abstract class BaseFlow<S> extends FlowLogic<S> {
                 AbstractParty counterparty = counterPartiesWithoutMe.get(i);
                 if (counterparty instanceof Party) {
                     FlowSession flowSession = initiateFlow((Party) counterparty);
-                    otherPartiesFlowVersion = flowSession.getCounterpartyFlowInfo().getFlowVersion();
+                    //otherPartiesFlowVersion = flowSession.getCounterpartyFlowInfo().getFlowVersion();
                     otherPartySessions.add(flowSession);
                 }
             }

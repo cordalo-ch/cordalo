@@ -24,6 +24,14 @@ dependencies {
     compile project(":corda-ext")
     compile project(":corda-common")
 }
+apply plugin: 'net.corda.plugins.quasar-utils'
+
+task installQuasar(type: Copy) {
+    destinationDir rootProject.file("lib")
+    from(configurations.quasar) {
+        rename 'quasar-core(.*).jar', 'quasar.jar'
+    }
+}
 
 jar {
     baseName 'corda-common-test'

@@ -358,7 +358,7 @@ public class MockCordaRPCOps implements CordaRPCOps {
     @Nullable
     @Override
     public Party wellKnownPartyFromX500Name(@NotNull CordaX500Name x500Name) {
-        return this.env.network.getNetworkMapCache().getPeerByLegalName(x500Name);
+        return this.env.ledgerServices.getIdentityService().wellKnownPartyFromX500Name(x500Name);
     }
 
     @Override

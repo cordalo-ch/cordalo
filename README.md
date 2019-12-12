@@ -31,15 +31,41 @@ ServiceState service = verifier
 
 Install in that order:
 * Java JDK 1.8
-* Gradle https://gradle.org/install/
-* Ruby https://www.ruby-lang.org/en/
-* rubyGen https://rubygems.org/pages/download should be enough with  
-    ```gem update --system```
-* https://rubygems.org/gems/travis should be enough with  
-    ```gem install travis```
 
-# Annexes
-## How to create the release instruction in .travis.yml
-To create the release part in your .travis.yml file, run the following command in the root of your project:
-  ```travis setup releases```
-You will be prompted for your GitHub username and password. This will create the deploy part in your .travis.yml file
+
+# Build environment travis
+we are using travis to build and deploy our solution to OSS nexus
+here are some tips for other that want to do this.
+
+
+- install travis-cli local
+```
+sudo gem install travis
+```
+
+- go to your git rep
+```
+cd git/cordalo/
+```
+
+- get your key from gpg 
+- export your GPG secret keys that had been used for OSS
+
+```
+$ gpg --list-secret-keys
+/Users/Lolo/.gnupg/pubring.kbx
+------------------------------
+sec   rsa4096 2019-08-30 [SC] [expires: 2023-08-30]
+      5FDC.......
+uid           [ultimate] Lorenz Hanggi <build@cordalo.ch>
+```
+
+replace value for LONG_ID with your ID from gpg
+add the key and iv values directly in your travis online configuration
+and add the code to your .travis.yml
+```
+LONG_ID=5FDC....
+gpg --armor --export-secret-keys $LONG_ID > secret-ring.gpg
+travis encrypt-file secret-ring.gpg —add
+rm secret-ring.gpg
+```

@@ -7,50 +7,22 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ******************************************************************************/
+
 package ch.cordalo.corda.common.contracts;
 
-public class ExampleStateMachine extends StateMachine {
+public class ExamplePermissions extends Permissions {
 
-    private final static ExampleStateMachine INSTANCE = new ExampleStateMachine();
+    private static final ExamplePermissions INSTANCE = new ExamplePermissions();
 
-    public static ExampleStateMachine get() {
+    public static ExamplePermissions getInstance() {
         return INSTANCE;
     }
 
-    private ExampleStateMachine() {
+    public ExamplePermissions() {
         super("example");
     }
 
-    public static StateTransition StateTransition(String transition) {
-        return INSTANCE.transition(transition);
-    }
-
-    public static State State(String state) {
-        return INSTANCE.state(state);
-    }
-
-    @Override
-    public void initStates() {
-        newState("CREATED", StateMachine.StateType.INITIAL);
-        newState("REGISTERED");
-        newState("INFORMED");
-        newState("CONFIRMED");
-
-        newState("TIMEOUTS", StateMachine.StateType.FINAL);
-        newState("WITHDRAWN", StateMachine.StateType.FINAL);
-
-        newState("SHARED", StateMachine.StateType.SHARE_STATE);
-        newState("NOT_SHARED", StateMachine.StateType.FINAL);
-        newState("DUPLICATE", StateMachine.StateType.FINAL);
-
-        newState("PAYMENT_SENT");
-
-        newState("ACCEPTED", StateMachine.StateType.FINAL);
-        newState("DECLINED", StateMachine.StateType.FINAL);
-    }
-
-    @Override
-    public void initTransitions() {
+    /*
         newTransition("CREATE", "CREATED");
 
         newTransition("REGISTER", "REGISTERED", "CREATED");
@@ -67,6 +39,43 @@ public class ExampleStateMachine extends StateMachine {
 
         newTransition("SEND_PAYMENT", "PAYMENT_SENT", "SHARED");
 
+        newTransition("DECLINE", "DECLINED", "SHARED", "PAYMENT_SENT");
         newTransition("ACCEPT", "ACCEPTED", "SHARED", "PAYMENT_SENT");
+
+     */
+    @Override
+    protected void initPermissions() {
+        this.addStateActionsForRole("admin",
+                "CREATE",
+                "REGISTER",
+                "INFORM",
+                "CONFIRM",
+                "TIMEOUT",
+                "WITHDRAW",
+                "NO_SHARE",
+                "DUPLICATE",
+                "SHARE",
+                "SEND_PAYMENT",
+                "DECLINE",
+                "ACCEPT"
+        );
+        this.addCommandActionsForRole("searcher", "search");
+        this.addStateActionsForRole("creator", "CREATE", "REGISTER");
+        this.addStateActionsForRole("decider", "DECLINE", "ACCEPT");
+    }
+
+    @Override
+    protected void initPartiesAndRoles() {
+        this.addPartyAndRoles("CN=Company-A,OU=IT,O=organisation,L=locality,ST=state,C=CH", "admin", "decider");
+        this.addPartyAndRoles("CN=Company-A,OU=Marketing,O=organisation,L=locality,ST=state,C=CH", "searcher");
+        this.addPartyAndRoles("CN=Company-B,OU=IT,O=organisation,L=locality,ST=state,C=CH", "searcher", "creator");
+        this.addPartyAndRoles("CN=Company-B,OU=Business,O=organisation,L=locality,ST=state,C=CH", "decider");
+        this.addPartyAndRoles("CN=Company-C,OU=IT,O=organisation,L=locality,ST=state,C=CH", "none");
+    }
+
+    @Override
+    protected void initPartiesAndAttributes() {
+        this.addPartyAndAttribute("CN=Company-A,OU=IT,O=organisation,L=locality,ST=state,C=CH", "logo", "companyA.png");
+        this.addPartyAndAttribute("CN=Company-A,OU=IT,O=organisation,L=locality,ST=state,C=CH", "products", "motor,household");
     }
 }

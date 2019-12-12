@@ -28,7 +28,6 @@ public class StateVerifierTests extends CordaloTestEnvironment {
         this.setup(false);
     }
 
-
     private TestState newTest() {
         return new TestState(new UniqueIdentifier(), testNode1.party, testNode2.party, testNode2.party, "string", 100);
     }
@@ -46,14 +45,12 @@ public class StateVerifierTests extends CordaloTestEnvironment {
         return new TestState(new UniqueIdentifier(), testNode1.party, testNode2.party, testNode2.party, stringValue, intValue);
     }
 
-
     @Test
     public void simpleTestObject() {
         TestState test = newTest();
         Assert.assertNotNull("test not null", test);
         test.withValues("string-new", 42);
     }
-
 
     @Test
     public void simpleJsonObject() {
@@ -106,7 +103,6 @@ public class StateVerifierTests extends CordaloTestEnvironment {
         Assert.assertEquals("test int identical", test.getIntValue(), test2.getIntValue());
     }
 
-
     @Test
     public void contract_create_one() {
         transaction(testNode1.ledgerServices, tx -> {
@@ -117,7 +113,6 @@ public class StateVerifierTests extends CordaloTestEnvironment {
             return null;
         });
     }
-
 
     @Test
     public void contract_create_multiple() {
@@ -131,7 +126,6 @@ public class StateVerifierTests extends CordaloTestEnvironment {
             return null;
         });
     }
-
 
     @Test
     public void contract_difference_output() {
@@ -147,7 +141,6 @@ public class StateVerifierTests extends CordaloTestEnvironment {
         });
     }
 
-
     @Test
     public void contract_union_output() {
         transaction(testNode1.ledgerServices, tx -> {
@@ -161,7 +154,6 @@ public class StateVerifierTests extends CordaloTestEnvironment {
             return null;
         });
     }
-
 
     @Test
     public void contract_notThis() {
@@ -177,7 +169,6 @@ public class StateVerifierTests extends CordaloTestEnvironment {
         });
     }
 
-
     @Test
     public void contract_create_parties() {
         transaction(testNode1.ledgerServices, tx -> {
@@ -188,7 +179,6 @@ public class StateVerifierTests extends CordaloTestEnvironment {
             return null;
         });
     }
-
 
     @After
     public void tearDown() {

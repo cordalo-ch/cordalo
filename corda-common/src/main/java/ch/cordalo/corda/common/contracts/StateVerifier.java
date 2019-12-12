@@ -9,6 +9,7 @@
  ******************************************************************************/
 package ch.cordalo.corda.common.contracts;
 
+import co.paralleluniverse.fibers.Suspendable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
@@ -17,6 +18,7 @@ import net.corda.core.identity.AbstractParty;
 import net.corda.core.node.ServiceHub;
 import net.corda.core.transactions.LedgerTransaction;
 import net.corda.core.transactions.SignedTransaction;
+import org.apache.commons.lang.NotImplementedException;
 import org.jetbrains.annotations.NotNull;
 
 import java.security.PublicKey;
@@ -34,9 +36,13 @@ interface TransactionDelegate {
 
     List<ContractState> outputsOfType(Class stateClass);
 
+    List<ContractState> referenceInputsOfType(Class stateClass);
+
     List<ContractState> getOutputStates();
 
     List<ContractState> getInputStates();
+
+    List<ContractState> getReferenceStates();
 }
 
 /* class StateVerifier must be part of states and not external package due to miss loading same cordapp package
@@ -134,206 +140,265 @@ public class StateVerifier {
     }
 
 
+    @Suspendable
     public <T extends ContractState> List<T> list() {
         return (List<T>) this.getParentList();
     }
 
+    @Suspendable
     public <T extends ContractState> List<T> objects() {
         return (List<T>) this.list();
     }
 
+    @Suspendable
     public <T extends ContractState> T object() {
         return this.one().object(0);
     }
 
+    @Suspendable
     public <T extends ContractState> T object(int index) {
         return (T) this.getParentList().get(index);
     }
 
 
+    @Suspendable
     public StateVerifier input() {
         return new InputList(this).verify();
     }
 
+    @Suspendable
     public StateVerifier input(Class<? extends ContractState> stateClass) {
         return new InputList(this, stateClass).verify();
     }
 
+    @Suspendable
+    public StateVerifier references() {
+        return new ReferencesList(this).verify();
+    }
+
+    @Suspendable
+    public StateVerifier references(Class<? extends ContractState> stateClass) {
+        return new ReferencesList(this, stateClass).verify();
+    }
+
+    @Suspendable
     public StateVerifier output() {
         return new OutputList(this).verify();
     }
 
+    @Suspendable
     public StateVerifier output(Class<? extends ContractState> stateClass) {
         return new OutputList(this, stateClass).verify();
     }
 
+    @Suspendable
     public StateVerifier newOutput() {
         return new NewOutputList(this).verify();
     }
 
+    @Suspendable
     public StateVerifier newOutput(Class<? extends ContractState> stateClass) {
         return new NewOutputList(this, stateClass).verify();
     }
 
+    @Suspendable
     public StateVerifier intersection() {
         return new IntersectionList<>(this).verify();
     }
 
+    @Suspendable
     public StateVerifier intersection(Class<? extends ContractState> stateClass) {
         return new IntersectionList(this, stateClass).verify();
     }
 
+    @Suspendable
     public <T extends ContractState> StateVerifier use(T state) {
         return new UseThis<T>(this, state).verify();
     }
 
+    @Suspendable
     public <T extends ContractState> StateVerifier use(List<T> states) {
         return new UseThese<T>(this, states).verify();
     }
 
+    @Suspendable
     public <T extends ContractState> StateVerifier filter(Class<T> stateClass) {
         return new FilterList(this, stateClass).verify();
     }
 
+    @Suspendable
     public <T extends ContractState> StateVerifier filterWhere(Function<T, Boolean> mapper) {
         return new FilterWhere(this, mapper).verify();
     }
 
+    @Suspendable
     public <T extends ContractState> StateVerifier notThis(T state) {
         return new FilterWhere(this, x -> !x.equals(state)).verify();
     }
 
 
+    @Suspendable
     public StateVerifier one() {
         return new One(this).verify();
     }
 
+    @Suspendable
     public StateVerifier one(String text) {
-        return new One(this).verify();
+        return new One(this, text).verify();
     }
 
+    @Suspendable
     public <T extends ContractState> StateVerifier one(Class<T> stateClass) {
         return this.filter(stateClass).one();
     }
 
+    @Suspendable
     public StateVerifier empty() {
         return new Empty(this).verify();
     }
 
+    @Suspendable
     public StateVerifier empty(String text) {
         return new Empty(this, text).verify();
     }
 
+    @Suspendable
     public <T extends ContractState> StateVerifier empty(Class<T> stateClass) {
         return this.filter(stateClass).empty();
     }
 
+    @Suspendable
     public StateVerifier notEmpty() {
         return new NotEmpty(this).verify();
     }
 
+    @Suspendable
     public StateVerifier notEmpty(String text) {
         return new NotEmpty(this, text).verify();
     }
 
+    @Suspendable
     public StateVerifier moreThanZero() {
         return new MoreThanZero(this).verify();
     }
 
+    @Suspendable
     public StateVerifier count(int size) {
         return new Count(this, size).verify();
     }
 
+    @Suspendable
     public <T extends ContractState> StateVerifier count(int size, Class<T> stateClass) {
         return this.filter(stateClass).count(size);
     }
 
+    @Suspendable
     public StateVerifier max(int size) {
         return new Max(this, size).verify();
     }
 
+    @Suspendable
     public StateVerifier min(int size) {
         return new Min(this, size).verify();
     }
 
+    @Suspendable
     public StateVerifier moreThanOne() {
         return new MoreThanN(this, 1).verify();
     }
 
+    @Suspendable
     public StateVerifier moreThan(int size) {
         return new MoreThanN(this, size).verify();
     }
 
+    @Suspendable
     public StateVerifier lessThan(int size) {
         return new LessThanN(this, size).verify();
     }
 
+    @Suspendable
     public StateVerifier amountNot0(String name, Function<ContractState, Amount> mapper) {
         return new AmountNot0(this, name, mapper).verify();
     }
 
+    @Suspendable
     public StateVerifier participantsAreSigner() {
         return new ParticipantsAreSigners(this).verify();
     }
 
+    @Suspendable
     public StateVerifier participantsAreSigner(String text) {
         return new ParticipantsAreSigners(this, text).verify();
     }
 
+    @Suspendable
     public StateVerifier signer(String text, Function<ContractState, ? extends AbstractParty> mapper) {
         return new Signers(this, text, mapper).verify();
     }
 
+    @Suspendable
     public StateVerifier differentParty(String name1, Function<ContractState, ? extends AbstractParty> party1Mapper,
                                         String name2, Function<ContractState, ? extends AbstractParty> party2Mapper
     ) {
         return new DifferentParty(this, name1, party1Mapper, name2, party2Mapper).verify();
     }
 
+    @Suspendable
     public StateVerifier sameParty(String name1, Function<ContractState, ? extends AbstractParty> party1Mapper,
                                    String name2, Function<ContractState, ? extends AbstractParty> party2Mapper
     ) {
         return new SameParty(this, name1, party1Mapper, name2, party2Mapper).verify();
     }
 
+    @Suspendable
     public <T extends ContractState> StateVerifier isEmpty(Collection<Function<T, Object>> emptyMappers) {
         return new IsEmpty(this, emptyMappers).verify();
     }
 
+    @Suspendable
     public <T extends ContractState> StateVerifier isEmpty(Function<T, Object> emptyMapper, String text) {
         return new IsEmpty(this, emptyMapper, text).verify();
     }
 
+    @Suspendable
     public <T extends ContractState> StateVerifier isEmpty(Function<T, Object>... emptyMapper) {
         return new IsEmpty(this, Arrays.asList(emptyMapper)).verify();
     }
 
 
+    @Suspendable
     public <T extends ContractState> StateVerifier isNotEmpty(Collection<Function<T, Object>> emptyMappers) {
         return new IsNotEmpty(this, emptyMappers).verify();
     }
 
+    @Suspendable
     public <T extends ContractState> StateVerifier isNotEmpty(Function<T, Object> emptyMapper, String text) {
         return new IsNotEmpty(this, emptyMapper, text).verify();
     }
 
+    @Suspendable
     public <T extends ContractState> StateVerifier isNotEmpty(Function<T, Object>... emptyMapper) {
         return new IsNotEmpty(this, Arrays.asList(emptyMapper)).verify();
     }
 
 
+    @Suspendable
     public <T extends ContractState> StateVerifier isEqual(Function<T, Object> firstMapper, Function<T, Object> secondMapper, String text) {
         return new IsEqual(this, firstMapper, secondMapper, text).verify();
     }
 
+    @Suspendable
     public <T extends ContractState> StateVerifier isEqual(Function<T, Object> firstMapper, Function<T, Object> secondMapper) {
         return new IsEqual(this, firstMapper, secondMapper).verify();
     }
 
+    @Suspendable
     public <T extends ContractState> StateVerifier isNotEqual(Function<T, Object> firstMapper, Function<T, Object> secondMapper, String text) {
         return new IsNotEqual(this, firstMapper, secondMapper, text).verify();
     }
 
+    @Suspendable
     public <T extends ContractState> StateVerifier isNotEqual(Function<T, Object> firstMapper, Function<T, Object> secondMapper) {
         return new IsNotEqual(this, firstMapper, secondMapper).verify();
     }
@@ -656,10 +721,10 @@ public class StateVerifier {
                 Object inputVal = firstMapping.apply(this.object());
                 Object outputVal = secondMapping.apply(this.object());
                 if (inputVal != null) {
-                    req.using("fields must be the same",
+                    req.using(this.s("fields must be the same"),
                             inputVal.equals(outputVal));
                 } else {
-                    req.using("fields must be empty for both",
+                    req.using(this.s("fields must be empty for both"),
                             outputVal == null);
                 }
                 return null;
@@ -995,6 +1060,26 @@ public class StateVerifier {
         }
     }
 
+
+    class ReferencesList<T> extends StateList {
+        ReferencesList(StateVerifier parent) {
+            super(parent);
+        }
+
+        ReferencesList(StateVerifier parent, Class<T> stateClass) {
+            super(parent, stateClass);
+        }
+
+        @Override
+        public List<ContractState> getList() {
+            if (this.stateClass != null) {
+                return tx.referenceInputsOfType(this.stateClass);
+            } else {
+                return tx.getReferenceStates();
+            }
+        }
+    }
+
     class FilterList<T> extends StateList {
         FilterList(StateVerifier parent, Class<T> stateClass) {
             super(parent, stateClass);
@@ -1100,6 +1185,16 @@ public class StateVerifier {
         }
 
         @Override
+        public List<ContractState> referenceInputsOfType(Class stateClass) {
+            throw new NotImplementedException("reference states are not supported in SignTransaction verifiers");
+        }
+
+        @Override
+        public List<ContractState> getReferenceStates() {
+            throw new NotImplementedException("reference states are not supported in SignTransaction verifiers");
+        }
+
+        @Override
         public List<ContractState> getInputStates() {
             ArrayList<ContractState> inputStates = new ArrayList<>();
             for (StateRef stateRef : this.stx.getInputs()) {
@@ -1153,6 +1248,11 @@ public class StateVerifier {
         }
 
         @Override
+        public List<ContractState> referenceInputsOfType(Class stateClass) {
+            return ltx.referenceInputsOfType(stateClass);
+        }
+
+        @Override
         public List<ContractState> getOutputStates() {
             return ltx.getOutputStates();
         }
@@ -1160,6 +1260,11 @@ public class StateVerifier {
         @Override
         public List<ContractState> getInputStates() {
             return ltx.getInputStates();
+        }
+
+        @Override
+        public List<ContractState> getReferenceStates() {
+            return ltx.getReferenceStates();
         }
 
     }
