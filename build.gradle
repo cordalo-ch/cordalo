@@ -40,6 +40,7 @@ buildscript {
         classpath "com.github.kt3k.coveralls:com.github.kt3k.coveralls.gradle.plugin:2.8.4"
     }
 }
+
 allprojects {
     apply from: "${rootProject.projectDir}/repositories.gradle"
     apply plugin: 'java'

@@ -26,7 +26,8 @@ public class CordaTestNodeEnvironmentTests {
 
     private List<String> getCordappPackageNames() {
         return ImmutableList.of(
-        );
+                "ch.cordalo.corda.ext",
+                "ch.cordalo.corda.common.contracts");
     }
 
 
