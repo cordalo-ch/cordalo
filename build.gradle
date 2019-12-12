@@ -13,6 +13,11 @@ buildscript {
         corda_platform_version = '4'
     }
 
+    ext {
+        cordalo_revision = "git rev-parse HEAD".execute().text.trim()
+        cordalo_branch = "git rev-parse --abbrev-ref HEAD".execute().text.trim()
+    }
+
     repositories {
         mavenLocal()
         mavenCentral()
@@ -37,7 +42,8 @@ allprojects {
     apply plugin: 'net.saliman.cobertura'
 
     group 'ch.cordalo'
-    version '0.12-SNAPSHOT'
+    version System.getenv("TRAVIS_BRANCH") ?: "0.13-SNAPSHOT";
+    /* project.logger.lifecycle("this is version=$version") */
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
 
