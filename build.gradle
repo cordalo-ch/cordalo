@@ -86,6 +86,11 @@ allprojects {
     //    dependsOn 'check'
     //}
 
+    test {
+        minHeapSize = "1024m"
+        maxHeapSize = "1024m"
+    }
+
     signing {
         def key = project.findProperty("signingKey") ?: System.getenv("signingKey");
         def pwd = project.findProperty("signingPassword") ?: System.getenv("signingPassword");
