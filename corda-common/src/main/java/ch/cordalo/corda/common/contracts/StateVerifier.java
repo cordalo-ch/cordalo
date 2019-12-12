@@ -18,7 +18,6 @@ import net.corda.core.identity.AbstractParty;
 import net.corda.core.node.ServiceHub;
 import net.corda.core.transactions.LedgerTransaction;
 import net.corda.core.transactions.SignedTransaction;
-import org.apache.commons.lang.NotImplementedException;
 import org.jetbrains.annotations.NotNull;
 
 import java.security.PublicKey;
@@ -1186,12 +1185,12 @@ public class StateVerifier {
 
         @Override
         public List<ContractState> referenceInputsOfType(Class stateClass) {
-            throw new NotImplementedException("reference states are not supported in SignTransaction verifiers");
+            throw new UnsupportedOperationException("reference states are not supported in SignTransaction verifiers");
         }
 
         @Override
         public List<ContractState> getReferenceStates() {
-            throw new NotImplementedException("reference states are not supported in SignTransaction verifiers");
+            throw new UnsupportedOperationException("reference states are not supported in SignTransaction verifiers");
         }
 
         @Override

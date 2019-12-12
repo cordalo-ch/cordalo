@@ -25,7 +25,6 @@ import net.corda.core.node.services.NetworkMapCache;
 import net.corda.core.node.services.Vault;
 import net.corda.core.node.services.vault.*;
 import net.corda.core.transactions.SignedTransaction;
-import org.apache.commons.lang3.NotImplementedException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import rx.Observable;
@@ -57,12 +56,12 @@ public class MockCordaRPCOps implements CordaRPCOps {
 
     @Override
     public void acceptNewNetworkParameters(@NotNull SecureHash parametersHash) {
-        throw new NotImplementedException("#CordaRPCOpsMock not supported yet");
+        throw new UnsupportedOperationException("#CordaRPCOpsMock not supported yet");
     }
 
     @Override
     public void addVaultTransactionNote(@NotNull SecureHash txnId, @NotNull String txnNote) {
-        throw new NotImplementedException("#CordaRPCOpsMock not supported yet");
+        throw new UnsupportedOperationException("#CordaRPCOpsMock not supported yet");
     }
 
     @Override
@@ -78,52 +77,52 @@ public class MockCordaRPCOps implements CordaRPCOps {
     @NotNull
     @Override
     public Instant currentNodeTime() {
-        throw new NotImplementedException("#currentNodeTime");
+        throw new UnsupportedOperationException("#currentNodeTime");
     }
 
     @NotNull
     @Override
     public Iterable<String> getVaultTransactionNotes(@NotNull SecureHash txnId) {
-        throw new NotImplementedException("#CordaRPCOpsMock not supported yet");
+        throw new UnsupportedOperationException("#CordaRPCOpsMock not supported yet");
     }
 
     @Nullable
     @Override
     public SignedTransaction internalFindVerifiedTransaction(@NotNull SecureHash txnId) {
-        throw new NotImplementedException("#CordaRPCOpsMock not supported yet");
+        throw new UnsupportedOperationException("#CordaRPCOpsMock not supported yet");
     }
 
     @NotNull
     @Override
     public DataFeed<List<SignedTransaction>, SignedTransaction> internalVerifiedTransactionsFeed() {
-        throw new NotImplementedException("#CordaRPCOpsMock not supported yet");
+        throw new UnsupportedOperationException("#CordaRPCOpsMock not supported yet");
     }
 
     @NotNull
     @Override
     public List<SignedTransaction> internalVerifiedTransactionsSnapshot() {
-        throw new NotImplementedException("#CordaRPCOpsMock not supported yet");
+        throw new UnsupportedOperationException("#CordaRPCOpsMock not supported yet");
     }
 
     @Override
     public boolean isFlowsDrainingModeEnabled() {
-        throw new NotImplementedException("#CordaRPCOpsMock not supported yet");
+        throw new UnsupportedOperationException("#CordaRPCOpsMock not supported yet");
     }
 
     @Override
     public boolean isWaitingForShutdown() {
-        throw new NotImplementedException("#CordaRPCOpsMock not supported yet");
+        throw new UnsupportedOperationException("#CordaRPCOpsMock not supported yet");
     }
 
     @Override
     public boolean killFlow(@NotNull StateMachineRunId id) {
-        throw new NotImplementedException("#CordaRPCOpsMock not supported yet");
+        throw new UnsupportedOperationException("#CordaRPCOpsMock not supported yet");
     }
 
     @NotNull
     @Override
     public DataFeed<List<NodeInfo>, NetworkMapCache.MapChange> networkMapFeed() {
-        throw new NotImplementedException("#CordaRPCOpsMock not supported yet");
+        throw new UnsupportedOperationException("#CordaRPCOpsMock not supported yet");
     }
 
     @NotNull
@@ -135,7 +134,7 @@ public class MockCordaRPCOps implements CordaRPCOps {
     @NotNull
     @Override
     public DataFeed<ParametersUpdateInfo, ParametersUpdateInfo> networkParametersFeed() {
-        throw new NotImplementedException("#CordaRPCOpsMock not supported yet");
+        throw new UnsupportedOperationException("#CordaRPCOpsMock not supported yet");
     }
 
     @NotNull
@@ -171,7 +170,7 @@ public class MockCordaRPCOps implements CordaRPCOps {
     @NotNull
     @Override
     public Set<Party> partiesFromName(@NotNull String query, boolean exactMatch) {
-        throw new NotImplementedException("#CordaRPCOpsMock not supported yet");
+        throw new UnsupportedOperationException("#CordaRPCOpsMock not supported yet");
     }
 
     @Nullable
@@ -189,23 +188,23 @@ public class MockCordaRPCOps implements CordaRPCOps {
 
     @Override
     public void refreshNetworkMapCache() {
-        throw new NotImplementedException("#CordaRPCOpsMock not supported yet");
+        throw new UnsupportedOperationException("#CordaRPCOpsMock not supported yet");
     }
 
     @NotNull
     @Override
     public List<String> registeredFlows() {
-        throw new NotImplementedException("#CordaRPCOpsMock not supported yet");
+        throw new UnsupportedOperationException("#CordaRPCOpsMock not supported yet");
     }
 
     @Override
     public void setFlowsDrainingModeEnabled(boolean enabled) {
-        throw new NotImplementedException("#CordaRPCOpsMock not supported yet");
+        throw new UnsupportedOperationException("#CordaRPCOpsMock not supported yet");
     }
 
     @Override
     public void shutdown() {
-        throw new NotImplementedException("#CordaRPCOpsMock not supported yet");
+        throw new UnsupportedOperationException("#CordaRPCOpsMock not supported yet");
     }
 
     @NotNull
@@ -245,30 +244,30 @@ public class MockCordaRPCOps implements CordaRPCOps {
     @NotNull
     @Override
     public DataFeed<List<StateMachineTransactionMapping>, StateMachineTransactionMapping> stateMachineRecordedTransactionMappingFeed() {
-        throw new NotImplementedException("#CordaRPCOpsMock not supported yet");
+        throw new UnsupportedOperationException("#CordaRPCOpsMock not supported yet");
     }
 
     @NotNull
     @Override
     public List<StateMachineTransactionMapping> stateMachineRecordedTransactionMappingSnapshot() {
-        throw new NotImplementedException("#CordaRPCOpsMock not supported yet");
+        throw new UnsupportedOperationException("#CordaRPCOpsMock not supported yet");
     }
 
     @NotNull
     @Override
     public DataFeed<List<StateMachineInfo>, StateMachineUpdate> stateMachinesFeed() {
-        throw new NotImplementedException("#CordaRPCOpsMock not supported yet");
+        throw new UnsupportedOperationException("#CordaRPCOpsMock not supported yet");
     }
 
     @NotNull
     @Override
     public List<StateMachineInfo> stateMachinesSnapshot() {
-        throw new NotImplementedException("#CordaRPCOpsMock not supported yet");
+        throw new UnsupportedOperationException("#CordaRPCOpsMock not supported yet");
     }
 
     @Override
     public void terminate(boolean drainPendingFlows) {
-        throw new NotImplementedException("#CordaRPCOpsMock not supported yet");
+        throw new UnsupportedOperationException("#CordaRPCOpsMock not supported yet");
     }
 
     @NotNull
@@ -346,7 +345,7 @@ public class MockCordaRPCOps implements CordaRPCOps {
     @NotNull
     @Override
     public CordaFuture<Void> waitUntilNetworkReady() {
-        throw new NotImplementedException("#CordaRPCOpsMock not supported yet");
+        throw new UnsupportedOperationException("#CordaRPCOpsMock not supported yet");
     }
 
     @Nullable
@@ -369,6 +368,6 @@ public class MockCordaRPCOps implements CordaRPCOps {
     @NotNull
     @Override
     public NodeDiagnosticInfo nodeDiagnosticInfo() {
-        throw new NotImplementedException("#nodeDiagnosticInfo not supported yet");
+        throw new UnsupportedOperationException("#nodeDiagnosticInfo not supported yet");
     }
 }

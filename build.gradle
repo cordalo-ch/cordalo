@@ -1,24 +1,33 @@
 buildscript {
+    Properties constants = new Properties()
+    file("$projectDir/./constants.properties").withInputStream { constants.load(it) }
+
     ext {
-        corda_release_group = 'net.corda'
-        corda_release_group_plugins = 'net.corda.plugins'
-        corda_release_version = '4.3'
-        corda_node_driver_version = '4.1'
-        corda_gradle_plugins_version = '4.0.42'
-        junit_version = '4.12'
-        quasar_version = '0.7.10'
-        spring_boot_version = '2.0.9.RELEASE'
-        spring_boot_gradle_plugin_version = '2.0.9.RELEASE'
-        slf4j_version = '1.7.25'
-        log4j_version = '2.11.2'
-        corda_platform_version = '4'
+        corda_release_group_plugins = "net.corda.plugins"
+        corda_release_group = constants.getProperty("cordaReleaseGroup")
+        corda_release_version = constants.getProperty("cordaVersion")
+        corda_gradle_plugins_version = constants.getProperty("gradlePluginsVersion")
+        kotlin_version = constants.getProperty("kotlinVersion")
+        junit_version = constants.getProperty("junitVersion")
+        quasar_version = constants.getProperty("quasarVersion")
+        log4j_version = constants.getProperty("log4jVersion")
+        slf4j_version = constants.getProperty("slf4jVersion")
+        corda_platform_version = constants.getProperty("platformVersion").toInteger()
+        //springboot
+        spring_boot_version = constants.getProperty("springBootVersion")
+        spring_boot_gradle_plugin_version = constants.getProperty("springBootVersion")
+    }
+
+    ext {
+        cordalo_revision = "git rev-parse HEAD".execute().text.trim()
+        cordalo_branch = "git rev-parse --abbrev-ref HEAD".execute().text.trim()
     }
 
     repositories {
         mavenLocal()
         mavenCentral()
         jcenter()
-        maven { url 'https://ci-artifactory.corda.r3cev.com/artifactory/corda' }
+        maven { url 'https://ci-artifactory.corda.r3cev.com/artifactory/corda-releases' }
         maven { url 'https://plugins.gradle.org/m2/'}
     }
 
@@ -32,13 +41,14 @@ buildscript {
     }
 }
 allprojects {
+    apply from: "${rootProject.projectDir}/repositories.gradle"
     apply plugin: 'java'
     apply plugin: 'maven'
     apply plugin: 'signing'
     apply plugin: 'net.saliman.cobertura'
 
     group 'ch.cordalo'
-    version '0.12-SNAPSHOT'
+    version "$cordalo_branch-SNAPSHOT"
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
 
@@ -46,7 +56,7 @@ allprojects {
         mavenLocal()
         jcenter()
         mavenCentral()
-        maven { url 'https://ci-artifactory.corda.r3cev.com/artifactory/corda' }
+        maven { url 'https://software.r3.com/artifactory/corda' }
         maven { url 'https://jitpack.io' }
     }
 
@@ -138,9 +148,6 @@ allprojects {
     }
 }
 
-ext {
-    cordalo_revision = "git rev-parse HEAD".execute().text.trim()
-}
 
 apply plugin: 'net.corda.plugins.quasar-utils'
 apply plugin: 'com.github.kt3k.coveralls'
@@ -168,8 +175,8 @@ targetCompatibility = 1.8
 dependencies {
     compile "$corda_release_group:corda-core:$corda_release_version"
     compile "$corda_release_group:corda-jackson:$corda_release_version"
-    compile "$corda_release_group:corda-test-utils:$corda_release_version"
-    compile "$corda_release_group:corda-node-driver:$corda_node_driver_version"
+    testCompile "$corda_release_group:corda-test-utils:$corda_release_version"
+    testCompile "$corda_release_group:corda-node-driver:$corda_release_version"
     testCompile "junit:junit:$junit_version"
 }
 

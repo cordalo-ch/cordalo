@@ -19,7 +19,6 @@ import net.corda.core.node.NodeInfo;
 import net.corda.core.node.services.NetworkMapCache;
 import net.corda.core.node.services.PartyInfo;
 import net.corda.core.utilities.NetworkHostAndPort;
-import org.apache.commons.lang3.NotImplementedException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import rx.Observable;
@@ -40,7 +39,7 @@ public class MockNetworkMapCache implements NetworkMapCache {
     @Nullable
     @Override
     public NodeInfo getNodeByLegalIdentity(@NotNull AbstractParty party) {
-        throw new NotImplementedException("#MockNetworkMapCache not supported yet");
+        throw new UnsupportedOperationException("#MockNetworkMapCache not supported yet");
     }
 
     @NotNull
@@ -52,13 +51,13 @@ public class MockNetworkMapCache implements NetworkMapCache {
     @NotNull
     @Override
     public Observable<MapChange> getChanged() {
-        throw new NotImplementedException("#MockNetworkMapCache not supported yet");
+        throw new UnsupportedOperationException("#MockNetworkMapCache not supported yet");
     }
 
     @NotNull
     @Override
     public CordaFuture<Void> getNodeReady() {
-        throw new NotImplementedException("#MockNetworkMapCache not supported yet");
+        throw new UnsupportedOperationException("#MockNetworkMapCache not supported yet");
     }
 
     @NotNull
@@ -75,7 +74,7 @@ public class MockNetworkMapCache implements NetworkMapCache {
     @Nullable
     @Override
     public NodeInfo getNodeByAddress(@NotNull NetworkHostAndPort address) {
-        throw new NotImplementedException("#MockNetworkMapCache not supported yet");
+        throw new UnsupportedOperationException("#MockNetworkMapCache not supported yet");
     }
 
     @Nullable
@@ -113,7 +112,7 @@ public class MockNetworkMapCache implements NetworkMapCache {
     @Nullable
     @Override
     public PartyInfo getPartyInfo(@NotNull Party party) {
-        throw new NotImplementedException("#MockNetworkMapCache not supported yet");
+        throw new UnsupportedOperationException("#MockNetworkMapCache not supported yet");
     }
 
     @Nullable
@@ -126,7 +125,7 @@ public class MockNetworkMapCache implements NetworkMapCache {
     @Nullable
     @Override
     public PartyAndCertificate getPeerCertificateByLegalName(@NotNull CordaX500Name name) {
-        throw new NotImplementedException("#MockNetworkMapCache not supported yet");
+        throw new UnsupportedOperationException("#MockNetworkMapCache not supported yet");
     }
 
     @Override
@@ -142,6 +141,6 @@ public class MockNetworkMapCache implements NetworkMapCache {
     @NotNull
     @Override
     public DataFeed<List<NodeInfo>, MapChange> track() {
-        throw new NotImplementedException("#MockNetworkMapCache not supported yet");
+        throw new UnsupportedOperationException("#MockNetworkMapCache not supported yet");
     }
 }
