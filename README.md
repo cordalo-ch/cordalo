@@ -27,12 +27,6 @@ ServiceState service = verifier
       
 `````
 
-# Developer environment setup
-
-Install in that order:
-* Java JDK 1.8
-
-
 # Build environment travis
 we are using travis to build and deploy our solution to OSS nexus
 here are some tips for other that want to do this.
