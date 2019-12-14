@@ -12,7 +12,6 @@ package ch.cordalo.corda.common.flows.test;
 import ch.cordalo.corda.common.contracts.test.TestSimpleContract;
 import ch.cordalo.corda.common.contracts.test.TestSimpleSchemaV1;
 import ch.cordalo.corda.common.contracts.test.TestSimpleState;
-import ch.cordalo.corda.common.contracts.test.TestState;
 import ch.cordalo.corda.common.flows.*;
 import co.paralleluniverse.fibers.Suspendable;
 import kotlin.Unit;
@@ -231,7 +230,7 @@ public class TestSimpleFlow {
     }
 
     @InitiatedBy(Create.class)
-    public static class CreateResponder extends ResponderBaseFlow<TestState> {
+    public static class CreateResponder extends ResponderBaseFlow<TestSimpleState> {
 
         public CreateResponder(FlowSession otherFlow) {
             super(otherFlow);
@@ -245,7 +244,7 @@ public class TestSimpleFlow {
     }
 
     @InitiatedBy(Update.class)
-    public static class UpdateResponder extends ResponderBaseFlow<TestState> {
+    public static class UpdateResponder extends ResponderBaseFlow<TestSimpleState> {
 
         public UpdateResponder(FlowSession otherFlow) {
             super(otherFlow);
@@ -259,7 +258,7 @@ public class TestSimpleFlow {
     }
 
     @InitiatedBy(Share.class)
-    public static class ShareResponder extends ResponderBaseFlow<TestState> {
+    public static class ShareResponder extends ResponderBaseFlow<TestSimpleState> {
 
         public ShareResponder(FlowSession otherFlow) {
             super(otherFlow);
@@ -273,7 +272,7 @@ public class TestSimpleFlow {
     }
 
     @InitiatedBy(Delete.class)
-    public static class DeleteResponder extends ResponderBaseFlow<TestState> {
+    public static class DeleteResponder extends ResponderBaseFlow<TestSimpleState> {
 
         public DeleteResponder(FlowSession otherFlow) {
             super(otherFlow);

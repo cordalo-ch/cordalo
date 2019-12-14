@@ -162,4 +162,35 @@ public class ExamplePermissionsTests {
         assertThat(allPermissions, is(notNullValue()));
     }
 
+
+    @Test
+    public void withExamplePermissions_hasRole_expectTrue() {
+        // arrange
+
+        // act
+        boolean isDecider = ExamplePermissions.getInstance().hasRole(companyA_IT, "decider");
+
+        // asssert
+        assertThat(isDecider, is(true));
+    }
+    @Test
+    public void withExamplePermissions_hasRole_expectFalse() {
+        // arrange
+
+        // act
+        boolean isDecider = ExamplePermissions.getInstance().hasRole(companyA_Marketing, "decider");
+
+        // asssert
+        assertThat(isDecider, is(false));
+    }
+    @Test
+    public void withExamplePermissionsMissingRole_hasRole_expectFalse() {
+        // arrange
+
+        // act
+        boolean isDecider = ExamplePermissions.getInstance().hasRole(companyA_Marketing, "missing role");
+
+        // asssert
+        assertThat(isDecider, is(false));
+    }
 }

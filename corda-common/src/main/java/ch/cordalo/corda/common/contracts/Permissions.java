@@ -170,6 +170,10 @@ public abstract class Permissions {
         return partyAndRoles == null ? Collections.emptySet() : partyAndRoles.getValidActions();
     }
 
+    public boolean hasRole(Party party, String role) {
+        return this.getRoles(party).contains(role);
+    }
+
     public Set<String> getRoles(Party party) {
         if (party == null) throw new IllegalArgumentException("party must be provided");
         PartyAndRoles partyAndRoles = this.partyRoleMapping.get(getPartyName(party));

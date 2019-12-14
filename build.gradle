@@ -23,6 +23,11 @@ buildscript {
         cordalo_branch = "git rev-parse --abbrev-ref HEAD".execute().text.trim()
     }
 
+    ext {
+        cordalo_revision = "git rev-parse HEAD".execute().text.trim()
+        cordalo_branch = "git rev-parse --abbrev-ref HEAD".execute().text.trim()
+    }
+
     repositories {
         mavenLocal()
         mavenCentral()

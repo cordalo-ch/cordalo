@@ -59,7 +59,7 @@ public class TestSimpleFlowTests extends CordaloTestEnvironment {
     }
 
     private StateVerifier newDelete(CordaNodeEnvironment env, TestSimpleState state) throws FlowException {
-        return this.startFlow(
+        return this.startFlowAndVerifier(
                 env,
                 new TestSimpleFlow.Delete(state.getLinearId()));
     }

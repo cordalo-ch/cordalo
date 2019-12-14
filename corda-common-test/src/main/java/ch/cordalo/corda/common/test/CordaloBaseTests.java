@@ -55,7 +55,7 @@ abstract public class CordaloBaseTests {
             CordaNodeEnvironment env,
             FlowLogic<SignedTransaction> flow,
             Class<T> stateClass) throws FlowException {
-        StateVerifier verifier = startFlow(env, flow);
+        StateVerifier verifier = startFlowAndVerifier(env, flow);
         List<T> objects = verifier.output().objects();
         if (objects.size() > 0) {
             return verifier
@@ -73,7 +73,7 @@ abstract public class CordaloBaseTests {
             CordaNodeEnvironment env,
             FlowLogic<SignedTransaction> flow,
             Class<T> stateClass) throws FlowException {
-        StateVerifier verifier = startFlow(env, flow);
+        StateVerifier verifier = startFlowAndVerifier(env, flow);
         return verifier
                 .output()
                 .filter(stateClass)
@@ -96,7 +96,20 @@ abstract public class CordaloBaseTests {
 
 
     @Suspendable
-    public StateVerifier startFlow(
+    public <T> T startFlowAndObject(CordaNodeEnvironment env, FlowLogic<T> flow) throws FlowException {
+        CordaFuture<T> future = env.node.startFlow(flow);
+        env.network.runNetwork();
+        try {
+            return future.get();
+        } catch (InterruptedException var5) {
+            throw new FlowException("InterruptedException while start flow", var5);
+        } catch (ExecutionException var6) {
+            throw new FlowException("ExecutionException while start flow", var6);
+        }
+    }
+
+    @Suspendable
+    public StateVerifier startFlowAndVerifier(
             CordaNodeEnvironment env,
             FlowLogic<SignedTransaction> flow) throws FlowException {
         CordaFuture<SignedTransaction> future = env.node.startFlow(flow);
@@ -109,5 +122,15 @@ abstract public class CordaloBaseTests {
         } catch (ExecutionException e) {
             throw new FlowException("ExecutionException while start flow", e);
         }
+    }
+
+
+    /* please use startFlowAndVerifier - the name startFlow is very missleading*/
+    @Suspendable
+    @Deprecated
+    public StateVerifier startFlow(
+            CordaNodeEnvironment env,
+            FlowLogic<SignedTransaction> flow) throws FlowException {
+        return startFlowAndVerifier(env, flow);
     }
 }
