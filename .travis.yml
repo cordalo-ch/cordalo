@@ -10,7 +10,7 @@ dist: xenial
 language: java
 jdk: openjdk8
 before_install:
-- export cordalo_new_snapshot=`curl -s https://oss.sonatype.org/service/local/repositories/snapshots/content/ch/cordalo/cordalo/maven-metadata.xml | grep "\<latest\>" | awk -F ">" '{print $2}'| awk -F "<" '{print $1}' | awk -F "-" '{print $1}' | awk -F "." '{print $1"."(($2)+1)"-SNAPSHOT"}'`
+- export cordalo_new_snapshot=`curl -s https://oss.sonatype.org/service/local/repositories/snapshots/content/ch/cordalo/cordalo/maven-metadata.xml | grep version\> | tail -n 1 | awk -F ">" '{print $2}'| awk -F "<" '{print $1}' | awk -F "-" '{print $1}' | awk -F "." '{print $1"."(($2)+1)"-SNAPSHOT"}'`
 - openssl aes-256-cbc -K $encrypted_fca62744a4cd_key -iv $encrypted_fca62744a4cd_iv
   -in secret-ring.gpg.enc -out secret-ring.gpg -d
 install:
