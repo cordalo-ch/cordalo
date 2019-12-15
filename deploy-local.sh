@@ -16,6 +16,8 @@
 # \n must be replaced
 # gpg --armor --export-secret-keys 5FDC... | awk 'NR == 1 { print "signingKey=" } 1' ORS='\\n' >> gradle.properties
 
+export cordalo_new_snapshot=`curl -s https://oss.sonatype.org/service/local/repositories/snapshots/content/ch/cordalo/cordalo/maven-metadata.xml | grep version\> | tail -n 1 | awk -F ">" '{print $2}'| awk -F "<" '{print $1}' | awk -F "-" '{print $1}' | awk -F "." '{print $1"."(($2)+1)"-SNAPSHOT"}'`
+echo "build and upload $cordalo_new_snapshot"
 ./gradlew clean
 rm -R `find . -name out`
 rm -R `find . -name bin`
