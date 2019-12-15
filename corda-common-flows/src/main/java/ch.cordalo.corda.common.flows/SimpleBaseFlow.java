@@ -15,6 +15,7 @@ import net.corda.core.contracts.*;
 import net.corda.core.flows.FlowException;
 import net.corda.core.flows.FlowSession;
 import net.corda.core.identity.Party;
+import net.corda.core.node.ServiceHub;
 import net.corda.core.serialization.CordaSerializable;
 import net.corda.core.transactions.SignedTransaction;
 import net.corda.core.transactions.TransactionBuilder;
@@ -30,17 +31,34 @@ public abstract class SimpleBaseFlow<S> extends BaseFlow<S> {
     public static final UniqueIdentifier EMPTY_SEARCH_RESULT_LINEAR_ID = new UniqueIdentifier(
             SEARCH_RESPONDER_NO_STATE_FOUND, UUID.fromString("8f247ffb-54f0-49a9-adcd-cb46ceba7fec"));
 
+    private final Context context;
+
+    public SimpleBaseFlow() {
+        super();
+        this.context = new Context(this.getServiceHub());
+    }
+
     @CordaSerializable
     public static class Context {
         private final List<ReferencedStateAndRef> referenceStates = new ArrayList<>();
         private final List<StateAndRef> inputStates = new ArrayList<>();
         private final List<ContractState> outputStates = new ArrayList<>();
+        private final ServiceHub serviceHub;
+
+        public Context(ServiceHub serviceHub) {
+            this.serviceHub = serviceHub;
+        }
 
         @Suspendable
         public <T extends ContractState> T addReferenceState(ReferencedStateAndRef<T> reference) throws FlowException {
             if (reference == null) throw new FlowException("reference must be provided");
             referenceStates.add(reference);
             return reference.getStateAndRef().getState().getData();
+        }
+
+        @Suspendable
+        public <T extends LinearState> T addReferenceState(Class<T> clazz, UniqueIdentifier id) throws FlowException {
+            return this.addReferenceState(new FlowHelper<T>(this.serviceHub).getLastStateByLinearId(clazz, id));
         }
 
         @Suspendable
@@ -55,6 +73,11 @@ public abstract class SimpleBaseFlow<S> extends BaseFlow<S> {
             if (input == null) throw new FlowException("input must be provided");
             inputStates.add(input);
             return input.getState().getData();
+        }
+
+        @Suspendable
+        public <T extends LinearState> T addInputState(Class<T> clazz, UniqueIdentifier id) throws FlowException {
+            return this.addInputState(new FlowHelper<T>(this.serviceHub).getLastStateByLinearId(clazz, id));
         }
 
         @Suspendable
@@ -84,8 +107,6 @@ public abstract class SimpleBaseFlow<S> extends BaseFlow<S> {
             }
         }
     }
-
-    private final Context context = new Context();
 
     @Suspendable
     public Context getContext() {
