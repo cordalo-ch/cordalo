@@ -1,4 +1,4 @@
-/*
+/*******************************************************************************
  * Copyright (c) 2019 by cordalo.ch - MIT License
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -6,10 +6,11 @@
  * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- */
+ ******************************************************************************/
 package ch.cordalo.corda.common.client.webserver;
 
 import net.corda.core.contracts.LinearState;
+import net.corda.core.contracts.StateAndRef;
 import net.corda.core.identity.CordaX500Name;
 import net.corda.core.messaging.CordaRPCOps;
 import net.corda.core.messaging.DataFeed;
@@ -24,6 +25,8 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.LinkedHashMap;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /* based on example
     https://www.callicoder.com/spring-boot-task-scheduling-with-scheduled-annotation/
@@ -60,7 +63,7 @@ public abstract class TrackVaultChanges<T extends LinearState> {
             logger.info("Vault Update Feed :: {} - subscribed for {}", dateTimeFormatter.format(LocalDateTime.now()), this.typeOfT.getSimpleName());
             dataFeed.getUpdates().subscribe(
                     next -> {
-                        this.triggerChanged(topicName, typeOfT);
+                        this.triggerChanged(topicName, typeOfT, next.getProduced());
                         logger.info("Vault Feed Updated :: {} - name={} topic={}", dateTimeFormatter.format(LocalDateTime.now()), this.typeOfT.getSimpleName(), topicName);
                     },
                     error -> {
@@ -78,9 +81,10 @@ public abstract class TrackVaultChanges<T extends LinearState> {
         }
     }
 
-    protected void triggerChanged(String topicName, Class<T> typeOfT) {
+    protected void triggerChanged(String topicName, Class<T> typeOfT, Set<StateAndRef<T>> state) {
         LinkedHashMap<String, Object> trigger = new LinkedHashMap<>();
         trigger.put("stateClass", typeOfT.getName());
+        trigger.put("linearIds", state.stream().map(x -> x.getState().getData().getLinearId()).collect(Collectors.toList()));
         this.messagingTemplate.convertAndSend(topicName, trigger);
     }
 
