@@ -31,12 +31,12 @@ public abstract class SimpleBaseFlow<S> extends BaseFlow<S> {
     public static final UniqueIdentifier EMPTY_SEARCH_RESULT_LINEAR_ID = new UniqueIdentifier(
             SEARCH_RESPONDER_NO_STATE_FOUND, UUID.fromString("8f247ffb-54f0-49a9-adcd-cb46ceba7fec"));
 
-    private final Context context;
+    private Context context;
 
     public SimpleBaseFlow() {
         super();
-        this.context = new Context(this.getServiceHub());
     }
+
 
     @CordaSerializable
     public static class Context {
@@ -110,6 +110,9 @@ public abstract class SimpleBaseFlow<S> extends BaseFlow<S> {
 
     @Suspendable
     public Context getContext() {
+        if (this.context == null) {
+            this.context = new Context(this.getServiceHub());
+        }
         return this.context;
     }
 
