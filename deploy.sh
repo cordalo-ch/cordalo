@@ -3,6 +3,7 @@
  ## only upload archives for "master" so far - must be adapted later if possible for all branches
  ## you have to export the key again
  ## additionally for the sign of archives the gradle.properties entry 'signingKey' is used because the content of secret cannot be passed via command line
+ ## remove check for master to allow branches to build snapshots
  ##if [ "$TRAVIS_BRANCH" = 'master' ] && [ "$TRAVIS_PULL_REQUEST" == 'false' ]; then
  if [ "$TRAVIS_PULL_REQUEST" == 'false' ]; then
   export cordalo_new_snapshot=`curl -s https://oss.sonatype.org/service/local/repositories/snapshots/content/ch/cordalo/cordalo/maven-metadata.xml | grep "version\>" | tail -n 1 | awk -F ">" '{print $2}'| awk -F "<" '{print $1}' | awk -F "-" '{print $1}' | awk -F "." '{print $1"."(($2)+1)"-SNAPSHOT"}'`
