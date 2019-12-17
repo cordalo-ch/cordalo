@@ -14,11 +14,13 @@ import ch.cordalo.corda.common.contracts.test.TestSimpleDependentState;
 import ch.cordalo.corda.common.contracts.test.TestSimpleState;
 import ch.cordalo.corda.common.flows.*;
 import co.paralleluniverse.fibers.Suspendable;
-import kotlin.Unit;
+import net.corda.core.contracts.ContractState;
 import net.corda.core.contracts.StateAndRef;
 import net.corda.core.contracts.UniqueIdentifier;
 import net.corda.core.flows.*;
 import net.corda.core.transactions.SignedTransaction;
+
+import java.util.List;
 
 @CordaloFlowVerifier
 public class TestSimpleDependentFlow {
@@ -53,7 +55,7 @@ public class TestSimpleDependentFlow {
 
 
     @InitiatedBy(Create.class)
-    public static class CreateResponder extends ResponderBaseFlow<TestSimpleDependentState> {
+    public static class CreateResponder extends SignedTransactionResponderBaseFlow<TestSimpleDependentState> {
 
         public CreateResponder(FlowSession otherFlow) {
             super(otherFlow);
@@ -61,8 +63,10 @@ public class TestSimpleDependentFlow {
 
         @Suspendable
         @Override
-        public Unit call() throws FlowException {
-            return this.receiveIdentitiesCounterpartiesNoTxChecking();
+        public SignedTransaction call() throws FlowException {
+            SignedTransaction signedTransaction = this.receiveIdentitiesCounterpartiesNoTxChecking();
+            List<ContractState> outputStates = signedTransaction.getTx().getOutputStates();
+            return signedTransaction;
         }
     }
 
