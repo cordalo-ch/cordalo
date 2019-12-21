@@ -227,16 +227,22 @@ public abstract class StateMachine {
             return this.getStateMachine() + ":state:" + action;
         }
 
+        /* return last part of the permission */
+        private String getActionFromPermissionName(String permission) {
+            return permission.split("\\:")[2];
+        }
+
         public List<String> getNextActionsFor(Party party) {
             List<String> stateMachinePermissions = this.getNextActions().stream().map(this::getPermissionNameFromAction).collect(Collectors.toList());
-            if (!stateMachinePermissions.isEmpty()) {
+            if (stateMachinePermissions.isEmpty()) {
                 return Collections.EMPTY_LIST;
             }
             Permissions permissions = Permissions.get(this.getStateMachine());
             if (permissions == null) {
                 return Collections.EMPTY_LIST;
             } else {
-                return permissions.isPermitted(party, stateMachinePermissions);
+                List<String> permittedPermissions = permissions.isPermitted(party, stateMachinePermissions);
+                return permittedPermissions.stream().map(this::getActionFromPermissionName).collect(Collectors.toList());
             }
         }
 
@@ -401,5 +407,4 @@ public abstract class StateMachine {
             }
         }
     }
-
 }

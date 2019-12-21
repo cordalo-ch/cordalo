@@ -10,12 +10,17 @@
 package ch.cordalo.corda.common.contracts;
 
 import ch.cordalo.corda.common.contracts.StateMachine.State;
+import net.corda.core.identity.CordaX500Name;
+import net.corda.core.identity.Party;
+import net.corda.testing.core.TestIdentity;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.List;
 
+import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
@@ -75,6 +80,18 @@ public class StateMachineTests {
         List<String> nextActions = state.getNextActions();
         // asssert
         assertThat(nextActions, hasSize(not(0)));
+    }
+
+    @Test
+    public void withStateCreated_getNextActionsFor_expectLarger0() {
+        // arrange
+        ExamplePermissions.getInstance();
+        State state = ExampleStateMachine.State("CREATED");
+        // act
+        List<String> nextActions = state.getNextActionsFor(companyA_IT);
+        // asssert
+        assertThat(nextActions, hasSize(not(0)));
+        assertThat(nextActions, hasItem("SHARE"));
     }
 
     @Test
@@ -150,4 +167,14 @@ public class StateMachineTests {
         Assert.assertNotNull("initial transition shall be valid", initialStateTransition);
         Assert.assertEquals("initial transition is CREATE", "CREATE", initialStateTransition.getValue());
     }
+
+    @NotNull
+    private Party newParty(String commonName, String organizationUnit) {
+        CordaX500Name cordaX500Name = new CordaX500Name(commonName, organizationUnit,
+                "organisation", "locality", "state", "CH");
+        return new TestIdentity(cordaX500Name).getParty();
+    }
+
+    private Party companyA_IT = newParty("Company-A", "IT");
+
 }
